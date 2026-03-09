@@ -58,7 +58,11 @@ function loadGDrive() {
           if (response.error) { console.error('GIS error', response); return; }
           // Explicitly set the token on gapi.client so Drive API calls work
           gapi.client.setToken({ access_token: response.access_token });
-          await _ensureFolders();
+          try {
+            await _ensureFolders();
+          } catch(e) {
+            console.error('_ensureFolders failed:', e);
+          }
           _fireSignInChange(true);
         },
       });
@@ -96,9 +100,12 @@ async function _getOrCreateFolder(name, parentId) {
     ? `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`
     : `name='${name}' and mimeType='application/vnd.google-apps.folder' and 'root' in parents and trashed=false`;
 
+  console.log('[gdrive] searching for folder:', name);
   const res = await gapi.client.drive.files.list({ q, fields: 'files(id,name)', spaces: 'drive' });
+  console.log('[gdrive] folder search result:', res.result);
   if (res.result.files.length > 0) return res.result.files[0].id;
 
+  console.log('[gdrive] creating folder:', name);
   const created = await gapi.client.drive.files.create({
     resource: {
       name,
@@ -107,13 +114,16 @@ async function _getOrCreateFolder(name, parentId) {
     },
     fields: 'id',
   });
+  console.log('[gdrive] created folder:', name, created.result.id);
   return created.result.id;
 }
 
 async function _ensureFolders() {
+  console.log('[gdrive] ensuring folders…');
   _rootFolderId   = await _getOrCreateFolder(FOLDER_NAME, null);
   _plansFolderId  = await _getOrCreateFolder('plans',  _rootFolderId);
   _imagesFolderId = await _getOrCreateFolder('images', _rootFolderId);
+  console.log('[gdrive] folders ready. root:', _rootFolderId, 'plans:', _plansFolderId, 'images:', _imagesFolderId);
 }
 
 // ── JSON file helpers ─────────────────────────────────────────────────────────
