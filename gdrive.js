@@ -1,6 +1,6 @@
 /**
- * gdrive.js — Shared Google Drive helper for CCY Travelog
- * Replace CLIENT_ID and API_KEY with your values from Google Cloud Console.
+ * gdrive.js — Google Drive helper for CCY Travelog
+ * Fill in your CLIENT_ID and API_KEY from Google Cloud Console.
  */
 
 const GDRIVE_CLIENT_ID = '377869285807-hkidh1sdvr3ph7cjtgrha82mmjr6p3pc.apps.googleusercontent.com';
@@ -8,7 +8,7 @@ const GDRIVE_API_KEY   = 'AIzaSyA75PrCkhOWUgE8uEtv4nyBc9I26Kru7Ms';
 const GDRIVE_SCOPES    = 'https://www.googleapis.com/auth/drive.file';
 const FOLDER_NAME      = 'ccy-travelog';
 
-// ── State ─────────────────────────────────────────────────────────────────────
+// ── Internal state ────────────────────────────────────────────────────────────
 let _tokenClient    = null;
 let _accessToken    = null;
 let _rootFolderId   = null;
@@ -16,17 +16,17 @@ let _plansFolderId  = null;
 let _imagesFolderId = null;
 let _signedIn       = false;
 
-const _signInCallbacks = [];
-function onSignInChange(fn) { _signInCallbacks.push(fn); }
+// ── Sign-in change callbacks ──────────────────────────────────────────────────
+const _cbs = [];
+function onSignInChange(fn) { _cbs.push(fn); }
 function _fire(v) {
   _signedIn = v;
-  console.log('[gdrive] sign-in state:', v);
-  _signInCallbacks.forEach(fn => { try { fn(v); } catch(e) { console.error('[gdrive] callback error', e); } });
+  _cbs.forEach(fn => { try { fn(v); } catch(e) { console.error('[gdrive] cb error', e); } });
 }
 
-// ── Token storage ─────────────────────────────────────────────────────────────
+// ── Token storage (persists across page reloads) ──────────────────────────────
 function _saveToken(token, expiresIn) {
-  const expiry = Date.now() + (expiresIn || 3600) * 1000 - 120000; // 2 min safety buffer
+  const expiry = Date.now() + (expiresIn || 3600) * 1000 - 120000;
   localStorage.setItem('gdrive_token', token);
   localStorage.setItem('gdrive_expiry', String(expiry));
 }
@@ -40,11 +40,12 @@ function _clearToken() {
   localStorage.removeItem('gdrive_expiry');
 }
 
-// ── Load Google scripts ───────────────────────────────────────────────────────
+// ── Load Google scripts and initialise ───────────────────────────────────────
+// Returns a Promise that resolves when both GAPI and GIS are fully ready.
 function loadGDrive() {
   return new Promise((resolve, reject) => {
     let gapiOk = false, gisOk = false;
-    function check() { if (gapiOk && gisOk) resolve(); }
+    function done() { if (gapiOk && gisOk) resolve(); }
 
     // GAPI
     const s1 = document.createElement('script');
@@ -58,13 +59,17 @@ function loadGDrive() {
             discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
           });
           console.log('[gdrive] gapi ready');
-          gapiOk = true; check();
-        } catch(e) { console.error('[gdrive] gapi init failed', e); reject(e); }
+          gapiOk = true;
+          done();
+        } catch(e) {
+          console.error('[gdrive] gapi init failed:', e);
+          reject(e);
+        }
       });
     };
     document.head.appendChild(s1);
 
-    // GIS
+    // GIS — callback intentionally left empty here, assigned in gdriveSignIn()
     const s2 = document.createElement('script');
     s2.src = 'https://accounts.google.com/gsi/client';
     s2.onerror = () => reject(new Error('Failed to load GIS'));
@@ -73,37 +78,53 @@ function loadGDrive() {
         _tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: GDRIVE_CLIENT_ID,
           scope: GDRIVE_SCOPES,
-          callback: '', // set per-call below
+          callback: '', // will be set in gdriveSignIn
         });
         console.log('[gdrive] GIS ready');
-        gisOk = true; check();
-      } catch(e) { console.error('[gdrive] GIS init failed', e); reject(e); }
+        gisOk = true;
+        done();
+      } catch(e) {
+        console.error('[gdrive] GIS init failed:', e);
+        reject(e);
+      }
     };
     document.head.appendChild(s2);
   });
 }
 
-// ── Sign in ───────────────────────────────────────────────────────────────────
+// ── Sign in (manual button press) ────────────────────────────────────────────
 function gdriveSignIn() {
-  if (!_tokenClient) { alert('Google APIs still loading, please wait a moment.'); return; }
-  // Assign callback fresh each call — avoids stale closure issues
-  _tokenClient.callback = async (resp) => {
-    if (resp.error) { console.error('[gdrive] token error:', resp); return; }
+  if (!_tokenClient) {
+    alert('Google APIs still loading — please try again in a moment.');
+    return;
+  }
+  // Assign callback right before requesting — avoids async callback issues
+  _tokenClient.callback = function(resp) {
+    if (resp.error) {
+      console.error('[gdrive] sign-in error:', resp.error);
+      return;
+    }
+    console.log('[gdrive] got token, setting up…');
     _accessToken = resp.access_token;
     _saveToken(_accessToken, resp.expires_in);
     gapi.client.setToken({ access_token: _accessToken });
-    console.log('[gdrive] signed in, setting up folders…');
-    await _ensureFolders();
-    console.log('[gdrive] folders ready, firing sign-in');
-    _fire(true);
+    // ensureFolders then fire — all async inside a plain function
+    _ensureFolders().then(() => {
+      console.log('[gdrive] ready after sign-in');
+      _fire(true);
+    }).catch(e => {
+      console.error('[gdrive] folder setup failed:', e);
+      _fire(true); // still fire so UI updates
+    });
   };
-  const saved = _getSavedToken();
-  _tokenClient.requestAccessToken({ prompt: saved ? '' : 'select_account' });
+  _tokenClient.requestAccessToken({ prompt: 'select_account' });
 }
 
 // ── Sign out ──────────────────────────────────────────────────────────────────
 function gdriveSignOut() {
-  if (_accessToken) google.accounts.oauth2.revoke(_accessToken, () => {});
+  if (_accessToken) {
+    google.accounts.oauth2.revoke(_accessToken, () => console.log('[gdrive] revoked'));
+  }
   _accessToken = null;
   gapi.client.setToken(null);
   _clearToken();
@@ -114,131 +135,159 @@ function gdriveSignOut() {
 function gdriveIsSignedIn() { return _signedIn; }
 
 // ── Silent restore on page load ───────────────────────────────────────────────
-async function gdriveRestore() {
+// Call this after loadGDrive() resolves. Returns a Promise.
+function gdriveRestore() {
   const saved = _getSavedToken();
-  if (!saved) { console.log('[gdrive] no saved token to restore'); return; }
-  console.log('[gdrive] restoring token from storage…');
+  if (!saved) {
+    console.log('[gdrive] no saved token');
+    return Promise.resolve();
+  }
+  console.log('[gdrive] restoring saved token…');
   _accessToken = saved;
   gapi.client.setToken({ access_token: saved });
-  try {
-    await _ensureFolders();
-    console.log('[gdrive] silent restore complete');
-    _fire(true);
-  } catch(e) {
-    console.error('[gdrive] silent restore failed — token likely expired', e);
-    _clearToken();
-  }
+  return _ensureFolders()
+    .then(() => {
+      console.log('[gdrive] restore complete');
+      _fire(true);
+    })
+    .catch(e => {
+      console.error('[gdrive] restore failed — token likely expired:', e);
+      _clearToken();
+    });
 }
 
-// ── Folder setup ──────────────────────────────────────────────────────────────
-async function _ensureFolders() {
-  _rootFolderId   = await _getOrCreateFolder(FOLDER_NAME, null);
-  _plansFolderId  = await _getOrCreateFolder('plans',  _rootFolderId);
-  _imagesFolderId = await _getOrCreateFolder('images', _rootFolderId);
+// ── Folder helpers ────────────────────────────────────────────────────────────
+function _ensureFolders() {
+  return _getOrCreateFolder(FOLDER_NAME, null)
+    .then(rootId => {
+      _rootFolderId = rootId;
+      return Promise.all([
+        _getOrCreateFolder('plans',  rootId),
+        _getOrCreateFolder('images', rootId),
+      ]);
+    })
+    .then(([plansId, imagesId]) => {
+      _plansFolderId  = plansId;
+      _imagesFolderId = imagesId;
+      console.log('[gdrive] folders:', _plansFolderId, _imagesFolderId);
+    });
 }
 
-async function _getOrCreateFolder(name, parentId) {
+function _getOrCreateFolder(name, parentId) {
   const q = parentId
     ? `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`
     : `name='${name}' and mimeType='application/vnd.google-apps.folder' and 'root' in parents and trashed=false`;
-  const res = await gapi.client.drive.files.list({ q, fields: 'files(id)', spaces: 'drive' });
-  if (res.result.files?.length) { console.log('[gdrive] folder exists:', name); return res.result.files[0].id; }
-  const c = await gapi.client.drive.files.create({
-    resource: { name, mimeType: 'application/vnd.google-apps.folder', parents: parentId ? [parentId] : [] },
-    fields: 'id',
-  });
-  console.log('[gdrive] created folder:', name);
-  return c.result.id;
+  return gapi.client.drive.files.list({ q, fields: 'files(id)', spaces: 'drive' })
+    .then(res => {
+      if (res.result.files && res.result.files.length > 0) {
+        return res.result.files[0].id;
+      }
+      return gapi.client.drive.files.create({
+        resource: { name, mimeType: 'application/vnd.google-apps.folder', parents: parentId ? [parentId] : [] },
+        fields: 'id',
+      }).then(c => c.result.id);
+    });
 }
 
-// ── Drive fetch ───────────────────────────────────────────────────────────────
-async function _fetch(url, opts = {}) {
-  const token = _accessToken;
-  if (!token) throw new Error('[gdrive] no access token');
-  const r = await fetch(url, { ...opts, headers: { Authorization: `Bearer ${token}`, ...(opts.headers||{}) } });
-  if (!r.ok) throw new Error(`[gdrive] HTTP ${r.status}: ${await r.text()}`);
-  return r;
+// ── Raw fetch with auth ───────────────────────────────────────────────────────
+function _fetch(url, opts) {
+  if (!_accessToken) return Promise.reject(new Error('[gdrive] not signed in'));
+  opts = opts || {};
+  opts.headers = Object.assign({ Authorization: 'Bearer ' + _accessToken }, opts.headers || {});
+  return fetch(url, opts).then(r => {
+    if (!r.ok) return r.text().then(t => { throw new Error('[gdrive] ' + r.status + ': ' + t); });
+    return r;
+  });
 }
 
 // ── JSON helpers ──────────────────────────────────────────────────────────────
-async function driveListPlans() {
-  if (!_plansFolderId) { console.warn('[gdrive] driveListPlans: no folder'); return []; }
-  const res = await gapi.client.drive.files.list({
+function driveListPlans() {
+  if (!_plansFolderId) return Promise.resolve([]);
+  return gapi.client.drive.files.list({
     q: `'${_plansFolderId}' in parents and name contains '.json' and trashed=false`,
     fields: 'files(id,name,modifiedTime)', spaces: 'drive', orderBy: 'modifiedTime desc',
-  });
-  return res.result.files || [];
+  }).then(res => res.result.files || []);
 }
 
-async function driveReadJSON(fileId) {
-  const r = await _fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`);
-  return await r.json();
+function driveReadJSON(fileId) {
+  return _fetch('https://www.googleapis.com/drive/v3/files/' + fileId + '?alt=media')
+    .then(r => r.json());
 }
 
-async function driveWriteJSON(filename, data) {
-  if (!_plansFolderId) { console.warn('[gdrive] driveWriteJSON: no folder'); return; }
+function driveWriteJSON(filename, data) {
+  if (!_plansFolderId) return Promise.reject(new Error('[gdrive] folders not ready'));
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const existing = await _findFile(filename, _plansFolderId);
-  await _upload(existing?.id || null, filename, blob, 'application/json', !existing, _plansFolderId);
-  console.log('[gdrive] wrote:', filename);
+  return _findFile(filename, _plansFolderId).then(existing => {
+    return _upload(existing ? existing.id : null, filename, blob, 'application/json', !existing, _plansFolderId);
+  }).then(() => console.log('[gdrive] saved:', filename));
 }
 
-async function driveDeleteJSON(filename) {
-  if (!_plansFolderId) return;
-  const f = await _findFile(filename, _plansFolderId);
-  if (f) await gapi.client.drive.files.delete({ fileId: f.id });
+function driveDeleteJSON(filename) {
+  if (!_plansFolderId) return Promise.resolve();
+  return _findFile(filename, _plansFolderId).then(f => {
+    if (f) return gapi.client.drive.files.delete({ fileId: f.id });
+  });
 }
 
 // ── Image helpers ─────────────────────────────────────────────────────────────
-async function driveWriteImage(filename, blob) {
-  if (!_imagesFolderId) { console.warn('[gdrive] driveWriteImage: no folder'); return null; }
-  const existing = await _findFile(filename, _imagesFolderId);
-  const r = await _upload(existing?.id||null, filename, blob, blob.type, !existing, _imagesFolderId);
-  return r.id || existing?.id;
+function driveWriteImage(filename, blob) {
+  if (!_imagesFolderId) return Promise.reject(new Error('[gdrive] folders not ready'));
+  return _findFile(filename, _imagesFolderId).then(existing => {
+    return _upload(existing ? existing.id : null, filename, blob, blob.type, !existing, _imagesFolderId)
+      .then(r => r.id || (existing && existing.id));
+  });
 }
 
-async function driveReadImage(fileId) {
-  try { const r = await _fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`); return _toDataURL(await r.blob()); }
-  catch(e) { console.warn('[gdrive] image read error:', e); return null; }
+function driveReadImage(fileId) {
+  return _fetch('https://www.googleapis.com/drive/v3/files/' + fileId + '?alt=media')
+    .then(r => r.blob()).then(_toDataURL)
+    .catch(e => { console.warn('[gdrive] image read failed:', e); return null; });
 }
 
-async function driveDeleteImage(filename) {
-  if (!_imagesFolderId) return;
-  const f = await _findFile(filename, _imagesFolderId);
-  if (f) await gapi.client.drive.files.delete({ fileId: f.id });
+function driveDeleteImage(filename) {
+  if (!_imagesFolderId) return Promise.resolve();
+  return _findFile(filename, _imagesFolderId).then(f => {
+    if (f) return gapi.client.drive.files.delete({ fileId: f.id });
+  });
 }
 
-async function driveFindImage(filename) {
-  if (!_imagesFolderId) return null;
-  const f = await _findFile(filename, _imagesFolderId);
-  return f ? f.id : null;
+function driveFindImage(filename) {
+  if (!_imagesFolderId) return Promise.resolve(null);
+  return _findFile(filename, _imagesFolderId).then(f => f ? f.id : null);
 }
 
-// ── Utilities ─────────────────────────────────────────────────────────────────
-async function _findFile(name, folderId) {
-  const res = await gapi.client.drive.files.list({
+// ── Low-level helpers ─────────────────────────────────────────────────────────
+function _findFile(name, folderId) {
+  return gapi.client.drive.files.list({
     q: `name='${name}' and '${folderId}' in parents and trashed=false`,
     fields: 'files(id,name)', spaces: 'drive',
-  });
-  return res.result.files?.[0] || null;
+  }).then(res => (res.result.files && res.result.files[0]) || null);
 }
 
-async function _upload(fileId, name, blob, mimeType, isCreate, parentId) {
+function _upload(fileId, name, blob, mimeType, isCreate, parentId) {
   const meta = isCreate ? { name, mimeType, parents: [parentId] } : { name, mimeType };
   const form = new FormData();
   form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
   form.append('file', blob);
   const url = isCreate
     ? 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name'
-    : `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&fields=id,name`;
-  const r = await fetch(url, { method: isCreate ? 'POST' : 'PATCH', headers: { Authorization: `Bearer ${_accessToken}` }, body: form });
-  return await r.json();
+    : 'https://www.googleapis.com/upload/drive/v3/files/' + fileId + '?uploadType=multipart&fields=id,name';
+  return fetch(url, {
+    method: isCreate ? 'POST' : 'PATCH',
+    headers: { Authorization: 'Bearer ' + _accessToken },
+    body: form,
+  }).then(r => r.json());
 }
 
 function _toDataURL(blob) {
-  return new Promise(res => { const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(blob); });
+  return new Promise(res => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.readAsDataURL(blob);
+  });
 }
 
 function slugify(title) {
-  return (title||'untitled').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') || 'untitled';
+  return (title || 'untitled').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'untitled';
 }
