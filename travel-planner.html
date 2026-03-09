@@ -3157,7 +3157,7 @@ function formatTimeInput(el) {
 
 /* ═══════════════ INIT ═══════════════ */
 (async function init() {
-  // Init Drive in background — cover images and saves will use it once ready
+  // Init Drive and restore session from saved token
   onSignInChange(signedIn => {
     const indicator = document.getElementById('drive-status');
     if (indicator) {
@@ -3165,7 +3165,7 @@ function formatTimeInput(el) {
       indicator.textContent = signedIn ? '☁ Drive ✓' : '';
     }
   });
-  loadGDrive().catch(()=>{});
+  loadGDrive().then(() => gdriveRestore()).catch(() => {});
 
   const planId = getPlanId();
   if (planId) {
