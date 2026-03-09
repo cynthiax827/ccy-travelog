@@ -85,6 +85,28 @@ function loadGDrive() {
   });
 }
 
+// ── Token persistence ─────────────────────────────────────────────────────────
+const TOKEN_STORAGE_KEY = 'gdrive_access_token';
+const TOKEN_EXPIRY_KEY  = 'gdrive_token_expiry';
+
+function _saveToken(response) {
+  const expiry = Date.now() + (response.expires_in || 3600) * 1000 - 60000; // 1 min buffer
+  localStorage.setItem(TOKEN_STORAGE_KEY, response.access_token);
+  localStorage.setItem(TOKEN_EXPIRY_KEY, String(expiry));
+}
+
+function _loadSavedToken() {
+  const token  = localStorage.getItem(TOKEN_STORAGE_KEY);
+  const expiry = parseInt(localStorage.getItem(TOKEN_EXPIRY_KEY) || '0');
+  if (token && Date.now() < expiry) return token;
+  return null;
+}
+
+function _clearSavedToken() {
+  localStorage.removeItem(TOKEN_STORAGE_KEY);
+  localStorage.removeItem(TOKEN_EXPIRY_KEY);
+}
+
 // ── Token response handler ────────────────────────────────────────────────────
 async function _handleTokenResponse(response) {
   console.log('[gdrive] token response received', response);
@@ -94,6 +116,7 @@ async function _handleTokenResponse(response) {
   }
   _accessToken = response.access_token;
   gapi.client.setToken({ access_token: _accessToken });
+  _saveToken(response);
   console.log('[gdrive] token set — firing sign-in immediately');
 
   // Fire UI update immediately so button changes right away
@@ -127,12 +150,30 @@ function gdriveSignOut() {
   }
   _accessToken = null;
   gapi.client.setToken(null);
+  _clearSavedToken();
   _rootFolderId = _plansFolderId = _imagesFolderId = null;
   _fireSignInChange(false);
 }
 
 function gdriveIsSignedIn() { return _signedIn; }
 function gdriveAreFoldersReady() { return !!(_plansFolderId && _imagesFolderId); }
+
+// ── Silent restore on page load ───────────────────────────────────────────────
+// Called automatically after loadGDrive() resolves
+async function _trySilentRestore() {
+  const saved = _loadSavedToken();
+  if (!saved) { console.log('[gdrive] no saved token'); return; }
+  console.log('[gdrive] restoring saved token…');
+  _accessToken = saved;
+  gapi.client.setToken({ access_token: saved });
+  _fireSignInChange(true);
+  try {
+    await _ensureFolders();
+    console.log('[gdrive] folders restored');
+  } catch(e) {
+    console.error('[gdrive] folder restore error:', e);
+  }
+}
 
 // ── Folder helpers ────────────────────────────────────────────────────────────
 async function _getOrCreateFolder(name, parentId) {
