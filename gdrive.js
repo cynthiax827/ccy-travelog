@@ -3,8 +3,8 @@
  * Replace the two values below with your own from Google Cloud Console.
  */
 
-const GDRIVE_CLIENT_ID = '377869285807-hkidh1sdvr3ph7cjtgrha82mmjr6p3pc.apps.googleusercontent.com';
-const GDRIVE_API_KEY   = 'AIzaSyA75PrCkhOWUgE8uEtv4nyBc9I26Kru7Ms';
+const GDRIVE_CLIENT_ID = 'AIzaSyA75PrCkhOWUgE8uEtv4nyBc9I26Kru7Ms';
+const GDRIVE_API_KEY   = '377869285807-hkidh1sdvr3ph7cjtgrha82mmjr6p3pc.apps.googleusercontent.com';
 const GDRIVE_SCOPES    = 'https://www.googleapis.com/auth/drive.file';
 const FOLDER_NAME      = 'ccy-travelog';
 
@@ -70,7 +70,8 @@ function loadGDrive() {
         _tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: GDRIVE_CLIENT_ID,
           scope: GDRIVE_SCOPES,
-          callback: _handleTokenResponse,
+          // GIS callback must NOT be async — wrap it
+          callback: (response) => { _handleTokenResponse(response); },
         });
         console.log('[gdrive] GIS token client ready');
         gisLoaded = true;
@@ -86,21 +87,25 @@ function loadGDrive() {
 
 // ── Token response handler ────────────────────────────────────────────────────
 async function _handleTokenResponse(response) {
-  console.log('[gdrive] token response received');
+  console.log('[gdrive] token response received', response);
   if (response.error) {
     console.error('[gdrive] auth error:', response.error, response.error_description);
     return;
   }
   _accessToken = response.access_token;
   gapi.client.setToken({ access_token: _accessToken });
-  console.log('[gdrive] token set, ensuring folders...');
+  console.log('[gdrive] token set — firing sign-in immediately');
+
+  // Fire UI update immediately so button changes right away
+  _fireSignInChange(true);
+
+  // Set up folders in background
   try {
     await _ensureFolders();
     console.log('[gdrive] folders ready');
   } catch(e) {
-    console.error('[gdrive] folder setup error (continuing anyway):', e);
+    console.error('[gdrive] folder setup error:', e);
   }
-  _fireSignInChange(true);
 }
 
 // ── Sign in / out ─────────────────────────────────────────────────────────────
@@ -127,6 +132,7 @@ function gdriveSignOut() {
 }
 
 function gdriveIsSignedIn() { return _signedIn; }
+function gdriveAreFoldersReady() { return !!(_plansFolderId && _imagesFolderId); }
 
 // ── Folder helpers ────────────────────────────────────────────────────────────
 async function _getOrCreateFolder(name, parentId) {
