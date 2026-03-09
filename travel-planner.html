@@ -3165,7 +3165,7 @@ function formatTimeInput(el) {
       indicator.textContent = signedIn ? '☁ Drive ✓' : '';
     }
   });
-  loadGDrive().then(() => gdriveRestore()).catch(() => {});
+  loadGDrive().then(function() { return gdriveRestore(); }).catch(function(e) { console.error('[planner] loadGDrive failed:', e); });
 
   const planId = getPlanId();
   if (planId) {
