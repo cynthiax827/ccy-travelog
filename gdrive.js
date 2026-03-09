@@ -8,7 +8,7 @@
 const GDRIVE_CLIENT_ID = '377869285807-hkidh1sdvr3ph7cjtgrha82mmjr6p3pc.apps.googleusercontent.com';
 const GDRIVE_API_KEY   = 'AIzaSyA75PrCkhOWUgE8uEtv4nyBc9I26Kru7Ms';
 const GDRIVE_SCOPES    = 'https://www.googleapis.com/auth/drive.file';
-const FOLDER_NAME      = 'ccy-ravelog';
+const FOLDER_NAME      = 'ccy-travelog';
 
 // ── State ────────────────────────────────────────────────────────────────────
 let _gapiReady   = false;
@@ -27,6 +27,10 @@ function _fireSignInChange(v) { _signedIn = v; _onSignInChange.forEach(fn => fn(
 // ── Load GAPI + GIS scripts ──────────────────────────────────────────────────
 function loadGDrive() {
   return new Promise((resolve) => {
+    let gapiDone = false;
+    let gisDone  = false;
+    function checkBothReady() { if (gapiDone && gisDone) resolve(); }
+
     // Load gapi
     const gapiScript = document.createElement('script');
     gapiScript.src = 'https://apis.google.com/js/api.js';
@@ -37,7 +41,8 @@ function loadGDrive() {
           discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
         });
         _gapiReady = true;
-        if (_gisReady) resolve();
+        gapiDone = true;
+        checkBothReady();
       });
     };
     document.head.appendChild(gapiScript);
@@ -51,12 +56,15 @@ function loadGDrive() {
         scope: GDRIVE_SCOPES,
         callback: async (response) => {
           if (response.error) { console.error('GIS error', response); return; }
+          // Explicitly set the token on gapi.client so Drive API calls work
+          gapi.client.setToken({ access_token: response.access_token });
           await _ensureFolders();
           _fireSignInChange(true);
         },
       });
       _gisReady = true;
-      if (_gapiReady) resolve();
+      gisDone = true;
+      checkBothReady();
     };
     document.head.appendChild(gisScript);
   });
@@ -65,8 +73,9 @@ function loadGDrive() {
 // ── Sign in / out ────────────────────────────────────────────────────────────
 async function gdriveSignIn() {
   if (!_tokenClient) { console.warn('GIS not ready'); return; }
+  // Use empty prompt if we already have a token (silent re-auth), otherwise show account picker
   const hasToken = gapi.client.getToken();
-  _tokenClient.requestAccessToken({ prompt: hasToken ? '' : 'consent' });
+  _tokenClient.requestAccessToken({ prompt: hasToken ? '' : 'select_account' });
 }
 
 function gdriveSignOut() {
@@ -123,8 +132,14 @@ async function driveListPlans() {
 
 /** Read a JSON file by Drive file ID */
 async function driveReadJSON(fileId) {
-  const res = await gapi.client.drive.files.get({ fileId, alt: 'media' });
-  return typeof res.result === 'string' ? JSON.parse(res.result) : res.result;
+  const token = gapi.client.getToken()?.access_token;
+  // Use fetch directly for reliable media download
+  const res = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  if (!res.ok) throw new Error(`Drive read failed: ${res.status}`);
+  return await res.json();
 }
 
 /** Write (create or update) a JSON file in plans/ */
