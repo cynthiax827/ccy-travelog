@@ -8,7 +8,7 @@
 const GDRIVE_CLIENT_ID = '377869285807-hkidh1sdvr3ph7cjtgrha82mmjr6p3pc.apps.googleusercontent.com';
 const GDRIVE_API_KEY   = 'AIzaSyA75PrCkhOWUgE8uEtv4nyBc9I26Kru7Ms';
 const GDRIVE_SCOPES    = 'https://www.googleapis.com/auth/drive.file';
-const FOLDER_NAME      = 'CCY Travelog';
+const FOLDER_NAME      = 'ccy-ravelog';
 
 // ── State ────────────────────────────────────────────────────────────────────
 let _gapiReady   = false;
