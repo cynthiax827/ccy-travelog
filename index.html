@@ -550,11 +550,7 @@ function toast(msg) { const el=document.getElementById('toast'); el.textContent=
 /* ── INIT ────────────────────────────────────────── */
 onSignInChange(updateDriveUI);
 loadGDrive().then(() => {
-  // Check if we already have a valid token from this session
-  const token = gapi.client.getToken();
-  if (token) {
-    updateDriveUI(true);
-  }
+  _trySilentRestore();
 });
 </script>
 <footer style="border-top:var(--border);padding:20px 48px;text-align:center;">
