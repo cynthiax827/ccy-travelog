@@ -3157,7 +3157,7 @@ function formatTimeInput(el) {
 
 /* ═══════════════ INIT ═══════════════ */
 (async function init() {
-  // Init Drive and restore session from saved token
+  // Restore Drive session first — saves won't work until this completes
   onSignInChange(signedIn => {
     const indicator = document.getElementById('drive-status');
     if (indicator) {
@@ -3165,9 +3165,20 @@ function formatTimeInput(el) {
       indicator.textContent = signedIn ? '☁ Drive ✓' : '';
     }
   });
-  loadGDrive().then(function() { return gdriveRestore(); }).catch(function(e) { console.error('[planner] loadGDrive failed:', e); });
+  try {
+    await loadGDrive();
+    await gdriveRestore();
+  } catch(e) { console.error('[planner] Drive init failed:', e); }
 
   const planId = getPlanId();
+
+
+
+
+
+
+
+
   if (planId) {
     try {
       const raw = localStorage.getItem('travelplan_' + planId);
