@@ -308,7 +308,7 @@ function itineraryHTML(d) {
     ${d.itinerary.map(day => `
     <div style="margin-bottom:28px;page-break-inside:avoid;">
       <div style="display:flex;align-items:baseline;gap:14px;padding-bottom:8px;border-bottom:1.5px solid #0a0a0a;margin-bottom:12px;flex-wrap:wrap;">
-        <span style="font-family:'DM Serif Display',Georgia,serif;font-size:22px;font-weight:400;">${esc(day.label || 'Day')}</span>
+        <span style="font-family:'DM Serif Display',Georgia,serif;font-size:22px;font-weight:400;">Day <span style="font-family:'DM Serif Display',Georgia,serif;">${day.n || ''}</span></span>
         ${day.date ? `<span style="font-size:12px;color:#6e6e6b;">${fmtDate(day.date)}</span>` : ''}
         ${day.overnightCity ? `<span style="font-size:11px;color:#8f8f8c;margin-left:auto;">📍 ${esc(day.overnightCity)}</span>` : ''}
         ${day.isDayTrip && day.sightseeingCity ? `<span style="font-size:11px;color:#8f8f8c;">→ day trip: ${esc(day.sightseeingCity)}</span>` : ''}
