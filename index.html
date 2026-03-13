@@ -220,25 +220,44 @@ let plans = [];
    then fetches each plan JSON in parallel.
 ──────────────────────────────────────────────────────── */
 async function loadPlans() {
+  function showError(msg) {
+    document.getElementById('cards-grid').innerHTML =
+      `<div class="empty-state"><div class="empty-icon">✈</div><div class="empty-title">Could not load plans</div><div class="empty-sub" style="word-break:break-all;">${msg}</div></div>`;
+  }
+
   document.getElementById('cards-grid').innerHTML =
     '<div class="empty-state"><div class="empty-icon" style="display:inline-block;animation:spin 1.2s linear infinite">↻</div><div class="empty-title">Loading…</div></div>';
 
   // 1. Fetch manifest
-  const manifest = await fetch(`${BASE}/plans/index.json`).then(r => r.json());
+  let manifest;
+  try {
+    const res = await fetch(`${BASE}/plans/index.json`);
+    if (!res.ok) { showError(`plans/index.json returned HTTP ${res.status}`); return; }
+    manifest = await res.json();
+  } catch (err) {
+    showError(`Failed to fetch plans/index.json — ${err.message}`);
+    return;
+  }
+
+  if (!Array.isArray(manifest) || !manifest.length) {
+    plans = []; updateStats(); renderCards(); return;
+  }
 
   // 2. Fetch all plan JSONs in parallel
   const results = await Promise.allSettled(
     manifest.map(filename =>
       fetch(`${BASE}/plans/${filename}`)
-        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(r => { if (!r.ok) throw new Error(`${filename} → HTTP ${r.status}`); return r.json(); })
         .then(d => ({ filename: filename.replace(/\.json$/, ''), data: d }))
     )
   );
 
-  // 3. Map to card objects
-  plans = results
-    .filter(r => r.status === 'fulfilled')
-    .map(({ value: { filename, data } }) => ({
+  // 3. Map to card objects (log individual failures)
+  plans = [];
+  for (const r of results) {
+    if (r.status === 'rejected') { console.warn('Plan load failed:', r.reason); continue; }
+    const { filename, data } = r.value;
+    plans.push({
       filename,
       title:     data.tripTitle || 'Untitled Trip',
       startDate: data.tripStart || '',
@@ -252,7 +271,8 @@ async function loadPlans() {
         name,
         color: (data.travellerColors || {})[name] || '#0a0a0a'
       }))
-    }));
+    });
+  }
 
   updateStats();
   renderCards();
