@@ -150,7 +150,8 @@
               "to": "LIS",
               "depTime": "06:50",
               "arrTime": "09:55",
-              "seatClass": "Economy"
+              "seatClass": "Economy",
+              "flightNo": "TK1755"
             }
           ],
           "resCode": ""
@@ -610,5 +611,5 @@
   },
   "_planId": 1,
   "_coverPosY": 75.5,
-  "_coverFilename": "portugal.jpg"
+  "_coverFilename": "2026-dc-summer-vacation.jpg"
 }
