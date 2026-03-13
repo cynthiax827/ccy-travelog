@@ -319,7 +319,7 @@ function renderCards() {
     const dests = p.destinations||[], travellers = p.travellers||[];
     const destsHtml = dests.map(d=>`<div class="dest-country"><div class="dest-country-row"><span class="dest-flag">${esc(d.flag||'🌍')}</span><span class="dest-country-name">${esc(d.country)}</span></div>${(d.cities||[]).length?`<div class="dest-cities">${d.cities.map(c=>`<span class="city-pill">${esc(c)}</span>`).join('')}</div>`:''}</div>`).join('');
     const travHtml = travellers.map(t=>`<span class="traveller-chip"><span class="chip-dot" style="background:${esc(t.color||'#f7f6f3')};${t.color==='#0a0a0a'?'border:1px solid rgba(255,255,255,0.3)':''}"></span>${esc(t.name)}</span>`).join('');
-    return `<div class="card" onclick="window.open('${esc(p.filename)}.html','_blank')">
+    return `<div class="card" onclick="window.open('travel-plan.html?plan=${esc(p.filename)}','_blank')">
       <div class="card-top">
         <span class="card-index">${String(idx+1).padStart(2,'0')}</span>
         <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
