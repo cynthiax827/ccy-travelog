@@ -231,7 +231,7 @@ async function loadPlans() {
 
   const results = await Promise.allSettled(
     PLANS.map(base =>
-      fetch(`${BASE}/plans/${base}.json`)
+      fetch(`${BASE}/plans/${base}.json`, { cache: 'no-cache' })
         .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
         .then(d => ({ base, data: d }))
     )
