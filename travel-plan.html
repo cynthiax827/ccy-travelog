@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CCY Travelog</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-size='18' fill='%23f7f6f3'%3E✈%3C/text%3E%3C/svg%3E"/>
+<link rel="apple-touch-icon" href="ccy-travelog-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Mono', 'Courier New', monospace; background: #f7f6f3; color: #0a0a0a; font-size: 13px; line-height: 1.6; min-height: 100vh; }
+
+  header { border-bottom: 2px solid #0a0a0a; padding: 14px 48px; display: flex; align-items: center; justify-content: space-between; background: #f7f6f3; position: sticky; top: 0; z-index: 100; }
+  .logo { font-family: 'DM Serif Display', Georgia, serif; font-size: 22px; font-weight: 400; letter-spacing: .02em; }
+  .header-right { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #8f8f8c; }
+
+  /* Cover */
+  #cover-section { display: none; width: 100%; height: 400px; overflow: hidden; }
+  #cover-section.show { display: block; }
+  #cover-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  @media (max-width: 600px) { #cover-section { height: 240px; } }
+
+  main { max-width: 900px; margin: 0 auto; padding: 0 48px 80px; }
+  section { padding: 40px 0; border-bottom: 1px solid #d4d4d2; }
+  section:last-child { border-bottom: none; }
+  .sec-hdr { display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px; padding-bottom: 8px; border-bottom: 2px solid #0a0a0a; }
+  .sec-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 26px; font-weight: 400; }
+  .sec-num { font-size: 10px; color: #8f8f8c; letter-spacing: .1em; }
+
+  footer { border-top: 1px solid #d4d4d2; padding: 20px 48px; text-align: center; font-size: 11px; color: #8f8f8c; letter-spacing: .08em; }
+
+  /* Loading / error */
+  #status { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 48px; gap: 14px; }
+  #status.hidden { display: none; }
+  .status-label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #8f8f8c; animation: pulse 1.4s ease-in-out infinite; }
+  .status-label.error { animation: none; color: #c0392b; }
+  .status-sub { font-size: 12px; color: #b8b8b5; max-width: 360px; text-align: center; }
+  @keyframes pulse { 0%,100%{opacity:.35} 50%{opacity:1} }
+
+  @media (max-width: 600px) {
+    header { padding: 14px 20px; }
+    main { padding: 0 20px 60px; }
+    footer { padding: 16px 20px; }
+  }
+  @media print { header { position: static; } body { background: #fff; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CCY Travelog</div>
+  <div class="header-right" id="header-date"></div>
+</header>
+
+<div id="cover-section"><img id="cover-img" src="" alt=""/></div>
+
+<div id="status">
+  <div class="status-label" id="status-label">Loading…</div>
+  <div class="status-sub" id="status-sub"></div>
+</div>
+
+<main id="main" style="display:none"></main>
+
+<footer>Made by Cynthia Hsiao</footer>
+
+<script>
+/* ── Derive JSON URL from this file's own name ───────────── */
+const baseName  = new URLSearchParams(location.search).get('plan') || '';
+const DATA_URL  = `https://cynthiax827.github.io/ccy-travelog/plans/${baseName}.json`;
+
+/* ── Helpers ─────────────────────────────────────────────── */
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(s) {
+  if (!s) return '—';
+  const [y,m,d] = s.split('-');
+  return new Date(+y, +m - 1, +d).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+function nightsBetween(a, b) {
+  if (!a || !b) return 0;
+  return Math.max(0, Math.round((new Date(b) - new Date(a)) / 86400000));
+}
+
+const LABEL_ICONS = {
+  flight:'✈', hotel:'🏨', transport:'🚕', bus:'🚌', train:'🚆',
+  breakfast:'☕', lunch:'🍽', dinner:'🍷', bar:'🍸',
+  tourist:'📍', reservation:'📋', activity:'🎭', museum:'🏛',
+  gallery:'🖼', heritage:'🏯', coffee:'☕', snack:'🥐', other:'•'
+};
+const LABEL_STYLE = {
+  flight:'background:#f7f6f3;color:#4a4a48;border-color:#d4d4d2',
+  hotel:'background:#f7f6f3;color:#4a4a48;border-color:#d4d4d2',
+  transport:'background:#f7f6f3;color:#4a4a48;border-color:#d4d4d2',
+  bus:'background:#f7f6f3;color:#4a4a48;border-color:#d4d4d2',
+  train:'background:#f7f6f3;color:#4a4a48;border-color:#d4d4d2',
+  breakfast:'background:#e8e5e0;color:#0a0a0a;border-color:#d4d4d2',
+  lunch:'background:#e8e5e0;color:#0a0a0a;border-color:#d4d4d2',
+  dinner:'background:#e8e5e0;color:#0a0a0a;border-color:#d4d4d2',
+  bar:'background:#e8e5e0;color:#0a0a0a;border-color:#d4d4d2',
+  tourist:'background:#2c3e50;color:#f7f6f3;border-color:#2c3e50',
+  reservation:'background:#2c3e50;color:#f7f6f3;border-color:#2c3e50',
+  activity:'background:#2c3e50;color:#f7f6f3;border-color:#2c3e50',
+  museum:'background:#2c3e50;color:#f7f6f3;border-color:#2c3e50',
+  gallery:'background:#2c3e50;color:#f7f6f3;border-color:#2c3e50',
+  heritage:'background:#2c3e50;color:#f7f6f3;border-color:#2c3e50',
+  coffee:'background:#e8e5e0;color:#0a0a0a;border-color:#d4d4d2',
+  snack:'background:#e8e5e0;color:#0a0a0a;border-color:#d4d4d2',
+  other:'background:#f7f6f3;color:#4a4a48;border-color:#d4d4d2'
+};
+
+/* ── Render ──────────────────────────────────────────────── */
+function render(d) {
+  // Page title
+  document.title = (d.tripTitle || 'Travel Plan') + ' | CCY Travelog';
+
+  // Header date
+  document.getElementById('header-date').textContent =
+    new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+
+  // Cover image — same logic as JSON: build URL directly and set src
+  const coverSection = document.getElementById('cover-section');
+  const coverImg     = document.getElementById('cover-img');
+  coverImg.style.objectPosition = `center ${d._coverPosY || 50}%`;
+
+  if (d.coverImg) {
+    // Embedded base64 in JSON
+    coverImg.src = d.coverImg;
+    coverSection.classList.add('show');
+  } else if (d._coverFilename) {
+    // Separate image file — named [baseName].[original ext]
+    const ext = d._coverFilename.split('.').pop() || 'jpg';
+    const coverUrl = `https://cynthiax827.github.io/ccy-travelog/images/${baseName}.${ext}`;
+    coverImg.src = coverUrl;
+    coverImg.onerror = () => { coverSection.classList.remove('show'); };
+    coverSection.classList.add('show');
+  }
+
+  const main = document.getElementById('main');
+  main.innerHTML = heroHTML(d) + destHTML(d) + flightsHTML(d) + hotelsHTML(d) + expensesHTML(d) + itineraryHTML(d);
+  main.style.display = '';
+  document.getElementById('status').classList.add('hidden');
+}
+
+/* Hero */
+function heroHTML(d) {
+  const colors = d.travellerColors || {};
+  const travHtml = (d.travellers || []).map(name => {
+    const color = colors[name] || '#0a0a0a';
+    const light = color === '#f7f6f3' || color === '#ffffff' || color === '#fff';
+    const textColor = light ? '#0a0a0a' : '#f7f6f3';
+    return `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:40px;background:${esc(color)};color:${textColor};margin:2px;${light?'border:1px solid #d4d4d2':''}">
+      <span style="width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5;display:inline-block"></span>${esc(name)}
+    </span>`;
+  }).join('');
+
+  const nights = nightsBetween(d.tripStart, d.tripEnd);
+
+  return `<div style="padding:40px 0 32px;border-bottom:2px solid #0a0a0a;">
+    <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8f8f8c;margin-bottom:10px;">Travel Plan</div>
+    <div style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(34px,5vw,64px);font-weight:400;line-height:1;letter-spacing:-.02em;margin-bottom:20px;">${esc(d.tripTitle || 'Untitled Trip')}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:32px;margin-bottom:20px;">
+      ${d.tripStart ? `<div><div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8f8f8c;margin-bottom:3px;">Departure</div><div style="font-size:13px;">${fmtDate(d.tripStart)}</div></div>` : ''}
+      ${d.tripEnd   ? `<div><div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8f8f8c;margin-bottom:3px;">Return</div><div style="font-size:13px;">${fmtDate(d.tripEnd)}</div></div>` : ''}
+      ${nights      ? `<div><div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8f8f8c;margin-bottom:3px;">Duration</div><div style="font-size:13px;">${nights} night${nights !== 1 ? 's' : ''}</div></div>` : ''}
+    </div>
+    ${travHtml ? `<div style="display:flex;flex-wrap:wrap;gap:4px;">${travHtml}</div>` : ''}
+  </div>`;
+}
+
+/* Destinations */
+function destHTML(d) {
+  if (!(d.countries || []).length) return '';
+  return `<section>
+    <div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">Destinations</span></div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+    ${d.countries.map(c => `
+      <div style="border:1px solid #d4d4d2;border-radius:2px;overflow:hidden;">
+        <div style="background:#0a0a0a;color:#f7f6f3;padding:8px 14px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;">${esc(c.name)}</div>
+        <div style="padding:10px 14px;display:flex;flex-wrap:wrap;gap:6px;">
+          ${(c.cities || []).map(ci => `<span style="font-size:12px;padding:3px 10px;border:1px solid #d4d4d2;border-radius:2px;background:#f7f6f3;">${esc(ci.name)}</span>`).join('')}
+        </div>
+      </div>`).join('')}
+    </div>
+  </section>`;
+}
+
+/* Flights */
+function flightsHTML(d) {
+  const travellers = d.travellers || [];
+  const withFlights = travellers.filter(name => d.flights && d.flights[name] && (d.flights[name].journeys || []).length);
+  if (!withFlights.length) return '';
+  const colors = d.travellerColors || {};
+
+  return `<section>
+    <div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">Flights</span></div>
+    ${withFlights.map(name => {
+      const pax   = d.flights[name];
+      const color = colors[name] || '#0a0a0a';
+      const light = color === '#f7f6f3' || color === '#ffffff' || color === '#fff';
+      return `<div style="margin-bottom:24px;">
+        <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6e6e6b;padding:8px 0;border-bottom:2px solid #0a0a0a;margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+          <span style="width:10px;height:10px;border-radius:50%;background:${esc(color)};flex-shrink:0;${light ? 'border:1px solid #d4d4d2' : ''}"></span>
+          <span style="font-family:'DM Serif Display',Georgia,serif;font-size:18px;font-weight:600;letter-spacing:0;text-transform:none;color:#0a0a0a;">${esc(name)}</span>
+        </div>
+        ${(pax.journeys || []).map(j => `
+        <div style="border:1px solid #d4d4d2;border-radius:2px;margin-bottom:10px;overflow:hidden;">
+          <div style="background:#ebebea;padding:6px 14px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#4a4a48;display:flex;justify-content:space-between;align-items:center;">
+            <span>${j.direction ? j.direction.charAt(0).toUpperCase() + j.direction.slice(1) : 'Flight'}</span>
+            ${j.resCode ? `<span style="color:#6e6e6b;">Res: ${esc(j.resCode)}</span>` : ''}
+          </div>
+          ${(j.legs || []).map(leg => `
+          <div style="padding:12px 14px;display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;border-top:1px solid #d4d4d2;">
+            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+              <span style="font-family:'DM Serif Display',Georgia,serif;font-size:20px;">${esc((leg.from || '—').toUpperCase())}</span>
+              <span style="font-size:18px;color:#b8b8b5;">→</span>
+              <span style="font-family:'DM Serif Display',Georgia,serif;font-size:20px;">${esc((leg.to || '—').toUpperCase())}</span>
+            </div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:11px;color:#6e6e6b;">
+              ${leg.flightNo ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:1px;">Flight</div>${esc(leg.flightNo)}</div>` : ''}
+              ${leg.date    ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:1px;">Date</div>${fmtDate(leg.date)}</div>` : ''}
+              ${leg.depTime ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:1px;">Departs</div>${esc(leg.depTime)}</div>` : ''}
+              ${leg.arrTime ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:1px;">Arrives</div>${esc(leg.arrTime)}</div>` : ''}
+              ${leg.airline ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:1px;">Airline</div>${esc(leg.airline)}</div>` : ''}
+              ${leg.seat    ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:1px;">Seat</div>${esc(leg.seat)}</div>` : ''}
+            </div>
+          </div>`).join('')}
+        </div>`).join('')}
+      </div>`;
+    }).join('')}
+  </section>`;
+}
+
+/* Hotels */
+function hotelsHTML(d) {
+  if (!(d.hotels || []).length) return '';
+  return `<section>
+    <div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">Hotels</span></div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+    ${d.hotels.map(h => {
+      const n = nightsBetween(h.checkin, h.checkout);
+      return `<div style="border:1px solid #d4d4d2;border-radius:2px;overflow:hidden;">
+        <div style="background:#0a0a0a;color:#f7f6f3;padding:8px 14px;display:flex;align-items:baseline;gap:12px;justify-content:space-between;flex-wrap:wrap;">
+          <span style="font-family:'DM Serif Display',Georgia,serif;font-size:20px;font-weight:400;">${n || '—'}<span style="font-size:11px;opacity:.6;margin-left:4px;">night${n !== 1 ? 's' : ''}</span></span>
+          <span style="font-size:10px;letter-spacing:.08em;opacity:.7;">${esc(h.city || '')}${h.country ? ' · ' + esc(h.country) : ''}</span>
+        </div>
+        <div style="padding:12px 14px;display:flex;flex-wrap:wrap;gap:20px;">
+          ${h.name     ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Hotel</div><div style="font-size:13px;">${esc(h.name)}</div></div>` : ''}
+          ${h.checkin  ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-in</div><div style="font-size:13px;">${fmtDate(h.checkin)}</div></div>` : ''}
+          ${h.checkout ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-out</div><div style="font-size:13px;">${fmtDate(h.checkout)}</div></div>` : ''}
+          ${h.resCode  ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Reservation</div><div style="font-size:13px;">${esc(h.resCode)}</div></div>` : ''}
+          ${h.address  ? `<div style="flex:1;min-width:180px;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Address</div><div style="font-size:12px;color:#4a4a48;">${esc(h.address)}</div></div>` : ''}
+        </div>
+      </div>`;
+    }).join('')}
+    </div>
+  </section>`;
+}
+
+/* Expenses */
+function expensesHTML(d) {
+  if (!(d.expenses || []).length) return '';
+  let total = 0;
+  d.expenses.forEach(e => { total += parseFloat(e.amt) || 0; });
+  const currency = 'TWD';
+  return `<section>
+    <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expenses</span></div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:520px;">
+      <thead>
+        <tr style="border-bottom:2px solid #0a0a0a;">
+          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Item</th>
+          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Category</th>
+          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid by</th>
+          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid for</th>
+          <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${d.expenses.map((e, i) => `
+        <tr style="border-bottom:1px solid #ebebea;${i % 2 ? 'background:#fafafa' : ''}">
+          <td style="padding:7px 10px;">${esc(e.desc || '—')}</td>
+          <td style="padding:7px 10px;color:#6e6e6b;">${esc(e.cat || '—')}</td>
+          <td style="padding:7px 10px;color:#6e6e6b;">${esc(e.paidBy || '—')}</td>
+          <td style="padding:7px 10px;color:#6e6e6b;">${(e.paidFor && e.paidFor.length && e.paidFor.length < (d.travellers || []).length) ? esc(e.paidFor.join(', ')) : 'All'}</td>
+          <td style="padding:7px 10px;text-align:right;">${esc(e.cur || currency)} ${parseFloat(e.amt || 0).toLocaleString()}</td>
+        </tr>`).join('')}
+      </tbody>
+      <tfoot>
+        <tr style="border-top:2px solid #0a0a0a;">
+          <td colspan="4" style="padding:8px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8f8f8c;">Total</td>
+          <td style="padding:8px 10px;text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:20px;">${currency} ${total.toLocaleString(undefined, { minimumFractionDigits:0, maximumFractionDigits:0 })}</td>
+        </tr>
+      </tfoot>
+    </table>
+    </div>
+  </section>`;
+}
+
+/* Itinerary */
+function itineraryHTML(d) {
+  if (!(d.itinerary || []).length) return '';
+  return `<section>
+    <div class="sec-hdr"><span class="sec-num">05</span><span class="sec-title">Itinerary</span></div>
+    ${d.itinerary.map(day => `
+    <div style="margin-bottom:28px;page-break-inside:avoid;">
+      <div style="display:flex;align-items:baseline;gap:14px;padding-bottom:8px;border-bottom:1.5px solid #0a0a0a;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="font-family:'DM Serif Display',Georgia,serif;font-size:22px;font-weight:400;">${esc(day.label || 'Day')}</span>
+        ${day.date ? `<span style="font-size:12px;color:#6e6e6b;">${fmtDate(day.date)}</span>` : ''}
+        ${day.overnightCity ? `<span style="font-size:11px;color:#8f8f8c;margin-left:auto;">📍 ${esc(day.overnightCity)}</span>` : ''}
+        ${day.isDayTrip && day.sightseeingCity ? `<span style="font-size:11px;color:#8f8f8c;">→ day trip: ${esc(day.sightseeingCity)}</span>` : ''}
+      </div>
+      ${(day.events || []).map(ev => `
+      <div style="display:grid;grid-template-columns:60px 1fr auto;align-items:start;gap:10px;padding:6px 0;border-bottom:1px solid #f0f0ee;">
+        <span style="font-size:11px;color:#8f8f8c;padding-top:2px;">${esc(ev.time || '')}</span>
+        <div>
+          <span style="font-size:13px;">${esc(ev.name || '')}</span>
+          ${(ev.hashtags || []).length ? `<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:4px;">${ev.hashtags.map(h => `<span style="font-size:10px;padding:2px 8px;border-radius:40px;background:#ebebea;border:1px solid #d4d4d2;color:#4a4a48;">#${esc(h)}</span>`).join('')}</div>` : ''}
+          ${ev.address ? `<div style="margin-top:4px;font-size:11px;color:#6e6e6b;"><a href="https://www.google.com/maps/search/${encodeURIComponent(ev.address)}" target="_blank" style="color:#6e6e6b;text-decoration:underline;">📍 ${esc(ev.address)}</a></div>` : ''}
+          ${ev.link    ? `<div style="margin-top:3px;font-size:11px;"><a href="${esc(ev.link)}" target="_blank" style="color:#4a4a48;text-decoration:underline;">↗ Link</a></div>` : ''}
+        </div>
+        ${ev.label && ev.label !== 'other' ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:40px;font-size:10px;border:1px solid;${LABEL_STYLE[ev.label] || ''};white-space:nowrap;">${LABEL_ICONS[ev.label] || ''} ${esc(ev.label)}</span>` : ''}
+      </div>`).join('')}
+    </div>`).join('')}
+  </section>`;
+}
+
+/* ── Fetch & init ────────────────────────────────────────── */
+async function init() {
+  try {
+    const res = await fetch(DATA_URL, { cache: 'no-cache' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    render(data);
+  } catch (err) {
+    const label = document.getElementById('status-label');
+    const sub   = document.getElementById('status-sub');
+    label.textContent = 'Could not load trip data';
+    label.classList.add('error');
+    sub.textContent = `Tried: ${DATA_URL}`;
+    console.error('Failed to fetch', DATA_URL, err);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
