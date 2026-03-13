@@ -8,7 +8,8 @@
   ],
   "travellerColors": {
     "Cynthia Hsiao": "#ff5979",
-    "Danny Parker": "#fbbe3c",
+    "Danny Parker": "#06c8c8",
+    "Cynthia test": "#fbbe3c"
   },
   "countries": [
     {
@@ -405,21 +406,7 @@
       "n": 6,
       "date": "2026-07-06",
       "city": "Lisbon",
-      "events": [
-        {
-          "id": 12,
-          "time": "09:00",
-          "label": "reservation",
-          "name": "Private Lisbon Arrabida Wine Tour",
-          "candidates": [],
-          "link": "https://www.viator.com/tours/Lisbon/Arrabida-Wine-Tour/d538-66870P1?gclsrc=aw.ds&&m=63845&supag=157612424879&supca=20987506069&supsc=dsa-1583450326707&supai=698438660399&supdv=c&supnt=g&suplp=9198936&supli=1011742&supti=dsa-1583450326707&tsem=true&supci=dsa-1583450326707&supap1=&supap2=&synthetic_keyword=&suppmas=&gad_source=1&gad_campaignid=20987506069&gbraid=0AAAAAD-gbd64ZrCifSzBwCmLUhtVk7ud0&gclid=CjwKCAjwyMnNBhBNEiwA-Kcgu-wkQzztUH9fpwloJZQJHLjwujILycU1tY7hLfo0KDNtDRQXtSE3HhoC-sQQAvD_BwE",
-          "hashtags": [
-            "leisure",
-            "culinary",
-            "local experience"
-          ]
-        }
-      ],
+      "events": [],
       "overnightCity": "Lisbon",
       "isDayTrip": false,
       "sightseeingCity": ""
@@ -513,7 +500,19 @@
       "n": 10,
       "date": "2026-07-10",
       "city": "",
-      "events": [],
+      "events": [
+        {
+          "id": 40,
+          "time": "",
+          "label": "reservation",
+          "name": "Wine Tour",
+          "candidates": [],
+          "hashtags": [
+            "local experience",
+            "culinary"
+          ]
+        }
+      ],
       "overnightCity": "Porto"
     },
     {
@@ -599,7 +598,7 @@
   ],
   "_ids": {
     "dayId": 16,
-    "eventId": 39,
+    "eventId": 40,
     "hotelId": 4,
     "expId": 14,
     "destId": 0,
