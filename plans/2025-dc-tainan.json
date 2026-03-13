@@ -1,0 +1,185 @@
+{
+  "tripTitle": "2025 DC Tainan",
+  "tripStart": "2025-05-30",
+  "tripEnd": "2025-06-01",
+  "travellers": [
+    "Cynthia Hsiao",
+    "Danny Parker"
+  ],
+  "travellerColors": {
+    "Cynthia Hsiao": "#ff5979",
+    "Danny Parker": "#06c8c8"
+  },
+  "countries": [
+    {
+      "id": 201,
+      "name": "Taiwan",
+      "cities": [
+        {
+          "id": 2001,
+          "name": "Tainan"
+        }
+      ]
+    }
+  ],
+  "flights": {
+    "Cynthia Hsiao": {
+      "journeys": []
+    },
+    "Danny Parker": {
+      "journeys": []
+    }
+  },
+  "hotels": [
+    {
+      "id": 1,
+      "name": "Simonhall B&B",
+      "city": "Tainan",
+      "checkin": "2025-05-30",
+      "checkout": "2025-06-01",
+      "room": "Double bed",
+      "addr": "No. 31, Lane 342, Section 1, Fuqian Road , West Central District, 700",
+      "notes": ""
+    }
+  ],
+  "expenses": [
+    {
+      "id": 1,
+      "desc": "HSR",
+      "cat": "Transport",
+      "cur": "TWD",
+      "amt": "5400",
+      "paidBy": "Cynthia Hsiao",
+      "paidFor": [
+        "Cynthia Hsiao",
+        "Danny Parker"
+      ]
+    },
+    {
+      "id": 2,
+      "desc": "Hotel",
+      "cat": "Accommodation",
+      "cur": "TWD",
+      "amt": "4860",
+      "paidBy": "Cynthia Hsiao",
+      "paidFor": [
+        "Cynthia Hsiao",
+        "Danny Parker"
+      ]
+    }
+  ],
+  "itinerary": [
+    {
+      "id": 1,
+      "n": 1,
+      "date": "2025-05-30",
+      "city": "",
+      "events": [
+        {
+          "id": 1,
+          "time": "12:46",
+          "label": "train",
+          "name": "HSR: Outbound",
+          "candidates": []
+        },
+        {
+          "id": 2,
+          "time": "15:00",
+          "label": "hotel",
+          "name": "Check-in",
+          "candidates": []
+        },
+        {
+          "id": 3,
+          "time": "",
+          "label": "tourist",
+          "name": "Historical spots nearby",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "cultural",
+            "religious"
+          ]
+        },
+        {
+          "id": 4,
+          "time": "",
+          "label": "dinner",
+          "name": "The Han-Jia Pairing Dinner",
+          "candidates": [],
+          "hashtags": [
+            "nightlife"
+          ]
+        }
+      ],
+      "overnightCity": "Tainan"
+    },
+    {
+      "id": 2,
+      "n": 2,
+      "date": "2025-05-31",
+      "city": "",
+      "events": [
+        {
+          "id": 5,
+          "time": "",
+          "label": "tourist",
+          "name": "An-ping",
+          "candidates": []
+        }
+      ],
+      "overnightCity": "Tainan"
+    },
+    {
+      "id": 3,
+      "n": 3,
+      "date": "2025-06-01",
+      "city": "",
+      "events": [
+        {
+          "id": 8,
+          "time": "11:00",
+          "label": "hotel",
+          "name": "Check-out",
+          "candidates": []
+        },
+        {
+          "id": 6,
+          "time": "11:30",
+          "label": "museum",
+          "name": "Chimei Museum",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "educational",
+            "cultural"
+          ]
+        },
+        {
+          "id": 7,
+          "time": "22:03",
+          "label": "train",
+          "name": "HSR: Return",
+          "candidates": []
+        }
+      ],
+      "overnightCity": "Tainan"
+    }
+  ],
+  "notes": [],
+  "_ids": {
+    "dayId": 3,
+    "eventId": 8,
+    "hotelId": 1,
+    "expId": 2,
+    "destId": 0,
+    "countryId": 201,
+    "cityId": 2001,
+    "noteId": 900,
+    "flightJourneyId": 100,
+    "flightLegId": 1000
+  },
+  "_planId": 2,
+  "_coverPosY": 44.25,
+  "_coverFilename": "pic_2574_5.jpg"
+}

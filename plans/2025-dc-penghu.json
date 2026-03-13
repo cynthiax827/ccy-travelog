@@ -1,0 +1,377 @@
+{
+  "tripTitle": "2025 DC Penghu",
+  "tripStart": "2025-02-28",
+  "tripEnd": "2025-03-02",
+  "travellers": [
+    "Cynthia Hsiao",
+    "Danny Parker"
+  ],
+  "travellerColors": {
+    "Cynthia Hsiao": "#ff5979",
+    "Danny Parker": "#06c8c8"
+  },
+  "countries": [
+    {
+      "id": 201,
+      "name": "Taiwan",
+      "cities": [
+        {
+          "id": 2001,
+          "name": "Penghu"
+        }
+      ]
+    }
+  ],
+  "flights": {
+    "Cynthia Hsiao": {
+      "journeys": [
+        {
+          "id": 101,
+          "direction": "outbound",
+          "legs": [
+            {
+              "id": 1001,
+              "from": "TSA",
+              "to": "MZG",
+              "airline": "Mandarin Airlines",
+              "flightNo": "AE367",
+              "date": "2025-02-28",
+              "depTime": "10:55",
+              "arrTime": "11:55",
+              "seatClass": "Economy",
+              "terminal": "",
+              "seat": ""
+            }
+          ],
+          "resCode": "6G3XHY"
+        },
+        {
+          "id": 102,
+          "direction": "return",
+          "legs": [
+            {
+              "id": 1002,
+              "from": "MZG",
+              "to": "TSA",
+              "airline": "Mandarin Airlines",
+              "flightNo": "AE378",
+              "date": "2025-03-02",
+              "depTime": "20:20",
+              "arrTime": "21:15",
+              "seatClass": "Economy",
+              "terminal": "",
+              "seat": ""
+            }
+          ],
+          "resCode": "6G3XHY"
+        }
+      ]
+    },
+    "Danny Parker": {
+      "journeys": [
+        {
+          "id": 103,
+          "direction": "outbound",
+          "legs": [
+            {
+              "id": 1003,
+              "from": "TSA",
+              "to": "MZG",
+              "airline": "Mandarin Airlines",
+              "flightNo": "AE367",
+              "date": "2025-02-28",
+              "depTime": "10:55",
+              "arrTime": "11:55",
+              "seatClass": "Economy",
+              "terminal": "",
+              "seat": ""
+            }
+          ],
+          "resCode": "6G3XHY"
+        },
+        {
+          "id": 104,
+          "direction": "return",
+          "legs": [
+            {
+              "id": 1004,
+              "from": "MZG",
+              "to": "TSA",
+              "airline": "Mandarin Airlines",
+              "flightNo": "AE378",
+              "date": "2025-03-02",
+              "depTime": "20:20",
+              "arrTime": "21:15",
+              "seatClass": "Economy",
+              "terminal": "",
+              "seat": ""
+            }
+          ],
+          "resCode": "6G3XHY"
+        }
+      ]
+    }
+  },
+  "hotels": [],
+  "expenses": [],
+  "itinerary": [
+    {
+      "id": 1,
+      "n": 1,
+      "date": "2025-02-28",
+      "city": "",
+      "events": [
+        {
+          "id": 6,
+          "time": "13:00",
+          "label": "snack",
+          "name": "掌上明珠仙人掌冰淇淋 23.5° Cactus Ice Cream",
+          "candidates": []
+        },
+        {
+          "id": 1,
+          "time": "13:30",
+          "label": "heritage",
+          "name": "Magong Zhongyang Old Street 馬公中央老街",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "cultural"
+          ]
+        },
+        {
+          "id": 2,
+          "time": "14:00",
+          "label": "heritage",
+          "name": "Penghu Tianhou Temple 澎湖天后宮",
+          "candidates": [],
+          "hashtags": [
+            "religious",
+            "historical",
+            "cultural",
+            "architectural"
+          ]
+        },
+        {
+          "id": 3,
+          "time": "14:30",
+          "label": "heritage",
+          "name": "Duxingshi Village 篤行十村",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "cultural"
+          ]
+        },
+        {
+          "id": 4,
+          "time": "15:00",
+          "label": "museum",
+          "name": "Chang Yu-sheng Memorial Museum 張雨生故事館",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "educational"
+          ]
+        },
+        {
+          "id": 5,
+          "time": "",
+          "label": "heritage",
+          "name": "Jinguitou Fort 馬公金龜頭砲台文化園區",
+          "candidates": [],
+          "hashtags": [
+            "historical"
+          ]
+        },
+        {
+          "id": 7,
+          "time": "",
+          "label": "dinner",
+          "name": "Local Grill 大船無煙燒烤",
+          "candidates": []
+        },
+        {
+          "id": 8,
+          "time": "",
+          "label": "tourist",
+          "name": "Xiying Rainbow Bridge 西瀛虹橋",
+          "candidates": [],
+          "hashtags": [
+            "architectural",
+            "leisure",
+            "photography"
+          ]
+        }
+      ],
+      "overnightCity": "Penghu"
+    },
+    {
+      "id": 2,
+      "n": 2,
+      "date": "2025-03-01",
+      "city": "",
+      "events": [
+        {
+          "id": 9,
+          "time": "10:00",
+          "label": "tourist",
+          "name": "Erkan Historic Village 二崁聚落",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "cultural"
+          ]
+        },
+        {
+          "id": 12,
+          "time": "10:40",
+          "label": "transport",
+          "name": "Bus: 藍線21外垵線 21C 10:40 [惠民醫院A002 - 二崁外站A103] / 21E 14:35 [二崁外站A103 - 縣政府A006]",
+          "candidates": []
+        },
+        {
+          "id": 10,
+          "time": "13:00",
+          "label": "lunch",
+          "name": "魚好。刺身專賣店",
+          "candidates": [],
+          "hashtags": [
+            "culinary"
+          ]
+        },
+        {
+          "id": 11,
+          "time": "15:00",
+          "label": "coffee",
+          "name": "Shepard Cafe 牧羊人咖啡館",
+          "candidates": [],
+          "hashtags": [
+            "culinary"
+          ]
+        },
+        {
+          "id": 13,
+          "time": "18:00",
+          "label": "tourist",
+          "name": "Penghu Mazu Statue 澎湖媽祖銅像 ",
+          "candidates": [],
+          "hashtags": [
+            "religious",
+            "architectural"
+          ]
+        },
+        {
+          "id": 14,
+          "time": "19:00",
+          "label": "dinner",
+          "name": "澎湖鳳姐自助碳烤",
+          "candidates": []
+        }
+      ],
+      "overnightCity": "Penghu"
+    },
+    {
+      "id": 3,
+      "n": 3,
+      "date": "2025-03-02",
+      "city": "",
+      "events": [
+        {
+          "id": 15,
+          "time": "10:00",
+          "label": "museum",
+          "name": "Penghu Living Museum 澎湖生活博物館",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "cultural",
+            "educational"
+          ]
+        },
+        {
+          "id": 16,
+          "time": "12:09",
+          "label": "transport",
+          "name": "004 澎湖空港快線：12:09 or 12:49 [#6 國際廣場 (福朋喜來登)站 - #9 澎湖機場站] (every 40mins)",
+          "candidates": []
+        },
+        {
+          "id": 17,
+          "time": "12:30",
+          "label": "tourist",
+          "name": "澎湖黃金沙灘貝殼教堂 Shell Church",
+          "candidates": [],
+          "hashtags": [
+            "photography"
+          ]
+        },
+        {
+          "id": 18,
+          "time": "14:25",
+          "label": "transport",
+          "name": "32D 12:35 or 32E 14:25 [B030 澎湖機場 — B072 林投公園] / By 30 mins walk",
+          "candidates": []
+        },
+        {
+          "id": 19,
+          "time": "15:00",
+          "label": "tourist",
+          "name": "林投金沙灘 Linton Golden Beach",
+          "candidates": [],
+          "hashtags": [
+            "scenic",
+            "nature",
+            "leisure"
+          ]
+        },
+        {
+          "id": 20,
+          "time": "16:00",
+          "label": "tourist",
+          "name": "及林春咖啡館Ji Lin Chun Cafe",
+          "candidates": []
+        },
+        {
+          "id": 21,
+          "time": "17:00",
+          "label": "tourist",
+          "name": "林投公園 Lintou Park",
+          "candidates": [],
+          "hashtags": [
+            "nature",
+            "leisure"
+          ]
+        },
+        {
+          "id": 22,
+          "time": "18:00",
+          "label": "tourist",
+          "name": "隘門沙灘 Aimen Beach",
+          "candidates": [],
+          "hashtags": [
+            "nature",
+            "leisure"
+          ]
+        }
+      ],
+      "overnightCity": "Penghu"
+    }
+  ],
+  "notes": [],
+  "_ids": {
+    "dayId": 3,
+    "eventId": 23,
+    "hotelId": 0,
+    "expId": 0,
+    "destId": 0,
+    "countryId": 201,
+    "cityId": 2001,
+    "noteId": 900,
+    "flightJourneyId": 104,
+    "flightLegId": 1004
+  },
+  "_planId": 3,
+  "_coverPosY": 33,
+  "_coverFilename": "Rainbow bridge.jpg"
+}

@@ -1,0 +1,616 @@
+{
+  "tripTitle": "2026 DC Summer Vacation",
+  "tripStart": "2026-07-01",
+  "tripEnd": "2026-07-15",
+  "travellers": [
+    "Cynthia Hsiao",
+    "Danny Parker"
+  ],
+  "travellerColors": {
+    "Cynthia Hsiao": "#ff5979",
+    "Danny Parker": "#06c8c8",
+    "Cynthia test": "#fbbe3c"
+  },
+  "countries": [
+    {
+      "id": 201,
+      "name": "Portugal",
+      "cities": [
+        {
+          "id": 2002,
+          "name": "Lisbon"
+        },
+        {
+          "id": 2006,
+          "name": "Sintra"
+        },
+        {
+          "id": 2005,
+          "name": "Coimbra"
+        },
+        {
+          "id": 2007,
+          "name": "Tomar"
+        },
+        {
+          "id": 2001,
+          "name": "Porto"
+        },
+        {
+          "id": 2008,
+          "name": "Aveiro"
+        },
+        {
+          "id": 2009,
+          "name": "Guimarães"
+        },
+        {
+          "id": 2010,
+          "name": "Braga"
+        },
+        {
+          "id": 2011,
+          "name": "Vila Nova de Gaia"
+        }
+      ]
+    }
+  ],
+  "flights": {
+    "Cynthia Hsiao": {
+      "journeys": [
+        {
+          "id": 101,
+          "direction": "outbound",
+          "legs": [
+            {
+              "id": 1001,
+              "from": "TPE",
+              "to": "IST",
+              "airline": "Turkish Airlines",
+              "flightNo": "TK25",
+              "date": "2026-07-01",
+              "depTime": "21:45",
+              "arrTime": "05:10",
+              "seatClass": "Economy",
+              "terminal": "",
+              "seat": "14A"
+            },
+            {
+              "id": 1002,
+              "from": "IST",
+              "airline": "Turkish Airlines",
+              "date": "2026-07-02",
+              "to": "LIS",
+              "depTime": "06:50",
+              "arrTime": "09:55",
+              "seatClass": "Economy",
+              "seat": "",
+              "flightNo": "TK1755"
+            }
+          ],
+          "resCode": "S364HE"
+        },
+        {
+          "id": 102,
+          "direction": "return",
+          "legs": [
+            {
+              "id": 1003,
+              "from": "OPO",
+              "to": "IST",
+              "airline": "Turkish Airlines",
+              "flightNo": "TK1452",
+              "date": "2026-07-15",
+              "depTime": "16:40",
+              "arrTime": "23:15",
+              "seatClass": "Economy",
+              "terminal": "",
+              "seat": ""
+            },
+            {
+              "id": 1004,
+              "from": "IST",
+              "airline": "Turkish Airlines",
+              "date": "2026-07-16",
+              "depTime": "01:30",
+              "arrTime": "17:55",
+              "to": "TPE",
+              "flightNo": "TK24",
+              "seatClass": "Economy"
+            }
+          ],
+          "resCode": "S364HE"
+        }
+      ]
+    },
+    "Danny Parker": {
+      "journeys": [
+        {
+          "id": 101,
+          "direction": "outbound",
+          "legs": [
+            {
+              "id": 1001,
+              "from": "TPE",
+              "to": "IST",
+              "airline": "Turkish Airlines",
+              "flightNo": "TK25",
+              "date": "2026-07-01",
+              "depTime": "21:45",
+              "arrTime": "05:10",
+              "seatClass": "Economy",
+              "terminal": "",
+              "seat": "14B"
+            },
+            {
+              "id": 1002,
+              "from": "IST",
+              "airline": "Turkish Airlines",
+              "date": "2026-07-02",
+              "to": "LIS",
+              "depTime": "06:50",
+              "arrTime": "09:55",
+              "seatClass": "Economy"
+            }
+          ],
+          "resCode": ""
+        },
+        {
+          "id": 104,
+          "direction": "other",
+          "legs": [
+            {
+              "id": 1003,
+              "from": "OPO",
+              "to": "MAN",
+              "airline": "Ryanair",
+              "flightNo": "FR1174",
+              "date": "2026-07-15",
+              "depTime": "10:50",
+              "arrTime": "13:20",
+              "seatClass": "Economy",
+              "terminal": "",
+              "seat": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "hotels": [
+    {
+      "id": 4,
+      "name": "VIP Executive Suites do Marquê",
+      "city": "Lisbon",
+      "checkin": "2026-07-02",
+      "checkout": "2026-07-07",
+      "room": "Double",
+      "addr": "45 Avenida Duque de Loulé, Santo Antonio, 1050-086 Lisbon, Portugal",
+      "notes": ""
+    }
+  ],
+  "expenses": [
+    {
+      "id": 2,
+      "desc": "Multi-city flights",
+      "cat": "Flights",
+      "cur": "TWD",
+      "amt": "37093",
+      "paidBy": "Cynthia Hsiao",
+      "paidFor": [
+        "Cynthia Hsiao"
+      ]
+    }
+  ],
+  "itinerary": [
+    {
+      "id": 1,
+      "n": 1,
+      "date": "2026-07-01",
+      "city": "",
+      "events": [
+        {
+          "id": 1,
+          "time": "21:45",
+          "label": "flight",
+          "name": "Departure",
+          "candidates": []
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "n": 2,
+      "date": "2026-07-02",
+      "city": "Lisbon",
+      "events": [
+        {
+          "id": 2,
+          "time": "09:55",
+          "label": "flight",
+          "name": "Arrive at LIS",
+          "candidates": []
+        },
+        {
+          "id": 35,
+          "time": "11:00",
+          "label": "hotel",
+          "name": "",
+          "candidates": []
+        },
+        {
+          "id": 18,
+          "time": "12:00",
+          "label": "lunch",
+          "name": "Local Food Court: Time Out Market",
+          "candidates": [],
+          "address": "Time Out Market",
+          "link": "https://thebeverlygarden.com/europe/portugal/lisbon/time-out-market/"
+        },
+        {
+          "id": 25,
+          "time": "13:00",
+          "label": "tourist",
+          "name": "Vintage Shop: A Vida Portuguesa",
+          "candidates": [],
+          "hashtags": [
+            "shopping",
+            "cultural"
+          ],
+          "address": "A Vida Portuguesa",
+          "link": "https://thebeverlygarden.com/europe/portugal/lisbon/cafe-a-brasileira/"
+        },
+        {
+          "id": 21,
+          "time": "14:00",
+          "label": "coffee",
+          "name": "A Brasileira",
+          "candidates": [],
+          "address": "A Brasileira Lisbon"
+        },
+        {
+          "id": 22,
+          "time": "15:00",
+          "label": "tourist",
+          "name": "",
+          "candidates": []
+        },
+        {
+          "id": 15,
+          "time": "18:00",
+          "label": "dinner",
+          "name": "Nice Dinner: Prado €50+",
+          "candidates": [
+            "SEM Restaurant",
+            "Pateo - Bairro do Avillez",
+            "Restaurant - Cervejaria Ramiro"
+          ],
+          "address": "Prado Lisbon",
+          "link": "",
+          "hashtags": [
+            "culinary"
+          ]
+        }
+      ],
+      "overnightCity": "Lisbon"
+    },
+    {
+      "id": 4,
+      "n": 3,
+      "date": "2026-07-03",
+      "city": "Lisbon",
+      "events": [
+        {
+          "id": 11,
+          "time": "09:00",
+          "label": "train",
+          "name": "Rossio to Sintra - 45 mins",
+          "candidates": []
+        },
+        {
+          "id": 10,
+          "time": "10:00",
+          "label": "heritage",
+          "name": "National Palace of Pena",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "cultural",
+            "architectural",
+            "photography"
+          ],
+          "address": "National Palace of Pena",
+          "link": "https://www.parquesdesintra.pt/en/parks-monuments/park-and-national-palace-of-pena/"
+        },
+        {
+          "id": 23,
+          "time": "17:00",
+          "label": "train",
+          "name": "Sintra to Rossio - 45 mins",
+          "candidates": []
+        },
+        {
+          "id": 24,
+          "time": "18:00",
+          "label": "dinner",
+          "name": "Seafood restaurant: UMA Marisqueira $",
+          "candidates": [],
+          "address": "UMA Marisqueira",
+          "link": "https://marisqueirauma.eatbu.com/"
+        }
+      ],
+      "overnightCity": "Lisbon",
+      "isDayTrip": true,
+      "sightseeingCity": "Sintra"
+    },
+    {
+      "id": 7,
+      "n": 4,
+      "date": "2026-07-04",
+      "city": "Coimbra",
+      "events": [
+        {
+          "id": 36,
+          "time": "10:00",
+          "label": "tourist",
+          "name": "Feira da Ladra (Flea market; open on Tue. & Sat.; Fado music)",
+          "candidates": [],
+          "link": "https://thebeverlygarden.com/europe/portugal/lisbon/feira-da-ladra/",
+          "address": "Feira da Ladra"
+        },
+        {
+          "id": 27,
+          "time": "18:00",
+          "label": "dinner",
+          "name": "Portuguese restaurant: Duque $$",
+          "candidates": [],
+          "link": "",
+          "address": "Duque Lisbon"
+        }
+      ],
+      "overnightCity": "Lisbon"
+    },
+    {
+      "id": 6,
+      "n": 5,
+      "date": "2026-07-05",
+      "city": "Lisbon",
+      "events": [
+        {
+          "id": 38,
+          "time": "10:00",
+          "label": "museum",
+          "name": "Museu de Marinha (Navy)",
+          "candidates": []
+        },
+        {
+          "id": 39,
+          "time": "13:00",
+          "label": "snack",
+          "name": "Pastéis de Belém (Egg Tart)",
+          "candidates": []
+        },
+        {
+          "id": 37,
+          "time": "19:00",
+          "label": "dinner",
+          "name": "Fado Live Music: A Tasca do Chico",
+          "candidates": [],
+          "address": "A Tasca do Chico"
+        }
+      ],
+      "overnightCity": "Lisbon"
+    },
+    {
+      "id": 5,
+      "n": 6,
+      "date": "2026-07-06",
+      "city": "Lisbon",
+      "events": [
+        {
+          "id": 12,
+          "time": "09:00",
+          "label": "reservation",
+          "name": "Private Lisbon Arrabida Wine Tour",
+          "candidates": [],
+          "link": "https://www.viator.com/tours/Lisbon/Arrabida-Wine-Tour/d538-66870P1?gclsrc=aw.ds&&m=63845&supag=157612424879&supca=20987506069&supsc=dsa-1583450326707&supai=698438660399&supdv=c&supnt=g&suplp=9198936&supli=1011742&supti=dsa-1583450326707&tsem=true&supci=dsa-1583450326707&supap1=&supap2=&synthetic_keyword=&suppmas=&gad_source=1&gad_campaignid=20987506069&gbraid=0AAAAAD-gbd64ZrCifSzBwCmLUhtVk7ud0&gclid=CjwKCAjwyMnNBhBNEiwA-Kcgu-wkQzztUH9fpwloJZQJHLjwujILycU1tY7hLfo0KDNtDRQXtSE3HhoC-sQQAvD_BwE",
+          "hashtags": [
+            "leisure",
+            "culinary",
+            "local experience"
+          ]
+        }
+      ],
+      "overnightCity": "Lisbon",
+      "isDayTrip": false,
+      "sightseeingCity": ""
+    },
+    {
+      "id": 3,
+      "n": 7,
+      "date": "2026-07-07",
+      "city": "Lisbon",
+      "events": [
+        {
+          "id": 26,
+          "time": "09:00",
+          "label": "train",
+          "name": "Oriente to Coimbra-B",
+          "candidates": []
+        },
+        {
+          "id": 30,
+          "time": "11:00",
+          "label": "hotel",
+          "name": "",
+          "candidates": []
+        },
+        {
+          "id": 31,
+          "time": "12:00",
+          "label": "bus",
+          "name": "",
+          "candidates": []
+        },
+        {
+          "id": 32,
+          "time": "12:30",
+          "label": "lunch",
+          "name": "",
+          "candidates": []
+        },
+        {
+          "id": 33,
+          "time": "13:00",
+          "label": "tourist",
+          "name": "Universidade de Coimbra",
+          "candidates": [],
+          "link": "https://thebeverlygarden.com/europe/portugal/coimbra/universidade-de-coimbra/",
+          "address": "Universidade de Coimbra"
+        },
+        {
+          "id": 34,
+          "time": "18:00",
+          "label": "dinner",
+          "name": "",
+          "candidates": []
+        }
+      ],
+      "overnightCity": "Coimbra",
+      "isDayTrip": false,
+      "sightseeingCity": ""
+    },
+    {
+      "id": 8,
+      "n": 8,
+      "date": "2026-07-08",
+      "city": "Coimbra",
+      "events": [],
+      "overnightCity": "Coimbra",
+      "isDayTrip": true,
+      "sightseeingCity": "Tomar"
+    },
+    {
+      "id": 9,
+      "n": 9,
+      "date": "2026-07-09",
+      "city": "",
+      "events": [
+        {
+          "id": 17,
+          "time": "10:00",
+          "label": "gallery",
+          "name": "Museu de Arte Contemporânea de Serralves",
+          "candidates": [],
+          "hashtags": [],
+          "address": "Serralves Museum of Contemporary Art",
+          "link": "https://www.serralves.pt/"
+        }
+      ],
+      "overnightCity": "Porto"
+    },
+    {
+      "id": 10,
+      "n": 10,
+      "date": "2026-07-10",
+      "city": "",
+      "events": [],
+      "overnightCity": "Porto"
+    },
+    {
+      "id": 11,
+      "n": 11,
+      "date": "2026-07-11",
+      "city": "",
+      "events": [],
+      "overnightCity": "Porto"
+    },
+    {
+      "id": 12,
+      "n": 12,
+      "date": "2026-07-12",
+      "city": "",
+      "events": [],
+      "overnightCity": "Porto",
+      "isDayTrip": true,
+      "sightseeingCity": "Aveiro"
+    },
+    {
+      "id": 13,
+      "n": 13,
+      "date": "2026-07-13",
+      "city": "",
+      "events": [],
+      "overnightCity": "Porto",
+      "isDayTrip": true,
+      "sightseeingCity": "Guimarães"
+    },
+    {
+      "id": 14,
+      "n": 14,
+      "date": "2026-07-14",
+      "city": "Porto",
+      "events": [],
+      "overnightCity": "Porto",
+      "isDayTrip": true,
+      "sightseeingCity": "Braga"
+    },
+    {
+      "id": 15,
+      "n": 15,
+      "date": "2026-07-15",
+      "city": "Porto",
+      "events": [
+        {
+          "id": 5,
+          "time": "10:50",
+          "label": "flight",
+          "name": "Danny' direct flight to MAN",
+          "candidates": []
+        },
+        {
+          "id": 6,
+          "time": "16:40",
+          "label": "flight",
+          "name": "Cynthia's return flight to TPE",
+          "candidates": []
+        }
+      ],
+      "overnightCity": "Porto",
+      "isDayTrip": true,
+      "sightseeingCity": "Vila Nova de Gaia"
+    }
+  ],
+  "notes": [
+    {
+      "id": 905,
+      "title": "Boca do Inferno",
+      "body": "Take the bus 427 from from Cascias train station (Cascais Estação)<div>Bus app: ScottURB<div>Guidance:&nbsp;<a href=\"https://itraveling.tw/cascais-boca-do-inferno/\">https://itraveling.tw/cascais-boca-do-inferno/</a></div></div>"
+    },
+    {
+      "id": 906,
+      "title": "Art galleries & Museums",
+      "body": "<h3 data-path-to-node=\"1\">Art Museums</h3><p data-path-to-node=\"2\"><b data-path-to-node=\"2\" data-index-in-node=\"0\">1. 國立古代美術館 (Museu Nacional de Arte Antiga, MNAA) —— 里斯本</b></p><ul data-path-to-node=\"3\"><li><p data-path-to-node=\"3,0,0\"><b data-path-to-node=\"3,0,0\" data-index-in-node=\"0\">核心價值：</b> 葡萄牙國家級的藝術殿堂，完整收錄 12 至 19 世紀的視覺藝術精華。</p></li><li><p data-path-to-node=\"3,1,0\"><b data-path-to-node=\"3,1,0\" data-index-in-node=\"0\">策展洞察：</b> 此館藏品是理解葡萄牙作為「首個全球化帝國」的視覺證據。最不容錯過的國寶是《聖文森祭壇畫》（Painéis de São Vicente），生動紀錄了 15 世紀葡萄牙社會各階層的面貌。此外，館內的「南蠻美術」（Namban art）屏風，精準捕捉了葡萄牙人抵達日本時的跨文化碰撞，展現了早期東西方貿易的珍貴歷史。</p></li></ul><p data-path-to-node=\"4\"><b data-path-to-node=\"4\" data-index-in-node=\"0\">2. 古爾本基安美術館 (Museu Calouste Gulbenkian) —— 里斯本</b></p><ul data-path-to-node=\"5\"><li><p data-path-to-node=\"5,0,0\"><b data-path-to-node=\"5,0,0\" data-index-in-node=\"0\">核心價值：</b> 歐洲最高水準的私人收藏博物館之一，跨越東西方長達五千年的藝術史。</p></li><li><p data-path-to-node=\"5,1,0\"><b data-path-to-node=\"5,1,0\" data-index-in-node=\"0\">策展洞察：</b> 亞美尼亞裔石油大亨 Gulbenkian 的品味極具系統性。展館分為兩大主軸：一為古埃及、伊斯蘭到東方藝術；二為歐洲古典繪畫至印象派（含林布蘭、莫內等大師作品），以及全球最完整的勒內·拉利克（René Lalique）新藝術時期珠寶收藏。其動線設計與自然光影的引入，是博物館空間體驗的極佳範例。</p></li></ul><p data-path-to-node=\"6\"><b data-path-to-node=\"6\" data-index-in-node=\"0\">3. 塞拉維斯當代美術館 (Museu de Arte Contemporânea de Serralves) —— 波多</b></p><ul data-path-to-node=\"7\"><li><p data-path-to-node=\"7,0,0\"><b data-path-to-node=\"7,0,0\" data-index-in-node=\"0\">核心價值：</b> 葡萄牙當代藝術的最高指標。</p></li><li><p data-path-to-node=\"7,1,0\"><b data-path-to-node=\"7,1,0\" data-index-in-node=\"0\">策展洞察：</b> 美術館本身即是一件頂級的空間藝術品，由葡萄牙國寶級普立茲克建築獎得主阿爾瓦羅·西塞（Álvaro Siza）操刀。此機構不以常設展為主，而是透過極具前瞻性的特展，與其廣達 18 公頃的幾何庭園與裝飾藝術（Art Deco）別墅產生跨時代的對話。</p></li></ul><hr data-path-to-node=\"8\"><h3 data-path-to-node=\"9\">History &amp; Cultural Museums</h3><p data-path-to-node=\"10\"><b data-path-to-node=\"10\" data-index-in-node=\"0\">1. 國立阿茲勒茹瓷磚博物館 (Museu Nacional do Azulejo) —— 里斯本</b></p><ul data-path-to-node=\"11\"><li><p data-path-to-node=\"11,0,0\"><b data-path-to-node=\"11,0,0\" data-index-in-node=\"0\">核心價值：</b> 橫跨五個世紀，專門研究與展示葡萄牙靈魂視覺元素「Azulejo（彩繪瓷磚）」的博物館。</p></li><li><p data-path-to-node=\"11,1,0\"><b data-path-to-node=\"11,1,0\" data-index-in-node=\"0\">策展洞察：</b> 介於藝術與歷史之間，這座博物館位於一座 16 世紀的修道院內。瓷磚在葡萄牙不僅是裝飾，更是歷史敘事與社會階級的載體。鎮館之寶是一幅長達 23 公尺的里斯本大地震前全景瓷磚畫，是研究 18 世紀里斯本都市規劃的關鍵史料。</p></li></ul><p data-path-to-node=\"12\"><b data-path-to-node=\"12\" data-index-in-node=\"0\">2. 國家馬車博物館 (Museu Nacional dos Coches) —— 里斯本</b></p><ul data-path-to-node=\"13\"><li><p data-path-to-node=\"13,0,0\"><b data-path-to-node=\"13,0,0\" data-index-in-node=\"0\">核心價值：</b> 全球規模最大、收藏最豐的皇家馬車博物館。</p></li><li><p data-path-to-node=\"13,1,0\"><b data-path-to-node=\"13,1,0\" data-index-in-node=\"0\">策展洞察：</b> 從 16 世紀至 19 世紀的馬車演進，表面上是交通工具的歷史，實則精準反映了葡萄牙帝國的經濟起伏。特別是 18 世紀的巴洛克式馬車，其極致奢華的黃金木雕與天鵝絨，具象化了葡萄牙在巴西發現金礦時期，王權向全歐洲展示國威的戰略手段。</p></li></ul><p data-path-to-node=\"14\"><b data-path-to-node=\"14\" data-index-in-node=\"0\">3. 海軍博物館 (Museu de Marinha) —— 里斯本</b></p><ul data-path-to-node=\"15\"><li><p data-path-to-node=\"15,0,0\"><b data-path-to-node=\"15,0,0\" data-index-in-node=\"0\">核心價值：</b> 系統性展示葡萄牙如何從歐洲邊陲小國，透過航海技術成為海權帝國的歷程。</p></li><li><p data-path-to-node=\"15,1,0\"><b data-path-to-node=\"15,1,0\" data-index-in-node=\"0\">策展洞察：</b> 位於熱羅尼莫斯修道院的西翼。館內展出大航海時代的星盤、海圖與等比例縮小的卡拉維爾帆船（Caravel）模型。透過這些技術與工具的迭代，可以清晰看見葡萄牙當年如何憑藉精準的航海科學與冒險精神，重新繪製了世界版圖。</p></li></ul>"
+    },
+    {
+      "id": 907,
+      "title": "Fine food for the arrival day",
+      "body": "<p data-path-to-node=\"2\"><b data-path-to-node=\"2\" data-index-in-node=\"0\">1. Sála de João Sá</b> (米其林一星)</p><ul data-path-to-node=\"3\"><li><p data-path-to-node=\"3,0,0\"><b data-path-to-node=\"3,0,0\" data-index-in-node=\"0\">定位：</b> 當代葡萄牙精緻餐飲的物有所值之選。</p></li><li><p data-path-to-node=\"3,1,0\"><b data-path-to-node=\"3,1,0\" data-index-in-node=\"0\">洞察：</b> 主廚 João Sá 將傳統葡萄牙風味與全球遊歷的經驗結合。菜單極具節奏感，將在地海鮮與農產品轉化為精緻的 tasting menu。與里斯本其他米其林星級餐廳相比，其定價相對親民，環境溫馨且不拘謹，服務細緻卻不顯壓迫，是極佳的 fine dining 入門選擇。</p></li><li><p data-path-to-node=\"3,2,0\"><b data-path-to-node=\"3,2,0\" data-index-in-node=\"0\">地點：</b> 靠近里斯本主教堂（Sé de Lisboa）周邊。</p></li></ul><p data-path-to-node=\"4\"><b data-path-to-node=\"4\" data-index-in-node=\"0\">2. Plano</b> (米其林指南推薦)</p><ul data-path-to-node=\"5\"><li><p data-path-to-node=\"5,0,0\"><b data-path-to-node=\"5,0,0\" data-index-in-node=\"0\">定位：</b> 隱於市區的直火料理與北葡靈魂。</p></li><li><p data-path-to-node=\"5,1,0\"><b data-path-to-node=\"5,1,0\" data-index-in-node=\"0\">洞察：</b> 位於 Graça 區，由主廚 Vítor Adão 主理。餐廳核心概念聚焦於葡萄牙北部（Trás-os-Montes）的直火烹調傳統，將粗獷的技法以細膩的現代手法呈現。提供 5 道或 9 道菜的 tasting menu，整體定價合理；若在溫暖的季節造訪，其充滿綠意的戶外庭園能大幅提升整體的用餐空間體驗。</p></li><li><p data-path-to-node=\"5,2,0\"><b data-path-to-node=\"5,2,0\" data-index-in-node=\"0\">地點：</b> 格拉薩區（Graça）。</p></li></ul><p data-path-to-node=\"6\"><b data-path-to-node=\"6\" data-index-in-node=\"0\">3. Prado</b> (米其林指南推薦)</p><ul data-path-to-node=\"7\"><li><p data-path-to-node=\"7,0,0\"><b data-path-to-node=\"7,0,0\" data-index-in-node=\"0\">定位：</b> 崇尚「從產地到餐桌」(Farm-to-table) 的摩登餐館。</p></li><li><p data-path-to-node=\"7,1,0\"><b data-path-to-node=\"7,1,0\" data-index-in-node=\"0\">洞察：</b> Prado（意為草地）在概念上高度聚焦於葡萄牙本土的季節性食材。菜單設計輕盈、純粹且充滿自然氣息，搭配極具水準的自然酒（Natural wine）酒單。挑高且充滿工業風與植物裝飾的空間，帶來時髦且放鬆的氣氛，是近年里斯本餐飲圈極具指標性的熱門地標。</p></li><li><p data-path-to-node=\"7,2,0\"><b data-path-to-node=\"7,2,0\" data-index-in-node=\"0\">地點：</b> 聖安多尼堂區（Santo António）附近。</p></li></ul><p data-path-to-node=\"8\"><b data-path-to-node=\"8\" data-index-in-node=\"0\">4. Encanto</b> (米其林一星)</p><ul data-path-to-node=\"9\"><li><p data-path-to-node=\"9,0,0\"><b data-path-to-node=\"9,0,0\" data-index-in-node=\"0\">定位：</b> 顛覆認知的全蔬食頂級體驗。</p></li><li><p data-path-to-node=\"9,1,0\"><b data-path-to-node=\"9,1,0\" data-index-in-node=\"0\">洞察：</b> 這是葡萄牙餐飲巨頭 José Avillez 旗下的蔬食餐廳。若不想負擔其兩星旗艦店 Belcanto 的高昂價格，Encanto 是體驗頂尖廚藝的絕佳替代方案。菜單全數以在地蔬菜、豆類與菇類構成，透過發酵、烘烤等複雜技法堆疊出豐富的風味層次，成功打破了傳統 fine dining 對珍稀肉類與海鮮的依賴，展現極高的永續餐飲視野。</p></li><li><p data-path-to-node=\"9,2,0\"><b data-path-to-node=\"9,2,0\" data-index-in-node=\"0\">地點：</b> 希亞多區（Chiado）。</p></li></ul>"
+    }
+  ],
+  "_ids": {
+    "dayId": 16,
+    "eventId": 39,
+    "hotelId": 4,
+    "expId": 14,
+    "destId": 0,
+    "countryId": 201,
+    "cityId": 2011,
+    "noteId": 907,
+    "flightJourneyId": 126,
+    "flightLegId": 1006
+  },
+  "_planId": 1,
+  "_coverPosY": 75.5,
+  "_coverFilename": "portugal.jpg"
+}
