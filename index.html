@@ -211,54 +211,36 @@
 <script>
 const BASE = 'https://cynthiax827.github.io/ccy-travelog';
 
+/* ══════════════════════════════════════════════════════════
+   ADD YOUR PLAN FILENAMES HERE (without .json extension)
+   e.g.  const PLANS = ['travel-plan', 'japan-2025'];
+══════════════════════════════════════════════════════════ */
+const PLANS = [
+  'travel-plan'
+];
+
 const FLAGS = {'Japan':'🇯🇵','France':'🇫🇷','Italy':'🇮🇹','Spain':'🇪🇸','Germany':'🇩🇪','Greece':'🇬🇷','Portugal':'🇵🇹','Netherlands':'🇳🇱','UK':'🇬🇧','United Kingdom':'🇬🇧','USA':'🇺🇸','United States':'🇺🇸','Canada':'🇨🇦','Mexico':'🇲🇽','Brazil':'🇧🇷','Argentina':'🇦🇷','Colombia':'🇨🇴','Peru':'🇵🇪','Chile':'🇨🇱','Thailand':'🇹🇭','Vietnam':'🇻🇳','Indonesia':'🇮🇩','Philippines':'🇵🇭','Malaysia':'🇲🇾','Singapore':'🇸🇬','Cambodia':'🇰🇭','Myanmar':'🇲🇲','Nepal':'🇳🇵','India':'🇮🇳','China':'🇨🇳','South Korea':'🇰🇷','Taiwan':'🇹🇼','Australia':'🇦🇺','New Zealand':'🇳🇿','Morocco':'🇲🇦','Egypt':'🇪🇬','South Africa':'🇿🇦','Kenya':'🇰🇪','Tanzania':'🇹🇿','Norway':'🇳🇴','Sweden':'🇸🇪','Denmark':'🇩🇰','Finland':'🇫🇮','Iceland':'🇮🇸','Switzerland':'🇨🇭','Austria':'🇦🇹','Czech Republic':'🇨🇿','Hungary':'🇭🇺','Poland':'🇵🇱','Croatia':'🇭🇷','Turkey':'🇹🇷','Jordan':'🇯🇴','UAE':'🇦🇪'};
 
 let plans = [];
 
-/* ── Load ─────────────────────────────────────────────────
-   Reads plans/index.json → ["travel-plan.json", "japan.json", …]
-   then fetches each plan JSON in parallel.
-──────────────────────────────────────────────────────── */
 async function loadPlans() {
-  function showError(msg) {
-    document.getElementById('cards-grid').innerHTML =
-      `<div class="empty-state"><div class="empty-icon">✈</div><div class="empty-title">Could not load plans</div><div class="empty-sub" style="word-break:break-all;">${msg}</div></div>`;
-  }
-
   document.getElementById('cards-grid').innerHTML =
     '<div class="empty-state"><div class="empty-icon" style="display:inline-block;animation:spin 1.2s linear infinite">↻</div><div class="empty-title">Loading…</div></div>';
 
-  // 1. Fetch manifest
-  let manifest;
-  try {
-    const res = await fetch(`${BASE}/plans/index.json`);
-    if (!res.ok) { showError(`plans/index.json returned HTTP ${res.status}`); return; }
-    manifest = await res.json();
-  } catch (err) {
-    showError(`Failed to fetch plans/index.json — ${err.message}`);
-    return;
-  }
-
-  if (!Array.isArray(manifest) || !manifest.length) {
-    plans = []; updateStats(); renderCards(); return;
-  }
-
-  // 2. Fetch all plan JSONs in parallel
   const results = await Promise.allSettled(
-    manifest.map(filename =>
-      fetch(`${BASE}/plans/${filename}`)
-        .then(r => { if (!r.ok) throw new Error(`${filename} → HTTP ${r.status}`); return r.json(); })
-        .then(d => ({ filename: filename.replace(/\.json$/, ''), data: d }))
+    PLANS.map(base =>
+      fetch(`${BASE}/plans/${base}.json`)
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+        .then(d => ({ base, data: d }))
     )
   );
 
-  // 3. Map to card objects (log individual failures)
   plans = [];
   for (const r of results) {
     if (r.status === 'rejected') { console.warn('Plan load failed:', r.reason); continue; }
-    const { filename, data } = r.value;
+    const { base, data } = r.value;
     plans.push({
-      filename,
+      filename: base,
       title:     data.tripTitle || 'Untitled Trip',
       startDate: data.tripStart || '',
       endDate:   data.tripEnd   || '',
@@ -373,7 +355,6 @@ window.addEventListener('resize', () => {
 let _tt;
 function toast(msg) { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2400); }
 
-/* ── INIT ─────────────────────────────────────────── */
 loadPlans();
 </script>
 <footer style="border-top:var(--border);padding:20px 48px;text-align:center;">
