@@ -13,9 +13,29 @@
   html { scroll-behavior: smooth; }
   body { font-family: 'DM Mono', 'Courier New', monospace; background: #f7f6f3; color: #0a0a0a; font-size: 13px; line-height: 1.6; min-height: 100vh; }
 
-  header { border-bottom: 2px solid #0a0a0a; padding: 14px 48px; display: flex; align-items: center; justify-content: space-between; background: #f7f6f3; position: sticky; top: 0; z-index: 100; }
-  .logo { font-family: 'DM Serif Display', Georgia, serif; font-size: 22px; font-weight: 400; letter-spacing: .02em; }
-  .header-right { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #8f8f8c; }
+  header { border-bottom: 2px solid #0a0a0a; padding: 14px 48px; display: flex; align-items: center; justify-content: space-between; background: #f7f6f3; position: sticky; top: 0; z-index: 100; gap: 20px; }
+  .logo { font-family: 'DM Serif Display', Georgia, serif; font-size: 22px; font-weight: 400; letter-spacing: .02em; flex-shrink: 0; text-decoration: none; color: #0a0a0a; }
+  .header-date { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #8f8f8c; flex-shrink: 0; }
+
+  /* Nav */
+  nav { display: flex; gap: 22px; position: absolute; left: 50%; transform: translateX(-50%); }
+  nav a { text-decoration: none; color: #4a4a48; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; white-space: nowrap; cursor: pointer; }
+  nav a:hover { color: #0a0a0a; }
+
+  /* Mobile menu */
+  .menu-btn { display: none; background: none; border: 1px solid #d4d4d2; border-radius: 2px; width: 32px; height: 32px; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex-shrink: 0; }
+  .menu-btn span { display: block; width: 14px; height: 1.5px; background: #0a0a0a; transition: all 0.2s; }
+  .mobile-menu { display: none; position: fixed; inset: 0; top: 53px; background: #f7f6f3; z-index: 99; border-top: 1px solid #d4d4d2; padding: 24px 20px; flex-direction: column; gap: 4px; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { text-decoration: none; color: #0a0a0a; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 0; border-bottom: 1px solid #ebebea; }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu .menu-date { font-size: 11px; color: #8f8f8c; letter-spacing: .1em; text-transform: uppercase; padding: 14px 0 0; margin-top: 8px; }
+
+  @media (max-width: 700px) {
+    nav { display: none; }
+    .header-date { display: none; }
+    .menu-btn { display: flex; }
+  }
 
   /* Cover */
   #cover-section { display: none; width: 100%; height: 400px; overflow: hidden; }
@@ -41,9 +61,9 @@
   @keyframes pulse { 0%,100%{opacity:.35} 50%{opacity:1} }
 
   @media (max-width: 600px) {
-    header { padding: 14px 20px; }
     main { padding: 0 20px 60px; }
     footer { padding: 16px 20px; }
+    header { padding: 14px 20px; }
   }
   @media print { header { position: static; } body { background: #fff; } }
 </style>
@@ -51,9 +71,30 @@
 <body>
 
 <header>
-  <div class="logo">CCY Travelog</div>
-  <div class="header-right" id="header-date"></div>
+  <a class="logo" href="index.html">CCY Travelog</a>
+  <nav id="main-nav">
+    <a href="#" onclick="scrollToSection('hero');return false;">Overview</a>
+    <a href="#" onclick="scrollToSection('destinations');return false;">Destinations</a>
+    <a href="#" onclick="scrollToSection('flights');return false;">Flights</a>
+    <a href="#" onclick="scrollToSection('hotels');return false;">Hotels</a>
+    <a href="#" onclick="scrollToSection('expenses');return false;">Expenses</a>
+    <a href="#" onclick="scrollToSection('itinerary');return false;">Itinerary</a>
+  </nav>
+  <div class="header-date" id="header-date"></div>
+  <button class="menu-btn" id="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#" onclick="scrollToSection('hero');closeMenu();return false;">Overview</a>
+  <a href="#" onclick="scrollToSection('destinations');closeMenu();return false;">Destinations</a>
+  <a href="#" onclick="scrollToSection('flights');closeMenu();return false;">Flights</a>
+  <a href="#" onclick="scrollToSection('hotels');closeMenu();return false;">Hotels</a>
+  <a href="#" onclick="scrollToSection('expenses');closeMenu();return false;">Expenses</a>
+  <a href="#" onclick="scrollToSection('itinerary');closeMenu();return false;">Itinerary</a>
+  <div class="menu-date" id="mobile-date"></div>
+</div>
 
 <div id="cover-section"><img id="cover-img" src="" alt=""/></div>
 
@@ -118,8 +159,9 @@ function render(d) {
   document.title = (d.tripTitle || 'Travel Plan') + ' | CCY Travelog';
 
   // Header date
-  document.getElementById('header-date').textContent =
-    new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  const dateStr = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  document.getElementById('header-date').textContent = dateStr;
+  document.getElementById('mobile-date').textContent = dateStr;
 
   // Cover image — same logic as JSON: build URL directly and set src
   const coverSection = document.getElementById('cover-section');
@@ -140,7 +182,7 @@ function render(d) {
   }
 
   const main = document.getElementById('main');
-  main.innerHTML = heroHTML(d) + destHTML(d) + flightsHTML(d) + hotelsHTML(d) + expensesHTML(d) + itineraryHTML(d);
+  main.innerHTML = `<div id="sec-hero">${heroHTML(d)}</div><div id="sec-destinations">${destHTML(d)}</div><div id="sec-flights">${flightsHTML(d)}</div><div id="sec-hotels">${hotelsHTML(d)}</div><div id="sec-expenses">${expensesHTML(d)}</div><div id="sec-itinerary">${itineraryHTML(d)}</div>`;
   main.style.display = '';
   document.getElementById('status').classList.add('hidden');
 }
@@ -327,6 +369,24 @@ function itineraryHTML(d) {
     </div>`).join('')}
   </section>`;
 }
+
+/* ── Nav helpers ─────────────────────────────────────────── */
+function scrollToSection(id) {
+  const el = document.getElementById('sec-' + id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  else window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function toggleMenu() {
+  const m = document.getElementById('mobile-menu');
+  m.classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#mobile-menu') && !e.target.closest('#menu-btn'))
+    closeMenu();
+});
 
 /* ── Fetch & init ────────────────────────────────────────── */
 async function init() {
