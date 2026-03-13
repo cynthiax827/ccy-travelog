@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CCY Travelog</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-size='18' fill='%23f7f6f3'%3E✈%3C/text%3E%3C/svg%3E"/>
-<link rel="apple-touch-icon" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon.png">
+<link rel="apple-touch-icon" href="ccy-travelog-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -110,6 +110,7 @@
   .modal-overlay { position: fixed; inset: 0; background: rgba(10,10,10,0.55); z-index: 500; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(2px); }
   .modal-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
   @keyframes fadeIn { from{opacity:0}to{opacity:1} }
+  @keyframes spin { from{transform:rotate(0deg)}to{transform:rotate(360deg)} }
   .modal { background: var(--white); border: 2px solid var(--black); border-radius: var(--radius); width: 100%; max-width: 420px; display: flex; flex-direction: column; animation: slideUp 0.2s ease; }
   @keyframes slideUp { from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1} }
   .modal-header { padding: 24px 32px 20px; border-bottom: 2px solid var(--black); display: flex; align-items: center; justify-content: space-between; }
@@ -208,30 +209,56 @@
 <div class="toast" id="toast"></div>
 
 <script>
+const BASE = 'https://cynthiax827.github.io/ccy-travelog';
+
 const FLAGS = {'Japan':'🇯🇵','France':'🇫🇷','Italy':'🇮🇹','Spain':'🇪🇸','Germany':'🇩🇪','Greece':'🇬🇷','Portugal':'🇵🇹','Netherlands':'🇳🇱','UK':'🇬🇧','United Kingdom':'🇬🇧','USA':'🇺🇸','United States':'🇺🇸','Canada':'🇨🇦','Mexico':'🇲🇽','Brazil':'🇧🇷','Argentina':'🇦🇷','Colombia':'🇨🇴','Peru':'🇵🇪','Chile':'🇨🇱','Thailand':'🇹🇭','Vietnam':'🇻🇳','Indonesia':'🇮🇩','Philippines':'🇵🇭','Malaysia':'🇲🇾','Singapore':'🇸🇬','Cambodia':'🇰🇭','Myanmar':'🇲🇲','Nepal':'🇳🇵','India':'🇮🇳','China':'🇨🇳','South Korea':'🇰🇷','Taiwan':'🇹🇼','Australia':'🇦🇺','New Zealand':'🇳🇿','Morocco':'🇲🇦','Egypt':'🇪🇬','South Africa':'🇿🇦','Kenya':'🇰🇪','Tanzania':'🇹🇿','Norway':'🇳🇴','Sweden':'🇸🇪','Denmark':'🇩🇰','Finland':'🇫🇮','Iceland':'🇮🇸','Switzerland':'🇨🇭','Austria':'🇦🇹','Czech Republic':'🇨🇿','Hungary':'🇭🇺','Poland':'🇵🇱','Croatia':'🇭🇷','Turkey':'🇹🇷','Jordan':'🇯🇴','UAE':'🇦🇪'};
 
-const plans = [
-  {id:7,title:'2026 DC Summer Vacation',startDate:'2026-07-01',endDate:'2026-07-15',destinations:[{country:'Portugal',flag:'🇵🇹',cities:['Lisbon','Sintra','Coimbra','Tomar','Porto','Aveiro','Guimarães','Braga','Vila Nova de Gaia']}],travellers:[{name:'Cynthia Hsiao',color:'#ff5979'},{name:'Danny Parker',color:'#06c8c8'}]},
-  {id:3,title:'2025 DC Penghu',startDate:'2025-02-28',endDate:'2025-03-02',destinations:[{country:'Taiwan',flag:'🇹🇼',cities:['Penghu']}],travellers:[{name:'Cynthia Hsiao',color:'#ff5979'},{name:'Danny Parker',color:'#06c8c8'}]},
-  {id:2,title:'2025 DC Tainan',startDate:'2025-05-30',endDate:'2025-06-01',destinations:[{country:'Taiwan',flag:'🇹🇼',cities:['Tainan']}],travellers:[{name:'Cynthia Hsiao',color:'#ff5979'},{name:'Danny Parker',color:'#06c8c8'}]}
-];
+let plans = [];
 
-function slugify(title) {
-  return (title || 'untitled').toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '') || 'untitled';
+/* ── Load ─────────────────────────────────────────────────
+   Reads plans/index.json → ["travel-plan.json", "japan.json", …]
+   then fetches each plan JSON in parallel.
+──────────────────────────────────────────────────────── */
+async function loadPlans() {
+  document.getElementById('cards-grid').innerHTML =
+    '<div class="empty-state"><div class="empty-icon" style="display:inline-block;animation:spin 1.2s linear infinite">↻</div><div class="empty-title">Loading…</div></div>';
+
+  // 1. Fetch manifest
+  const manifest = await fetch(`${BASE}/plans/index.json`).then(r => r.json());
+
+  // 2. Fetch all plan JSONs in parallel
+  const results = await Promise.allSettled(
+    manifest.map(filename =>
+      fetch(`${BASE}/plans/${filename}`)
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(d => ({ filename: filename.replace(/\.json$/, ''), data: d }))
+    )
+  );
+
+  // 3. Map to card objects
+  plans = results
+    .filter(r => r.status === 'fulfilled')
+    .map(({ value: { filename, data } }) => ({
+      filename,
+      title:     data.tripTitle || 'Untitled Trip',
+      startDate: data.tripStart || '',
+      endDate:   data.tripEnd   || '',
+      destinations: (data.countries || []).map(c => ({
+        country: c.name || '',
+        flag:    FLAGS[c.name] || '🌍',
+        cities:  (c.cities || []).map(ci => ci.name).filter(Boolean)
+      })),
+      travellers: (data.travellers || []).map(name => ({
+        name,
+        color: (data.travellerColors || {})[name] || '#0a0a0a'
+      }))
+    }));
+
+  updateStats();
+  renderCards();
 }
 
-/* ── RENDER ──────────────────────────────────────── */
-function updateStats() {
-  const C = new Set(), K = new Set();
-  plans.forEach(p => (p.destinations||[]).forEach(d => { C.add(d.country); (d.cities||[]).forEach(c=>K.add(c)); }));
-  document.getElementById('stat-trips').textContent = plans.length;
-  document.getElementById('stat-countries').textContent = C.size;
-  document.getElementById('stat-cities').textContent = K.size;
-}
-
-/* ── RENDER ──────────────────────────────────────── */
+/* ── Helpers ─────────────────────────────────────────── */
 function inferStatus(s, e) {
   if (!s) return 'upcoming';
   const now = new Date(), sd = new Date(s+'T00:00:00'), ed = e ? new Date(e+'T00:00:00') : null;
@@ -256,9 +283,17 @@ function nights(s,e) { if(!s||!e)return null; try{const d=(new Date(e)-new Date(
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function setFilter(v) { document.getElementById('filter-status').value = v; renderCards(); }
 
+function updateStats() {
+  const C = new Set(), K = new Set();
+  plans.forEach(p => (p.destinations||[]).forEach(d => { C.add(d.country); (d.cities||[]).forEach(c=>K.add(c)); }));
+  document.getElementById('stat-trips').textContent = plans.length;
+  document.getElementById('stat-countries').textContent = C.size;
+  document.getElementById('stat-cities').textContent = K.size;
+}
+
 function renderCards() {
   const grid = document.getElementById('cards-grid');
-  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  const q  = document.getElementById('search-input').value.toLowerCase().trim();
   const fs = document.getElementById('filter-status').value;
   let filtered = plans.filter(p => {
     const st = inferStatus(p.startDate, p.endDate);
@@ -267,18 +302,20 @@ function renderCards() {
     return [p.title,...(p.destinations||[]).flatMap(d=>[d.country,...(d.cities||[])]),...(p.travellers||[]).map(t=>t.name)].join(' ').toLowerCase().includes(q);
   });
   filtered.sort((a,b)=>(b.startDate||'')<(a.startDate||'')?-1:(b.startDate||'')>(a.startDate||'')?1:0);
-  document.getElementById('results-count').textContent = filtered.length===plans.length?`${plans.length} plan${plans.length!==1?'s':''}`:`${filtered.length} of ${plans.length}`;
+  document.getElementById('results-count').textContent = filtered.length===plans.length
+    ? `${plans.length} plan${plans.length!==1?'s':''}`
+    : `${filtered.length} of ${plans.length}`;
   if (!filtered.length) {
     grid.innerHTML = `<div class="empty-state"><div class="empty-icon">✈</div><div class="empty-title">No plans found</div><div class="empty-sub">${plans.length?'Try adjusting your filters.':'No trips yet.'}</div></div>`;
     return;
   }
-  grid.innerHTML = filtered.map((p,idx)=>{
+  grid.innerHTML = filtered.map((p,idx) => {
     const status = inferStatus(p.startDate, p.endDate);
     const n = nights(p.startDate, p.endDate);
     const dests = p.destinations||[], travellers = p.travellers||[];
     const destsHtml = dests.map(d=>`<div class="dest-country"><div class="dest-country-row"><span class="dest-flag">${esc(d.flag||'🌍')}</span><span class="dest-country-name">${esc(d.country)}</span></div>${(d.cities||[]).length?`<div class="dest-cities">${d.cities.map(c=>`<span class="city-pill">${esc(c)}</span>`).join('')}</div>`:''}</div>`).join('');
     const travHtml = travellers.map(t=>`<span class="traveller-chip"><span class="chip-dot" style="background:${esc(t.color||'#f7f6f3')};${t.color==='#0a0a0a'?'border:1px solid rgba(255,255,255,0.3)':''}"></span>${esc(t.name)}</span>`).join('');
-    return `<div class="card" onclick="window.open('${slugify(p.title)}.html','_blank')">
+    return `<div class="card" onclick="window.open('${esc(p.filename)}.html','_blank')">
       <div class="card-top">
         <span class="card-index">${String(idx+1).padStart(2,'0')}</span>
         <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
@@ -304,8 +341,6 @@ function setView(v) {
   document.getElementById('btn-grid').classList.toggle('active', v==='grid');
   document.getElementById('btn-list').classList.toggle('active', v==='list');
 }
-
-// Auto-switch to grid if window resized below 900px while in list view
 window.addEventListener('resize', () => {
   const grid = document.getElementById('cards-grid');
   if (window.innerWidth <= 900 && grid.classList.contains('list-view')) {
@@ -318,8 +353,8 @@ window.addEventListener('resize', () => {
 let _tt;
 function toast(msg) { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2400); }
 
-/* ── INIT ────────────────────────────────────────── */
-updateStats(); renderCards();
+/* ── INIT ─────────────────────────────────────────── */
+loadPlans();
 </script>
 <footer style="border-top:var(--border);padding:20px 48px;text-align:center;">
   <span style="font-family:var(--font-mono);font-size:11px;color:var(--gray-400);letter-spacing:0.08em;">Made by Cynthia Hsiao</span>
