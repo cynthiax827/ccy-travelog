@@ -330,7 +330,7 @@ function itineraryHTML(d) {
 /* ── Fetch & init ────────────────────────────────────────── */
 async function init() {
   try {
-    const res = await fetch(DATA_URL);
+    const res = await fetch(DATA_URL, { cache: 'no-cache' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     render(data);
