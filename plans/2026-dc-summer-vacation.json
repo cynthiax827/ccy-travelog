@@ -8,7 +8,8 @@
   ],
   "travellerColors": {
     "Cynthia Hsiao": "#ff5979",
-    "Danny Parker": "#06c8c8"
+    "Danny Parker": "#06c8c8",
+    "Cynthia test": "#fbbe3c"
   },
   "countries": [
     {
@@ -502,7 +503,7 @@
       "events": [
         {
           "id": 40,
-          "time": "",
+          "time": "09:00",
           "label": "reservation",
           "name": "Wine Tour",
           "candidates": [],
