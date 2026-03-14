@@ -316,7 +316,7 @@ function hotelsHTML(d) {
           ${h.checkout ? `<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-out</div><div style="font-size:13px;">${fmtDate(h.checkout)}</div></div>` : ''}
           ${h.notes    ? `<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Reservation</div><div style="font-size:13px;">${esc(h.notes)}</div></div>` : ''}
           ${(h.addr || h.link) ? `<div style="flex-shrink:0;display:flex;gap:12px;margin-left:auto;">
-            ${h.addr ? `<a href="https://www.google.com/maps/search/${encodeURIComponent(mapsQuery)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;white-space:nowrap;">📍 Google Maps</a>` : ''}
+            ${h.addr ? `<a href="https://www.google.com/maps/search/${encodeURIComponent(mapsQuery)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;white-space:nowrap;">📍 Map</a>` : ''}
             ${h.link ? `<a href="${esc(h.link)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;white-space:nowrap;">↗ Website</a>` : ''}
           </div>` : ''}
         </div>
