@@ -48,7 +48,7 @@
   .hero-eyebrow { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gray-400); }
   .hero-title { font-family: var(--font-serif); font-size: clamp(42px, 6vw, 72px); font-weight: 400; line-height: 1; letter-spacing: -0.02em; }
   .hero-title em { font-style: italic; color: var(--gray-400); }
-  .hero-sub { font-size: 12px; color: var(--gray-500); max-width: 400px; line-height: 1.7; }
+  .hero-sub { font-size: 12px; color: var(--gray-500); max-width: 600px; line-height: 1.7; white-space: nowrap; }
   .hero-stats { display: flex; gap: 40px; align-items: flex-end; flex-shrink: 0; }
   .hero-stat { text-align: right; }
   .hero-stat-val { font-family: var(--font-serif); font-size: 40px; font-weight: 400; line-height: 1; }
@@ -136,6 +136,7 @@
     .hero-stat{text-align:left;flex:1;}
     .hero-stat + .hero-stat{border-left:var(--border);padding-left:20px;}
     .hero-stat-val{font-size:28px;}
+    .hero-sub{white-space:normal;}
     .toolbar{flex-wrap:wrap;gap:10px;top:auto;position:static;}
     .toolbar-left{flex-wrap:wrap;width:100%;}
     .search-wrap{max-width:100%;}
@@ -162,7 +163,7 @@
       <a href="#" onclick="setFilter('past');return false;">Past</a>
     </nav>
     <div class="header-actions">
-      <a class="btn btn-primary btn-sm" href="editor.html">Go to Editor</a>
+      <a class="btn btn-primary btn-sm" href="editor.html" target="_blank" rel="noopener">Go to Editor</a>
     </div>
   </div>
 </header>
