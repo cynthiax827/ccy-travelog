@@ -186,8 +186,9 @@
       "checkin": "2026-07-02",
       "checkout": "2026-07-07",
       "room": "Double",
-      "addr": "45 Avenida Duque de Loulé, Santo Antonio, 1050-086 Lisbon, Portugal",
-      "notes": ""
+      "addr": "VIP Executive Suites do Marquê",
+      "notes": "",
+      "link": "https://www.booking.com/hotel/pt/vip-executive-suites-do-marques.en-gb.html?label=lisbon-*MOHJpjMKdPatzzxXst1dQS752214335007%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-9694802142%3Alp9197990%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YTQUGSsRwx9_3qo3uPTHyoo&gclid=CjwKCAjwjtTNBhB0EiwAuswYhnA9vZNM7C82xkJZJVEX1RMCksXkqSusCzvhknJBRvK6lMcyiRy86hoCOQYQAvD_BwE&aid=311984&source=landing"
     }
   ],
   "expenses": [
@@ -234,32 +235,19 @@
         },
         {
           "id": 35,
-          "time": "11:00",
+          "time": "11:30",
           "label": "hotel",
           "name": "",
           "candidates": []
         },
         {
           "id": 18,
-          "time": "12:00",
+          "time": "13:00",
           "label": "lunch",
           "name": "Local Food Court: Time Out Market",
           "candidates": [],
           "address": "Time Out Market",
           "link": "https://thebeverlygarden.com/europe/portugal/lisbon/time-out-market/"
-        },
-        {
-          "id": 25,
-          "time": "13:00",
-          "label": "tourist",
-          "name": "Vintage Shop: A Vida Portuguesa",
-          "candidates": [],
-          "hashtags": [
-            "shopping",
-            "cultural"
-          ],
-          "address": "A Vida Portuguesa",
-          "link": "https://thebeverlygarden.com/europe/portugal/lisbon/cafe-a-brasileira/"
         },
         {
           "id": 21,
@@ -270,11 +258,17 @@
           "address": "A Brasileira Lisbon"
         },
         {
-          "id": 22,
+          "id": 25,
           "time": "15:00",
           "label": "tourist",
-          "name": "",
-          "candidates": []
+          "name": "Vintage Shop: A Vida Portuguesa",
+          "candidates": [],
+          "hashtags": [
+            "shopping",
+            "cultural"
+          ],
+          "address": "A Vida Portuguesa",
+          "link": "https://thebeverlygarden.com/europe/portugal/lisbon/cafe-a-brasileira/"
         },
         {
           "id": 15,
