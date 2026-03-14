@@ -81,19 +81,12 @@
     .exp-toggle-btn { display: table-cell; }
     .exp-detail-row { display: none; }
     .exp-detail-row.open { display: table-row; }
-    /* Break expense table out of main padding so it spans full width */
-    #sec-expenses section { padding-left: 0; padding-right: 0; }
-    #sec-expenses .sec-hdr { padding-left: 20px; padding-right: 20px; }
-    #sec-expenses table { width: 100%; margin: 0; }
   }
 
   @media (max-width: 600px) {
     main { padding: 0 20px 60px; }
     footer { padding: 16px 20px; }
     header { padding: 14px 20px; }
-    /* Break expense table out of main padding so it spans full width */
-    #sec-expenses section { margin-left: -20px; margin-right: -20px; }
-    #sec-expenses .sec-hdr { padding-left: 20px; padding-right: 20px; }
   }
   @media print { header { position: static; } body { background: #fff; } }
 </style>
@@ -365,11 +358,11 @@ function expensesHTML(d) {
     <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expenses</span></div>
     <table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;">
       <colgroup>
-        <col style="width:auto;">
-        <col style="width:110px;">
-        <col class="exp-col-hide" style="width:110px;">
-        <col class="exp-col-hide" style="width:110px;">
-        <col style="width:120px;">
+        <col>
+        <col style="width:90px;">
+        <col class="exp-col-hide" style="width:100px;">
+        <col class="exp-col-hide" style="width:100px;">
+        <col style="width:100px;">
         <col class="exp-toggle-btn" style="width:28px;">
       </colgroup>
       <thead>
