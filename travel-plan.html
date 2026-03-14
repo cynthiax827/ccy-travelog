@@ -68,8 +68,8 @@
 
   /* Expense mobile toggler */
   .exp-col-hide { }
-  .exp-toggle-btn { display: none; width: 28px; text-align: center; cursor: pointer; color: #8f8f8c; font-size: 14px; padding: 7px 4px; user-select: none; }
-  .exp-toggle-btn:hover { color: #0a0a0a; }
+  .exp-row-toggle { display: none; }
+  .exp-toggle-th { display: none; }
   .exp-detail-row { display: none; line-height: 0; }
   .exp-detail-row td { padding: 0; border: none; line-height: 0; overflow: hidden; }
   .exp-detail-row.open { display: table-row; line-height: 1.6; }
@@ -79,7 +79,8 @@
   .exp-detail-value { font-size: 12px; color: #6e6e6b; }
   @media (max-width: 600px) {
     .exp-col-hide { display: none; }
-    .exp-toggle-btn { display: table-cell; }
+    .exp-row-toggle { display: table-cell; width: 28px; }
+    .exp-toggle-th { display: table-cell; width: 28px; }
     .exp-detail-row { display: none; }
     .exp-detail-row.open { display: table-row; }
   }
@@ -340,13 +341,13 @@ function expensesHTML(d) {
     <tr class="exp-main-row" style="border-bottom:1px solid #ebebea;${bg}" onclick="toggleExpDetail(this)">
       <td style="padding:7px 10px;">${esc(e.desc || '—')}</td>
       <td style="padding:7px 10px;color:#6e6e6b;white-space:nowrap;">${esc(e.cat || '—')}</td>
-      <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${esc(e.paidBy || '—')}</td>
-      <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${paidFor}</td>
+      <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;white-space:nowrap;">${esc(e.paidBy || '—')}</td>
+      <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;white-space:nowrap;">${paidFor}</td>
       <td style="padding:7px 10px;text-align:right;white-space:nowrap;">${esc(e.cur || currency)} ${parseFloat(e.amt || 0).toLocaleString()}</td>
-      <td class="exp-toggle-btn">›</td>
+      <td class="exp-row-toggle" style="padding:7px 6px;text-align:right;white-space:nowrap;color:#8f8f8c;font-size:14px;cursor:pointer;">›</td>
     </tr>
     <tr class="exp-detail-row">
-      <td colspan="6">
+      <td colspan="3">
         <div class="exp-detail-grid">
           <div><div class="exp-detail-label">Paid by</div><div class="exp-detail-value">${esc(e.paidBy || '—')}</div></div>
           <div><div class="exp-detail-label">Paid for</div><div class="exp-detail-value">${paidFor}</div></div>
@@ -362,18 +363,20 @@ function expensesHTML(d) {
         <tr style="border-bottom:2px solid #0a0a0a;">
           <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Item</th>
           <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Category</th>
-          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid by</th>
-          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid for</th>
+          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Paid by</th>
+          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Paid for</th>
           <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Amount</th>
-          <th class="exp-toggle-btn" style="padding:6px 4px;"></th>
+          <th class="exp-toggle-th" style="padding:6px 4px;"></th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
       <tfoot>
         <tr style="border-top:2px solid #0a0a0a;">
-          <td colspan="4" style="padding:8px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8f8f8c;">Total</td>
-          <td style="padding:8px 10px;text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:20px;">${currency} ${total.toLocaleString(undefined, { minimumFractionDigits:0, maximumFractionDigits:0 })}</td>
-          <td class="exp-toggle-btn"></td>
+          <td colspan="2" style="padding:8px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8f8f8c;">Total</td>
+          <td class="exp-col-hide"></td>
+          <td class="exp-col-hide"></td>
+          <td style="padding:8px 10px;text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:20px;white-space:nowrap;">${currency} ${total.toLocaleString(undefined, { minimumFractionDigits:0, maximumFractionDigits:0 })}</td>
+          <td class="exp-toggle-th"></td>
         </tr>
       </tfoot>
     </table>
@@ -385,12 +388,11 @@ function toggleExpDetail(row) {
   const detail = row.nextElementSibling;
   if (!detail || !detail.classList.contains('exp-detail-row')) return;
   const isOpen = detail.classList.contains('open');
-  // Close all open
   document.querySelectorAll('.exp-detail-row.open').forEach(r => r.classList.remove('open'));
-  document.querySelectorAll('.exp-toggle-btn').forEach(b => b.textContent = '›');
+  document.querySelectorAll('.exp-row-toggle').forEach(b => b.textContent = '›');
   if (!isOpen) {
     detail.classList.add('open');
-    row.querySelector('.exp-toggle-btn').textContent = '⌄';
+    row.querySelector('.exp-row-toggle').textContent = '⌄';
   }
 }
 
