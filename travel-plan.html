@@ -66,6 +66,23 @@
   .status-sub { font-size: 12px; color: #b8b8b5; max-width: 360px; text-align: center; }
   @keyframes pulse { 0%,100%{opacity:.35} 50%{opacity:1} }
 
+  /* Expense mobile toggler */
+  .exp-col-hide { }
+  .exp-toggle-btn { display: none; width: 28px; text-align: center; cursor: pointer; color: #8f8f8c; font-size: 14px; padding: 7px 4px; user-select: none; }
+  .exp-toggle-btn:hover { color: #0a0a0a; }
+  .exp-detail-row { display: none; }
+  .exp-detail-row.open { display: table-row; }
+  .exp-detail-row td { padding: 0 10px 12px; border-bottom: 1px solid #ebebea; }
+  .exp-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; padding-top: 8px; }
+  .exp-detail-label { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: #8f8f8c; margin-bottom: 3px; }
+  .exp-detail-value { font-size: 12px; color: #6e6e6b; }
+  @media (max-width: 600px) {
+    .exp-col-hide { display: none; }
+    .exp-toggle-btn { display: table-cell; }
+    .exp-detail-row { display: none; }
+    .exp-detail-row.open { display: table-row; }
+  }
+
   @media (max-width: 600px) {
     main { padding: 0 20px 60px; }
     footer { padding: 16px 20px; }
@@ -314,38 +331,68 @@ function expensesHTML(d) {
   let total = 0;
   d.expenses.forEach(e => { total += parseFloat(e.amt) || 0; });
   const currency = 'TWD';
+  const travCount = (d.travellers || []).length;
+  const rows = d.expenses.map((e, i) => {
+    const paidFor = (e.paidFor && e.paidFor.length && e.paidFor.length < travCount) ? esc(e.paidFor.join(', ')) : 'All';
+    const bg = i % 2 ? 'background:#fafafa' : '';
+    return `
+    <tr class="exp-main-row" style="border-bottom:1px solid #ebebea;${bg}" onclick="toggleExpDetail(this)">
+      <td style="padding:7px 10px;">${esc(e.desc || '—')}</td>
+      <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${esc(e.cat || '—')}</td>
+      <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${esc(e.paidBy || '—')}</td>
+      <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${paidFor}</td>
+      <td style="padding:7px 10px;text-align:right;">${esc(e.cur || currency)} ${parseFloat(e.amt || 0).toLocaleString()}</td>
+      <td class="exp-toggle-btn">›</td>
+    </tr>
+    <tr class="exp-detail-row">
+      <td colspan="3">
+        <div class="exp-detail-grid">
+          <div><div class="exp-detail-label">Category</div><div class="exp-detail-value">${esc(e.cat || '—')}</div></div>
+          <div><div class="exp-detail-label">Paid by</div><div class="exp-detail-value">${esc(e.paidBy || '—')}</div></div>
+          <div><div class="exp-detail-label">Paid for</div><div class="exp-detail-value">${paidFor}</div></div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
   return `<section>
     <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expenses</span></div>
     <div style="overflow-x:auto;">
-    <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:520px;">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead>
         <tr style="border-bottom:2px solid #0a0a0a;">
           <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Item</th>
-          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Category</th>
-          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid by</th>
-          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid for</th>
+          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Category</th>
+          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid by</th>
+          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid for</th>
           <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Amount</th>
+          <th class="exp-toggle-btn" style="padding:6px 4px;"></th>
         </tr>
       </thead>
-      <tbody>
-        ${d.expenses.map((e, i) => `
-        <tr style="border-bottom:1px solid #ebebea;${i % 2 ? 'background:#fafafa' : ''}">
-          <td style="padding:7px 10px;">${esc(e.desc || '—')}</td>
-          <td style="padding:7px 10px;color:#6e6e6b;">${esc(e.cat || '—')}</td>
-          <td style="padding:7px 10px;color:#6e6e6b;">${esc(e.paidBy || '—')}</td>
-          <td style="padding:7px 10px;color:#6e6e6b;">${(e.paidFor && e.paidFor.length && e.paidFor.length < (d.travellers || []).length) ? esc(e.paidFor.join(', ')) : 'All'}</td>
-          <td style="padding:7px 10px;text-align:right;">${esc(e.cur || currency)} ${parseFloat(e.amt || 0).toLocaleString()}</td>
-        </tr>`).join('')}
-      </tbody>
+      <tbody>${rows}</tbody>
       <tfoot>
         <tr style="border-top:2px solid #0a0a0a;">
-          <td colspan="4" style="padding:8px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8f8f8c;">Total</td>
-          <td style="padding:8px 10px;text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:20px;">${currency} ${total.toLocaleString(undefined, { minimumFractionDigits:0, maximumFractionDigits:0 })}</td>
+          <td colspan="5" style="padding:8px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8f8f8c;">Total</td>
+          <td style="padding:8px 10px;text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:20px;" colspan="2">${currency} ${total.toLocaleString(undefined, { minimumFractionDigits:0, maximumFractionDigits:0 })}</td>
         </tr>
       </tfoot>
     </table>
     </div>
   </section>`;
+}
+
+function toggleExpDetail(row) {
+  if (window.innerWidth > 600) return;
+  const detail = row.nextElementSibling;
+  if (!detail || !detail.classList.contains('exp-detail-row')) return;
+  const isOpen = detail.classList.contains('open');
+  // Close all open
+  document.querySelectorAll('.exp-detail-row.open').forEach(r => r.classList.remove('open'));
+  document.querySelectorAll('.exp-toggle-btn').forEach(b => b.textContent = '›');
+  if (!isOpen) {
+    detail.classList.add('open');
+    row.querySelector('.exp-toggle-btn').textContent = '⌄';
+  }
 }
 
 /* Itinerary */
