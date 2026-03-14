@@ -82,8 +82,6 @@
     .exp-toggle-btn { display: table-cell; }
     .exp-detail-row { display: none; }
     .exp-detail-row.open { display: table-row; }
-    .exp-cat-col { width: 72px; }
-    .exp-amt-col { width: 90px; }
   }
 
   @media (max-width: 600px) {
@@ -341,10 +339,10 @@ function expensesHTML(d) {
     return `
     <tr class="exp-main-row" style="border-bottom:1px solid #ebebea;${bg}" onclick="toggleExpDetail(this)">
       <td style="padding:7px 10px;">${esc(e.desc || '—')}</td>
-      <td style="padding:7px 10px;color:#6e6e6b;">${esc(e.cat || '—')}</td>
+      <td style="padding:7px 10px;color:#6e6e6b;white-space:nowrap;">${esc(e.cat || '—')}</td>
       <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${esc(e.paidBy || '—')}</td>
       <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${paidFor}</td>
-      <td style="padding:7px 10px;text-align:right;">${esc(e.cur || currency)} ${parseFloat(e.amt || 0).toLocaleString()}</td>
+      <td style="padding:7px 10px;text-align:right;white-space:nowrap;">${esc(e.cur || currency)} ${parseFloat(e.amt || 0).toLocaleString()}</td>
       <td class="exp-toggle-btn">›</td>
     </tr>
     <tr class="exp-detail-row">
@@ -359,22 +357,14 @@ function expensesHTML(d) {
 
   return `<section>
     <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expenses</span></div>
-    <table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;">
-      <colgroup>
-        <col>
-        <col class="exp-cat-col" style="width:110px;">
-        <col class="exp-col-hide" style="width:110px;">
-        <col class="exp-col-hide" style="width:110px;">
-        <col class="exp-amt-col" style="width:120px;">
-        <col class="exp-toggle-btn" style="width:28px;">
-      </colgroup>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead>
         <tr style="border-bottom:2px solid #0a0a0a;">
           <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Item</th>
-          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Category</th>
+          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Category</th>
           <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid by</th>
           <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid for</th>
-          <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Amount</th>
+          <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Amount</th>
           <th class="exp-toggle-btn" style="padding:6px 4px;"></th>
         </tr>
       </thead>
