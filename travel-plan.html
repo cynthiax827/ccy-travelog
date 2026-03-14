@@ -70,9 +70,10 @@
   .exp-col-hide { }
   .exp-toggle-btn { display: none; width: 28px; text-align: center; cursor: pointer; color: #8f8f8c; font-size: 14px; padding: 7px 4px; user-select: none; }
   .exp-toggle-btn:hover { color: #0a0a0a; }
-  .exp-detail-row { display: none; }
-  .exp-detail-row.open { display: table-row; }
-  .exp-detail-row td { padding: 0 10px 12px; border-bottom: 1px solid #ebebea; }
+  .exp-detail-row { display: none; line-height: 0; }
+  .exp-detail-row td { padding: 0; border: none; line-height: 0; overflow: hidden; }
+  .exp-detail-row.open { display: table-row; line-height: 1.6; }
+  .exp-detail-row.open td { padding: 0 10px 12px; border-bottom: 1px solid #ebebea; line-height: 1.6; overflow: visible; }
   .exp-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; padding-top: 8px; }
   .exp-detail-label { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: #8f8f8c; margin-bottom: 3px; }
   .exp-detail-value { font-size: 12px; color: #6e6e6b; }
@@ -81,6 +82,8 @@
     .exp-toggle-btn { display: table-cell; }
     .exp-detail-row { display: none; }
     .exp-detail-row.open { display: table-row; }
+    .exp-cat-col { width: 72px; }
+    .exp-amt-col { width: 90px; }
   }
 
   @media (max-width: 600px) {
@@ -359,10 +362,10 @@ function expensesHTML(d) {
     <table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;">
       <colgroup>
         <col>
-        <col style="width:90px;">
-        <col class="exp-col-hide" style="width:100px;">
-        <col class="exp-col-hide" style="width:100px;">
-        <col style="width:100px;">
+        <col class="exp-cat-col" style="width:110px;">
+        <col class="exp-col-hide" style="width:110px;">
+        <col class="exp-col-hide" style="width:110px;">
+        <col class="exp-amt-col" style="width:120px;">
         <col class="exp-toggle-btn" style="width:28px;">
       </colgroup>
       <thead>
