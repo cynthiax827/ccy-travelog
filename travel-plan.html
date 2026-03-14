@@ -180,25 +180,20 @@ const LABEL_STYLE = {
 
 /* ── Render ──────────────────────────────────────────────── */
 function render(d) {
-  // Page title
   document.title = (d.tripTitle || 'Travel Plan') + ' | CCY Travelog';
 
-  // Header date
   const dateStr = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
   document.getElementById('header-date').textContent = dateStr;
   document.getElementById('mobile-date').textContent = dateStr;
 
-  // Cover image — same logic as JSON: build URL directly and set src
   const coverSection = document.getElementById('cover-section');
   const coverImg     = document.getElementById('cover-img');
   coverImg.style.objectPosition = `center ${d._coverPosY || 50}%`;
 
   if (d.coverImg) {
-    // Embedded base64 in JSON
     coverImg.src = d.coverImg;
     coverSection.classList.add('show');
   } else if (d._coverFilename) {
-    // Separate image file — named [baseName].[original ext]
     const ext = d._coverFilename.split('.').pop() || 'jpg';
     const coverUrl = `https://cynthiax827.github.io/ccy-travelog/images/${baseName}.${ext}`;
     coverImg.src = coverUrl;
@@ -309,6 +304,7 @@ function hotelsHTML(d) {
     <div style="display:flex;flex-direction:column;gap:16px;">
     ${d.hotels.map(h => {
       const n = nightsBetween(h.checkin, h.checkout);
+      const mapsQuery = h.address ? `${h.name ? h.name + ' ' : ''}${h.address}` : (h.name || '');
       return `<div style="border:1px solid #d4d4d2;border-radius:2px;overflow:hidden;">
         <div style="background:#0a0a0a;color:#f7f6f3;padding:8px 14px;display:flex;align-items:baseline;gap:12px;justify-content:space-between;flex-wrap:wrap;">
           <span style="font-family:'DM Serif Display',Georgia,serif;font-size:20px;font-weight:400;">${n || '—'}<span style="font-size:11px;opacity:.6;margin-left:4px;">night${n !== 1 ? 's' : ''}</span></span>
@@ -321,6 +317,10 @@ function hotelsHTML(d) {
           ${h.resCode  ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Reservation</div><div style="font-size:13px;">${esc(h.resCode)}</div></div>` : ''}
           ${h.address  ? `<div style="flex:1;min-width:180px;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Address</div><div style="font-size:12px;color:#4a4a48;">${esc(h.address)}</div></div>` : ''}
         </div>
+        ${(h.address || h.website) ? `<div style="padding:0 14px 12px;display:flex;flex-wrap:wrap;gap:12px;">
+          ${h.address  ? `<a href="https://www.google.com/maps/search/${encodeURIComponent(mapsQuery)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;">📍 Google Maps</a>` : ''}
+          ${h.website  ? `<a href="${esc(h.website)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;">↗ Website</a>` : ''}
+        </div>` : ''}
       </div>`;
     }).join('')}
     </div>
