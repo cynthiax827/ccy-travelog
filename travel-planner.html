@@ -3627,17 +3627,21 @@ function exportHTML() {
     <div style="display:flex;flex-direction:column;gap:16px;">
     ${d.hotels.map(h=>{
       const n = nightsBetween(h.checkin, h.checkout);
+      const mapsQuery = h.addr ? (h.name ? h.name+' '+h.addr : h.addr) : (h.name||'');
       return `<div style="border:1px solid #d4d4d2;border-radius:2px;overflow:hidden;">
-        <div style="background:#0a0a0a;color:#f7f6f3;padding:8px 14px;display:flex;align-items:baseline;gap:12px;justify-content:space-between;">
+        <div style="background:#0a0a0a;color:#f7f6f3;padding:8px 14px;display:flex;align-items:baseline;gap:12px;justify-content:space-between;flex-wrap:wrap;">
           <span style="font-family:'DM Serif Display',Georgia,serif;font-size:20px;font-weight:400;">${n||'—'}<span style="font-size:11px;opacity:.6;margin-left:4px;">night${n!==1?'s':''}</span></span>
           <span style="font-size:10px;letter-spacing:.08em;opacity:.7;">${esc(h.city||'')}${h.country?' · '+esc(h.country):''}</span>
         </div>
-        <div style="padding:12px 14px;display:flex;flex-wrap:wrap;gap:20px;">
-          ${h.name?`<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Hotel</div><div style="font-size:13px;">${esc(h.name)}</div></div>`:''}
-          ${h.checkin?`<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-in</div><div style="font-size:13px;">${fmtDate(h.checkin)}</div></div>`:''}
-          ${h.checkout?`<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-out</div><div style="font-size:13px;">${fmtDate(h.checkout)}</div></div>`:''}
-          ${h.resCode?`<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Reservation</div><div style="font-size:13px;">${esc(h.resCode)}</div></div>`:''}
-          ${h.address?`<div style="flex:1;min-width:180px;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Address</div><div style="font-size:12px;color:#4a4a48;">${esc(h.address)}</div></div>`:''}
+        <div style="padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;">
+          ${h.name    ?`<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Hotel</div><div style="font-size:13px;">${esc(h.name)}</div></div>`:''}
+          ${h.checkin ?`<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-in</div><div style="font-size:13px;">${fmtDate(h.checkin)}</div></div>`:''}
+          ${h.checkout?`<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-out</div><div style="font-size:13px;">${fmtDate(h.checkout)}</div></div>`:''}
+          ${h.notes   ?`<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Reservation</div><div style="font-size:13px;">${esc(h.notes)}</div></div>`:''}
+          ${(h.addr||h.link)?`<div style="flex-shrink:0;display:flex;gap:12px;margin-left:auto;">
+            ${h.addr?`<a href="https://www.google.com/maps/search/${encodeURIComponent(mapsQuery)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;white-space:nowrap;">📍 Map</a>`:''}
+            ${h.link?`<a href="${esc(h.link)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;white-space:nowrap;">↗ Website</a>`:''}
+          </div>`:''}
         </div>
       </div>`;
     }).join('')}
@@ -3650,32 +3654,36 @@ function exportHTML() {
     const currency = 'TWD';
     let total = 0;
     d.expenses.forEach(e=>{ total += parseFloat(e.amt)||0; });
+    const travCount = (d.travellers||[]).length;
     expHtml = `<section>
     <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expenses</span></div>
     <table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead>
         <tr style="border-bottom:2px solid #0a0a0a;">
           <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Item</th>
-          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Category</th>
-          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid by</th>
-          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid for</th>
-          <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Amount</th>
+          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Category</th>
+          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Paid by</th>
+          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Paid for</th>
+          <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;white-space:nowrap;">Amount</th>
         </tr>
       </thead>
       <tbody>
-        ${d.expenses.map((e,i)=>`
-        <tr style="border-bottom:1px solid #ebebea;${i%2?'background:#fafafa':''}">
+        ${d.expenses.map((e,i)=>{
+          const paidFor = (e.paidFor&&e.paidFor.length&&e.paidFor.length<travCount)?esc(e.paidFor.join(', ')):'All';
+          return `<tr style="border-bottom:1px solid #ebebea;${i%2?'background:#fafafa':''}">
           <td style="padding:7px 10px;">${esc(e.desc||'—')}</td>
-          <td style="padding:7px 10px;color:#6e6e6b;">${esc(e.cat||'—')}</td>
-          <td style="padding:7px 10px;color:#6e6e6b;">${esc(e.paidBy||'—')}</td>
-          <td style="padding:7px 10px;color:#6e6e6b;">${(e.paidFor&&e.paidFor.length&&e.paidFor.length<d.travellers.length)?esc(e.paidFor.join(', ')):`All`}</td>
-          <td style="padding:7px 10px;text-align:right;">${esc(e.cur||currency)} ${parseFloat(e.amt||0).toLocaleString()}</td>
-        </tr>`).join('')}
+          <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;white-space:nowrap;">${esc(e.cat||'—')}</td>
+          <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;white-space:nowrap;">${esc(e.paidBy||'—')}</td>
+          <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;white-space:nowrap;">${paidFor}</td>
+          <td style="padding:7px 10px;text-align:right;white-space:nowrap;">${esc(e.cur||currency)} ${parseFloat(e.amt||0).toLocaleString()}</td>
+        </tr>`;}).join('')}
       </tbody>
       <tfoot>
         <tr style="border-top:2px solid #0a0a0a;">
-          <td colspan="4" style="padding:8px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8f8f8c;">Total</td>
-          <td style="padding:8px 10px;text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:20px;">${currency} ${total.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</td>
+          <td colspan="2" style="padding:8px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8f8f8c;">Total</td>
+          <td class="exp-col-hide"></td>
+          <td class="exp-col-hide"></td>
+          <td style="padding:8px 10px;text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:20px;white-space:nowrap;">${currency} ${total.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</td>
         </tr>
       </tfoot>
     </table></section>`;
@@ -3737,6 +3745,8 @@ function exportHTML() {
   .sec-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 26px; font-weight: 400; }
   .sec-num { font-size: 10px; color: #8f8f8c; letter-spacing: .1em; }
   footer { border-top: 1px solid #d4d4d2; padding: 20px 48px; text-align: center; font-size: 11px; color: #8f8f8c; letter-spacing: .08em; }
+  .exp-col-hide { }
+  @media (max-width: 600px) { .exp-col-hide { display: none; } }
   @media (max-width: 600px) { main { padding: 0 20px 60px; } header { padding: 14px 20px; } footer { padding: 16px 20px; } }
   @media print { header { position: static; } body { background: #fff; } }
 </style>
