@@ -310,17 +310,16 @@ function hotelsHTML(d) {
           <span style="font-family:'DM Serif Display',Georgia,serif;font-size:20px;font-weight:400;">${n || '—'}<span style="font-size:11px;opacity:.6;margin-left:4px;">night${n !== 1 ? 's' : ''}</span></span>
           <span style="font-size:10px;letter-spacing:.08em;opacity:.7;">${esc(h.city || '')}${h.country ? ' · ' + esc(h.country) : ''}</span>
         </div>
-        <div style="padding:12px 14px;display:flex;flex-wrap:wrap;gap:20px;">
-          ${h.name     ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Hotel</div><div style="font-size:13px;">${esc(h.name)}</div></div>` : ''}
-          ${h.checkin  ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-in</div><div style="font-size:13px;">${fmtDate(h.checkin)}</div></div>` : ''}
-          ${h.checkout ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-out</div><div style="font-size:13px;">${fmtDate(h.checkout)}</div></div>` : ''}
-          ${h.notes    ? `<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Reservation</div><div style="font-size:13px;">${esc(h.notes)}</div></div>` : ''}
-          ${h.addr     ? `<div style="flex:1;min-width:180px;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Address</div><div style="font-size:12px;color:#4a4a48;">${esc(h.addr)}</div></div>` : ''}
+        <div style="padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;">
+          ${h.name     ? `<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Hotel</div><div style="font-size:13px;">${esc(h.name)}</div></div>` : ''}
+          ${h.checkin  ? `<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-in</div><div style="font-size:13px;">${fmtDate(h.checkin)}</div></div>` : ''}
+          ${h.checkout ? `<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-out</div><div style="font-size:13px;">${fmtDate(h.checkout)}</div></div>` : ''}
+          ${h.notes    ? `<div style="flex-shrink:0;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Reservation</div><div style="font-size:13px;">${esc(h.notes)}</div></div>` : ''}
+          ${(h.addr || h.link) ? `<div style="flex-shrink:0;display:flex;gap:12px;margin-left:auto;">
+            ${h.addr ? `<a href="https://www.google.com/maps/search/${encodeURIComponent(mapsQuery)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;white-space:nowrap;">📍 Google Maps</a>` : ''}
+            ${h.link ? `<a href="${esc(h.link)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;white-space:nowrap;">↗ Website</a>` : ''}
+          </div>` : ''}
         </div>
-        ${(h.addr || h.link) ? `<div style="padding:0 14px 12px;display:flex;flex-wrap:wrap;gap:12px;">
-          ${h.addr ? `<a href="https://www.google.com/maps/search/${encodeURIComponent(mapsQuery)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;">📍 Google Maps</a>` : ''}
-          ${h.link ? `<a href="${esc(h.link)}" target="_blank" style="font-size:11px;color:#4a4a48;text-decoration:underline;">↗ Website</a>` : ''}
-        </div>` : ''}
       </div>`;
     }).join('')}
     </div>
