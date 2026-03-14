@@ -338,7 +338,7 @@ function expensesHTML(d) {
     return `
     <tr class="exp-main-row" style="border-bottom:1px solid #ebebea;${bg}" onclick="toggleExpDetail(this)">
       <td style="padding:7px 10px;">${esc(e.desc || '—')}</td>
-      <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${esc(e.cat || '—')}</td>
+      <td style="padding:7px 10px;color:#6e6e6b;">${esc(e.cat || '—')}</td>
       <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${esc(e.paidBy || '—')}</td>
       <td class="exp-col-hide" style="padding:7px 10px;color:#6e6e6b;">${paidFor}</td>
       <td style="padding:7px 10px;text-align:right;">${esc(e.cur || currency)} ${parseFloat(e.amt || 0).toLocaleString()}</td>
@@ -357,12 +357,11 @@ function expensesHTML(d) {
 
   return `<section>
     <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expenses</span></div>
-    <div style="overflow-x:auto;">
     <table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead>
         <tr style="border-bottom:2px solid #0a0a0a;">
           <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Item</th>
-          <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Category</th>
+          <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Category</th>
           <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid by</th>
           <th class="exp-col-hide" style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Paid for</th>
           <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Amount</th>
@@ -377,7 +376,6 @@ function expensesHTML(d) {
         </tr>
       </tfoot>
     </table>
-    </div>
   </section>`;
 }
 
