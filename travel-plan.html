@@ -357,7 +357,15 @@ function expensesHTML(d) {
 
   return `<section>
     <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expenses</span></div>
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;">
+      <colgroup>
+        <col style="width:auto;">
+        <col style="width:120px;">
+        <col class="exp-col-hide" style="width:120px;">
+        <col class="exp-col-hide" style="width:120px;">
+        <col style="width:130px;">
+        <col class="exp-toggle-btn" style="width:28px;">
+      </colgroup>
       <thead>
         <tr style="border-bottom:2px solid #0a0a0a;">
           <th style="text-align:left;padding:6px 10px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;font-weight:400;">Item</th>
@@ -371,8 +379,9 @@ function expensesHTML(d) {
       <tbody>${rows}</tbody>
       <tfoot>
         <tr style="border-top:2px solid #0a0a0a;">
-          <td colspan="5" style="padding:8px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8f8f8c;">Total</td>
-          <td style="padding:8px 10px;text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:20px;" colspan="2">${currency} ${total.toLocaleString(undefined, { minimumFractionDigits:0, maximumFractionDigits:0 })}</td>
+          <td colspan="4" style="padding:8px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8f8f8c;">Total</td>
+          <td style="padding:8px 10px;text-align:right;font-family:'DM Serif Display',Georgia,serif;font-size:20px;">${currency} ${total.toLocaleString(undefined, { minimumFractionDigits:0, maximumFractionDigits:0 })}</td>
+          <td class="exp-toggle-btn"></td>
         </tr>
       </tfoot>
     </table>
