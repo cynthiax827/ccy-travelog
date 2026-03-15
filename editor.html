@@ -422,11 +422,11 @@ window.addEventListener('storage', e => {
 
 /* ── DATA CONVERSION ─────────────────────────────── */
 function plannerToCard(id, d) {
-  const destinations = (d.countries || []).map(c => ({
+  const destinations = (d.country || d.countries || []).map(c => ({
     country: c.name, flag: FLAGS[c.name] || '🌍',
     cities: (c.cities || []).map(ci => ci.name).filter(Boolean)
   })).filter(c => c.country);
-  const travellers = (d.travellers || []).map(n => ({ name: n, color: (d.travellerColors||{})[n] || '#0a0a0a' }));
+  const travellers = (d.traveller || d.travellers || []).map(n => ({ name: n, color: (d.travellerColor||d.travellerColors||{})[n] || '#0a0a0a' }));
   return { id, title: d.tripTitle || 'Untitled Trip',
            startDate: d.tripStart || '', endDate: d.tripEnd || '',
            destinations, travellers,
@@ -435,12 +435,12 @@ function plannerToCard(id, d) {
 
 function cardToPlanner(p) {
   let cid = 200, kid = 2000;
-  const countries = (p.destinations||[]).map(d => ({ id: ++cid, name: d.country, cities: (d.cities||[]).map(c=>({id:++kid,name:c})) }));
-  const travellerColors = {};
-  (p.travellers||[]).forEach(t => { travellerColors[t.name] = t.color; });
+  const country = (p.destinations||[]).map(d => ({ id: ++cid, name: d.country, cities: (d.cities||[]).map(c=>({id:++kid,name:c})) }));
+  const travellerColor = {};
+  (p.travellers||[]).forEach(t => { travellerColor[t.name] = t.color; });
   return { tripTitle: p.title||'', tripStart: p.startDate||'', tripEnd: p.endDate||'',
-           travellers: (p.travellers||[]).map(t=>t.name), travellerColors, countries,
-           flights:{}, hotels:[], expenses:[], itinerary:[], notes:[] };
+           traveller: (p.travellers||[]).map(t=>t.name), travellerColor, country,
+           flight:{}, hotel:[], expense:[], itinerary:[], note:[] };
 }
 
 /* ── OPEN PLANNER ────────────────────────────────── */
