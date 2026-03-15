@@ -55,6 +55,12 @@
     .exp-detail-item { display: flex; flex-direction: column; }
     .exp-detail-item.full { grid-column: 1 / -1; }
     .exp-toggle-btn-cell { text-align: right; width: 28px; padding: 4px !important; }
+    .expense-table th:nth-child(1),
+    .expense-table td:nth-child(1) { width: 38%; }
+    .expense-table th:nth-child(2),
+    .expense-table td:nth-child(2) { width: 30%; }
+    .expense-table th:nth-child(4),
+    .expense-table td:nth-child(4) { width: 25%; }
   }
   @media (min-width: 601px) {
     .exp-toggle-btn { display: none !important; }
@@ -3747,12 +3753,16 @@ function exportHTML() {
           <span style="font-family:'DM Serif Display',Georgia,serif;font-size:20px;font-weight:400;">${n||'—'}<span style="font-size:11px;opacity:.6;margin-left:4px;">night${n!==1?'s':''}</span></span>
           <span style="font-size:10px;letter-spacing:.08em;opacity:.7;">${esc(h.city||'')}${h.country?' · '+esc(h.country):''}</span>
         </div>
-        <div style="padding:12px 14px;display:flex;flex-wrap:wrap;gap:20px;">
+        <div style="padding:12px 14px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;">
           ${h.name?`<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Hotel</div><div style="font-size:13px;">${esc(h.name)}</div></div>`:''}
           ${h.checkin?`<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-in</div><div style="font-size:13px;">${fmtDate(h.checkin)}</div></div>`:''}
           ${h.checkout?`<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Check-out</div><div style="font-size:13px;">${fmtDate(h.checkout)}</div></div>`:''}
           ${h.resCode?`<div><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Reservation</div><div style="font-size:13px;">${esc(h.resCode)}</div></div>`:''}
-          ${h.address?`<div style="flex:1;min-width:180px;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Address</div><div style="font-size:12px;color:#4a4a48;">${esc(h.address)}</div></div>`:''}
+          ${h.addr?`<div style="flex:1;min-width:180px;"><div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8f8f8c;margin-bottom:2px;">Address</div><div style="font-size:12px;color:#4a4a48;">${esc(h.addr)}</div></div>`:''}
+          <div style="margin-left:auto;display:flex;gap:8px;flex-shrink:0;">
+            ${h.addr?`<a href="https://www.google.com/maps/search/${encodeURIComponent(h.addr)}" target="_blank" style="font-size:12px;text-decoration:none;padding:4px 10px;border:1px solid #d4d4d2;border-radius:2px;color:#0a0a0a;white-space:nowrap;">📍 Map</a>`:''}
+            ${h.link?`<a href="${esc(h.link)}" target="_blank" style="font-size:12px;text-decoration:none;padding:4px 10px;border:1px solid #d4d4d2;border-radius:2px;color:#0a0a0a;white-space:nowrap;">↗ Website</a>`:''}
+          </div>
         </div>
       </div>`;
     }).join('')}
