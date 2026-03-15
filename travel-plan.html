@@ -39,6 +39,12 @@
   .mobile-menu a { text-decoration: none; color: #0a0a0a; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 0; border-bottom: 1px solid #ebebea; }
   .mobile-menu a:last-child { border-bottom: none; }
   .mobile-menu .menu-date { font-size: 11px; color: #8f8f8c; letter-spacing: .1em; text-transform: uppercase; padding: 14px 0 0; margin-top: 8px; }
+  .mobile-menu .mobile-exit-btn { display: inline-flex; align-items: center; justify-content: center; font-family: 'DM Mono', 'Courier New', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid #0a0a0a; background: #0a0a0a; color: #f7f6f3; border-radius: 2px; padding: 10px 14px; text-decoration: none; margin-top: auto; cursor: pointer; }
+
+  /* Menu button open state */
+  .menu-btn.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .menu-btn.open span:nth-child(2) { opacity: 0; }
+  .menu-btn.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
 
   @media (max-width: 700px) {
     nav { display: none; }
@@ -122,7 +128,7 @@
   <a href="#" onclick="scrollToSection('hotels');closeMenu();return false;">Hotel</a>
   <a href="#" onclick="scrollToSection('expenses');closeMenu();return false;">Expense</a>
   <a href="#" onclick="scrollToSection('itinerary');closeMenu();return false;">Itinerary</a>
-  <a href="index.html" style="margin-top:auto;text-align:center;background:#0a0a0a;color:#f7f6f3;border-radius:2px;padding:12px 0;border-bottom:none;">⭠ Exit</a>
+  <a href="index.html" class="mobile-exit-btn">⭠ Exit</a>
 </div>
 
 <div id="cover-section"><img id="cover-img" src="" alt=""/></div>
@@ -439,8 +445,10 @@ function scrollToSection(id) {
   else window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function toggleMenu() {
-  document.getElementById('mobile-menu').classList.toggle('open');
-  document.getElementById('menu-btn').classList.toggle('open');
+  const m = document.getElementById('mobile-menu');
+  const b = document.getElementById('menu-btn');
+  m.classList.toggle('open');
+  b.classList.toggle('open');
 }
 function closeMenu() {
   document.getElementById('mobile-menu').classList.remove('open');

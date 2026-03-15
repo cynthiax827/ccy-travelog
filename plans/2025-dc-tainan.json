@@ -2,15 +2,15 @@
   "tripTitle": "2025 DC Tainan",
   "tripStart": "2025-05-30",
   "tripEnd": "2025-06-01",
-  "travellers": [
+  "traveller": [
     "Cynthia Hsiao",
     "Danny Parker"
   ],
-  "travellerColors": {
+  "travellerColor": {
     "Cynthia Hsiao": "#ff5979",
     "Danny Parker": "#06c8c8"
   },
-  "countries": [
+  "country": [
     {
       "id": 201,
       "name": "Taiwan",
@@ -22,7 +22,7 @@
       ]
     }
   ],
-  "flights": {
+  "flight": {
     "Cynthia Hsiao": {
       "journeys": []
     },
@@ -30,7 +30,7 @@
       "journeys": []
     }
   },
-  "hotels": [
+  "hotel": [
     {
       "id": 1,
       "name": "Simonhall B&B",
@@ -42,7 +42,7 @@
       "notes": ""
     }
   ],
-  "expenses": [
+  "expense": [
     {
       "id": 1,
       "desc": "HSR",
@@ -166,7 +166,7 @@
       "overnightCity": "Tainan"
     }
   ],
-  "notes": [],
+  "note": [],
   "_ids": {
     "dayId": 3,
     "eventId": 8,
@@ -181,5 +181,5 @@
   },
   "_planId": 2,
   "_coverPosY": 44.25,
-  "_coverFilename": "pic_2574_5.jpg"
+  "_coverFilename": "2025-dc-tainan.jpg"
 }
