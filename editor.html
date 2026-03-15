@@ -462,12 +462,12 @@ function confirmNewPlan() {
   closeNewPlanModal();
   const newId = plans.length ? Math.max(...plans.map(p => p.id)) + 1 : 1;
   localStorage.setItem(ACTIVE_KEY, String(newId));
-  window.open(PLANNER_FILE + '?id=' + newId + '&title=' + encodeURIComponent(title), '_blank');
+  window.location.href = PLANNER_FILE + '?id=' + newId + '&title=' + encodeURIComponent(title);
 }
 
 function openEditPlan(id) {
   localStorage.setItem(ACTIVE_KEY, String(id));
-  window.open(PLANNER_FILE + '?id=' + id, '_blank');
+  window.location.href = PLANNER_FILE + '?id=' + id;
 }
 
 /* ── DELETE ──────────────────────────────────────── */
