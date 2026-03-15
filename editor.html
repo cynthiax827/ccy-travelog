@@ -395,30 +395,17 @@ async function loadPlans() {
 
 
 /* ── SYNC BACK FROM PLANNER ──────────────────────── */
-function syncBack() {
-  const activeId = localStorage.getItem('travelog_active');
-  if (!activeId) return;
-  // If this plan was deleted, don't resurrect it
-  if (!plans.find(p => p.id === parseInt(activeId)) && !localStorage.getItem('travelplan_' + activeId)) return;
-  try {
-    const raw = localStorage.getItem('travelplan_' + activeId);
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    if (!data.tripTitle && !data.countries?.length && !data.travellers?.length) return; // ignore blank new plans
-    const card = plannerToCard(parseInt(activeId), data);
-    const idx = plans.findIndex(p => p.id === card.id);
-    if (idx >= 0) plans[idx] = card; else plans.unshift(card);
-    savePlans();
-    updateStats(); renderCards();
-  } catch(e) {}
+async function syncBack() {
+  const root = await ensureFsDir();
+  if (!root) return; // No folder linked — never fall back to localStorage cache
+  // Re-read all plans directly from the linked folder (bypass localStorage cache)
+  await loadPlansFromFolder(root);
+  updateStats(); renderCards();
 }
 
-window.addEventListener('focus', syncBack);
+window.addEventListener('focus', () => syncBack());
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') syncBack(); });
-// Also sync immediately when the planner writes to localStorage (cross-tab storage event)
-window.addEventListener('storage', e => {
-  if (e.key && e.key.startsWith('travelplan_')) syncBack();
-});
+// Folder is the single source of truth — localStorage storage events are not used
 
 /* ── DATA CONVERSION ─────────────────────────────── */
 function plannerToCard(id, d) {
@@ -619,7 +606,7 @@ function sampleData() {
 }
 
 /* ── INIT ────────────────────────────────────────── */
-loadPlans().then(() => { syncBack(); updateStats(); renderCards(); });
+loadPlans().then(() => { updateStats(); renderCards(); });
 </script>
 <footer style="border-top:var(--border);padding:20px 48px;text-align:center;">
   <span style="font-family:var(--font-mono);font-size:11px;color:var(--gray-400);letter-spacing:0.08em;">Made by Cynthia Hsiao</span>
