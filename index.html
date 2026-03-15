@@ -261,14 +261,14 @@ async function loadPlans() {
       title:     data.tripTitle || 'Untitled Trip',
       startDate: data.tripStart || '',
       endDate:   data.tripEnd   || '',
-      destinations: (data.countries || []).map(c => ({
+      destinations: (data.country || data.countries || []).map(c => ({
         country: c.name || '',
         flag:    FLAGS[c.name] || '🌍',
         cities:  (c.cities || []).map(ci => ci.name).filter(Boolean)
       })),
-      travellers: (data.travellers || []).map(name => ({
+      travellers: (data.traveller || data.travellers || []).map(name => ({
         name,
-        color: (data.travellerColors || {})[name] || '#0a0a0a'
+        color: (data.travellerColor || data.travellerColors || {})[name] || '#0a0a0a'
       }))
     });
   }
