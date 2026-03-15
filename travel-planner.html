@@ -2934,24 +2934,27 @@ let _dragEvent = null; // { dayId, evId }
 function eventDragStart(e, dayId, evId) {
   _dragEvent = { dayId, evId };
   e.dataTransfer.effectAllowed = 'move';
-  e.stopPropagation(); // prevent day drag from firing
+  e.stopPropagation(); // prevent dayDragStart from firing
 }
 function eventDragEnd(e) {
   e.currentTarget.closest('.event-row').draggable = false;
+  _dragEvent = null;
 }
 function eventDragOver(e) {
+  if (!_dragEvent) return; // not an event drag — let it bubble to dayDragOver
   e.preventDefault();
   e.stopPropagation();
   e.currentTarget.classList.add('drag-over');
 }
 function eventDragLeave(e) {
+  if (!_dragEvent) return;
   e.currentTarget.classList.remove('drag-over');
 }
 function eventDrop(e, toDayId, toEvId) {
+  if (!_dragEvent) return; // not an event drag — let it bubble to dayDrop
   e.preventDefault();
   e.stopPropagation();
   e.currentTarget.classList.remove('drag-over');
-  if (!_dragEvent) return;
   const { dayId: fromDayId, evId: fromEvId } = _dragEvent;
   _dragEvent = null;
   if (fromDayId === toDayId && fromEvId === toEvId) return;
