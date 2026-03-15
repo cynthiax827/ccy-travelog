@@ -2747,9 +2747,11 @@ function renderItinerary() {
         </div>`
       ).join('');
       return `<div class="event-row" data-dayid="${day.id}" data-evid="${ev.id}"
+        ondragstart="eventDragStart(event,${day.id},${ev.id})"
         ondragover="eventDragOver(event)"
         ondragleave="eventDragLeave(event)"
-        ondrop="eventDrop(event,${day.id},${ev.id})">
+        ondrop="eventDrop(event,${day.id},${ev.id})"
+        ondragend="eventDragEnd(event)">
         <div class="event-time"><input value="${esc(ev.time)}" placeholder="09:00" maxlength="5" oninput="formatTimeInput(this)" onchange="updateEvent(${day.id},${ev.id},'time',this.value);renderItinerary()"/></div>
         <div class="event-row-top">
           <div class="event-label-select">
@@ -2765,9 +2767,7 @@ function renderItinerary() {
             <button class="btn btn-ghost btn-sm event-del-btn" onclick="removeEvent(${day.id},${ev.id})" style="color:var(--gray-400)">×</button>
             <span class="event-drag-handle" title="Drag to move"
               onmousedown="this.closest('.event-row').draggable=true;"
-              onmouseup="this.closest('.event-row').draggable=false;"
-              ondragstart="eventDragStart(event,${day.id},${ev.id})"
-              ondragend="eventDragEnd(event)">⠿</span>
+              onmouseup="this.closest('.event-row').draggable=false;">⠿</span>
           </div>
         </div>
         <div class="event-name"><input value="${esc(ev.name)}" placeholder="Event / place name…" onchange="updateEvent(${day.id},${ev.id},'name',this.value)"/></div>
