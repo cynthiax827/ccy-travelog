@@ -516,13 +516,13 @@
   <div class="logo">Travel Planner</div>
   <nav id="main-nav">
     <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});closeNav();return false">Overview</a>
-    <a href="#travellers-section" onclick="closeNav()">Travellers</a>
-    <a href="#destinations-section" onclick="closeNav()">Destinations</a>
-    <a href="#flights-section" onclick="closeNav()">Flights</a>
+    <a href="#travellers-section" onclick="closeNav()">Traveller</a>
+    <a href="#destinations-section" onclick="closeNav()">Destination</a>
+    <a href="#flights-section" onclick="closeNav()">Flight</a>
     <a href="#hotel-section" onclick="closeNav()">Hotel</a>
     <a href="#itinerary-section" onclick="closeNav()">Itinerary</a>
-    <a href="#expenses-section" onclick="closeNav()">Expenses</a>
-    <a href="#notes-section" onclick="closeNav()">Notes</a>
+    <a href="#expenses-section" onclick="closeNav()">Expense</a>
+    <a href="#notes-section" onclick="closeNav()">Note</a>
   </nav>
   <div class="header-actions">
     <div class="autosave-dot" id="autosave-dot"></div>
@@ -583,7 +583,7 @@
       </div>
       <div class="trip-meta-stats">
         <div class="stat-box"><div class="stat-val" id="stat-days">—</div><div class="stat-lbl">Days</div></div>
-        <div class="stat-box"><div class="stat-val" id="stat-travellers">0</div><div class="stat-lbl">Travellers</div></div>
+        <div class="stat-box"><div class="stat-val" id="stat-travellers">0</div><div class="stat-lbl">Traveller</div></div>
         <div class="stat-box"><div class="stat-val" id="stat-total">0</div><div class="stat-lbl">Est. Total (TWD)</div></div>
       </div>
     </div>
@@ -591,7 +591,7 @@
 
   <!-- 00 · TRAVELLERS -->
   <section id="travellers-section">
-    <div class="section-header"><h2 class="section-title">Travellers</h2><span class="section-number">01</span></div>
+    <div class="section-header"><h2 class="section-title">Traveller</h2><span class="section-number">01</span></div>
     <div class="traveller-tags" id="traveller-tags"></div>
     <div class="add-traveller">
       <input type="text" id="new-traveller" placeholder="Add name…" onkeydown="if(event.key==='Enter')addTraveller()"/>
@@ -601,7 +601,7 @@
 
   <!-- 1 · DESTINATIONS -->
   <section id="destinations-section">
-    <div class="section-header"><h2 class="section-title">Destinations</h2><span class="section-number">02</span></div>
+    <div class="section-header"><h2 class="section-title">Destination</h2><span class="section-number">02</span></div>
     <div id="dest-list-wrap"></div>
     <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
       <button class="btn btn-ghost btn-sm" onclick="addCountry()">+ Add Country</button>
@@ -613,7 +613,7 @@
 
   <!-- 2 · FLIGHTS -->
   <section id="flights-section">
-    <div class="section-header"><h2 class="section-title">Flights</h2><span class="section-number">03</span></div>
+    <div class="section-header"><h2 class="section-title">Flight</h2><span class="section-number">03</span></div>
     <div id="flights-by-traveller">
       <div class="empty-state">Add travellers first to assign flight tickets.</div>
     </div>
@@ -639,7 +639,7 @@
 
   <!-- 05 · EXPENSES -->
   <section id="expenses-section">
-    <div class="section-header"><h2 class="section-title">Expenses</h2><span class="section-number">06</span></div>
+    <div class="section-header"><h2 class="section-title">Expense</h2><span class="section-number">06</span></div>
     <div class="expense-scroll"><table class="expense-table">
       <thead><tr>
         <th style="width:20%">Description</th>
@@ -662,7 +662,7 @@
 
   <!-- 06 · NOTES -->
   <section id="notes-section">
-    <div class="section-header"><h2 class="section-title">Notes</h2><span class="section-number">07</span></div>
+    <div class="section-header"><h2 class="section-title">Note</h2><span class="section-number">07</span></div>
     <div id="notes-list"></div>
     <div style="margin-top:14px">
       <button class="btn btn-ghost btn-sm" onclick="addNote()">+ Add Note</button>
@@ -3685,7 +3685,7 @@ function exportHTML() {
   let destHtml = '';
   if ((d.countries||[]).length) {
     destHtml = `<section>
-    <div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">Destinations</span></div>
+    <div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">Destination</span></div>
     <div style="display:flex;flex-direction:column;gap:12px;">
     ${(d.countries).map(c=>`
       <div style="border:1px solid #d4d4d2;border-radius:2px;overflow:hidden;">
@@ -3703,7 +3703,7 @@ function exportHTML() {
   const flightEntries = ftravellers.filter(name=>d.flights&&d.flights[name]&&(d.flights[name].journeys||[]).length);
   if (flightEntries.length) {
     flightsHtml = `<section>
-    <div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">Flights</span></div>
+    <div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">Flight</span></div>
     ${flightEntries.map(name=>{
       const pax = d.flights[name];
       const color = (d.travellerColors||{})[name] || '#0a0a0a';
@@ -3744,7 +3744,7 @@ function exportHTML() {
   let hotelsHtml = '';
   if ((d.hotels||[]).length) {
     hotelsHtml = `<section>
-    <div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">Hotels</span></div>
+    <div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">Hotel</span></div>
     <div style="display:flex;flex-direction:column;gap:16px;">
     ${d.hotels.map(h=>{
       const n = nightsBetween(h.checkin, h.checkout);
@@ -3775,7 +3775,7 @@ function exportHTML() {
     let total = 0;
     d.expenses.forEach(e=>{ total += parseFloat(e.amt)||0; });
     expHtml = `<section>
-    <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expenses</span></div>
+    <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expense</span></div>
     <table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead>
         <tr style="border-bottom:2px solid #0a0a0a;">

@@ -100,10 +100,10 @@
   <a class="logo" href="index.html">CCY Travelog</a>
   <nav id="main-nav">
     <a href="#" onclick="scrollToSection('hero');return false;">Overview</a>
-    <a href="#" onclick="scrollToSection('destinations');return false;">Destinations</a>
-    <a href="#" onclick="scrollToSection('flights');return false;">Flights</a>
-    <a href="#" onclick="scrollToSection('hotels');return false;">Hotels</a>
-    <a href="#" onclick="scrollToSection('expenses');return false;">Expenses</a>
+    <a href="#" onclick="scrollToSection('destinations');return false;">Destination</a>
+    <a href="#" onclick="scrollToSection('flights');return false;">Flight</a>
+    <a href="#" onclick="scrollToSection('hotels');return false;">Hotel</a>
+    <a href="#" onclick="scrollToSection('expenses');return false;">Expense</a>
     <a href="#" onclick="scrollToSection('itinerary');return false;">Itinerary</a>
   </nav>
   <div class="header-date" id="header-date"></div>
@@ -114,10 +114,10 @@
 
 <div class="mobile-menu" id="mobile-menu">
   <a href="#" onclick="scrollToSection('hero');closeMenu();return false;">Overview</a>
-  <a href="#" onclick="scrollToSection('destinations');closeMenu();return false;">Destinations</a>
-  <a href="#" onclick="scrollToSection('flights');closeMenu();return false;">Flights</a>
-  <a href="#" onclick="scrollToSection('hotels');closeMenu();return false;">Hotels</a>
-  <a href="#" onclick="scrollToSection('expenses');closeMenu();return false;">Expenses</a>
+  <a href="#" onclick="scrollToSection('destinations');closeMenu();return false;">Destination</a>
+  <a href="#" onclick="scrollToSection('flights');closeMenu();return false;">Flight</a>
+  <a href="#" onclick="scrollToSection('hotels');closeMenu();return false;">Hotel</a>
+  <a href="#" onclick="scrollToSection('expenses');closeMenu();return false;">Expense</a>
   <a href="#" onclick="scrollToSection('itinerary');closeMenu();return false;">Itinerary</a>
   <div class="menu-date" id="mobile-date"></div>
 </div>
@@ -238,7 +238,7 @@ function heroHTML(d) {
 function destHTML(d) {
   if (!(d.countries || []).length) return '';
   return `<section>
-    <div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">Destinations</span></div>
+    <div class="sec-hdr"><span class="sec-num">01</span><span class="sec-title">Destination</span></div>
     <div style="display:flex;flex-direction:column;gap:12px;">
     ${d.countries.map(c => `
       <div style="border:1px solid #d4d4d2;border-radius:2px;overflow:hidden;">
@@ -259,7 +259,7 @@ function flightsHTML(d) {
   const colors = d.travellerColors || {};
 
   return `<section>
-    <div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">Flights</span></div>
+    <div class="sec-hdr"><span class="sec-num">02</span><span class="sec-title">Flight</span></div>
     ${withFlights.map(name => {
       const pax   = d.flights[name];
       const color = colors[name] || '#0a0a0a';
@@ -301,7 +301,7 @@ function flightsHTML(d) {
 function hotelsHTML(d) {
   if (!(d.hotels || []).length) return '';
   return `<section>
-    <div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">Hotels</span></div>
+    <div class="sec-hdr"><span class="sec-num">03</span><span class="sec-title">Hotel</span></div>
     <div style="display:flex;flex-direction:column;gap:16px;">
     ${d.hotels.map(h => {
       const n = nightsBetween(h.checkin, h.checkout);
@@ -357,7 +357,7 @@ function expensesHTML(d) {
   }).join('');
 
   return `<section>
-    <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expenses</span></div>
+    <div class="sec-hdr"><span class="sec-num">04</span><span class="sec-title">Expense</span></div>
     <table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead>
         <tr style="border-bottom:2px solid #0a0a0a;">
