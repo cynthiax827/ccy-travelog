@@ -3540,6 +3540,7 @@ function renderNotes() {
   wrap.innerHTML = notes.map(n => `
     <div class="note-block"
       draggable="false"
+      ondragstart="noteDragStart(event,${n.id})"
       ondragover="noteDragOver(event)"
       ondragleave="noteDragLeave(event)"
       ondrop="noteDrop(event,${n.id})"
@@ -3549,8 +3550,7 @@ function renderNotes() {
           oninput="updateNote(${n.id},'title',this.value)"/>
         <span class="note-drag-handle" title="Drag to reorder"
           onmousedown="this.closest('.note-block').draggable=true;"
-          onmouseup="this.closest('.note-block').draggable=false;"
-          ondragstart="noteDragStart(event,${n.id})">⠿</span>
+          onmouseup="this.closest('.note-block').draggable=false;">⠿</span>
         <button class="note-remove" onclick="removeNote(${n.id})">×</button>
       </div>
       ${noteToolbar(n.id)}
