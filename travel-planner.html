@@ -522,7 +522,7 @@
     <div class="autosave-dot" id="autosave-dot"></div>
     <span class="autosave-label" id="autosave-label">Saved</span>
     <div class="actions-menu-wrap">
-      <button class="actions-menu-btn" onclick="toggleActionsMenu()" aria-label="Menu">⋯</button>
+      <button class="actions-menu-btn" onclick="toggleActionsMenu()" aria-label="Menu" style="aspect-ratio:1;padding:5px 8px;">⋯</button>
       <div id="actions-menu" class="actions-menu" style="display:none">
         <div class="actions-menu-item" id="btn-undo" onclick="undo();closeActionsMenu()" style="opacity:0.4;pointer-events:none">↩ Undo</div>
         <div class="actions-menu-item" id="btn-redo" onclick="redo();closeActionsMenu()" style="opacity:0.4;pointer-events:none">↪ Redo</div>
@@ -539,9 +539,9 @@
         <div class="actions-menu-item" onclick="exportJSON();closeActionsMenu()">↓ JSON — data backup</div>
         <div class="actions-menu-item" onclick="exportHTML();closeActionsMenu()">↓ HTML — read-only snapshot</div>
         <div class="actions-menu-divider"></div>
-        <div class="actions-menu-divider"></div>
-        <div class="actions-menu-item" onclick="window.location.href='editor.html'">← Exit Editor</div>
         <div class="actions-menu-item actions-menu-danger" onclick="confirmReset();closeActionsMenu()">↺ Reset</div>
+        <div class="actions-menu-divider"></div>
+        <div class="actions-menu-item actions-menu-danger" onclick="window.location.href='editor.html'">← Exit Editor</div>
       </div>
     </div>
   </div>
@@ -637,8 +637,8 @@
     <div class="expense-scroll"><table class="expense-table">
       <thead><tr>
         <th style="width:20%">Description</th>
-        <th class="exp-col-hide" style="width:13%">Category</th>
-        <th style="width:8%">Currency</th>
+        <th style="width:13%">Category</th>
+        <th class="exp-col-hide" style="width:8%">Currency</th>
         <th style="width:14%">Amount</th>
         <th class="exp-col-hide" style="width:20%">Paid for</th>
         <th class="exp-col-hide" style="width:20%">Paid by</th>
@@ -2454,8 +2454,8 @@ function renderExpenses() {
       </div>` : '';
     return `<tr data-expid="${e.id}">
       <td><input value="${esc(e.desc)}" placeholder="Description…" oninput="updateExpense(${e.id},'desc',this.value)"/></td>
-      <td class="exp-col-hide"><select onchange="updateExpense(${e.id},'cat',this.value)">${catO}</select></td>
-      <td><select class="exp-cur" onchange="updateExpense(${e.id},'cur',this.value);recalcTotals();(function(s){const td=s.closest('tr').querySelector('.amt-wrap');td.querySelector('.amt-sym').textContent=CURRENCY_SYMBOLS[s.value]||'';td.querySelector('.exp-amt').placeholder='0';})(this)">${curO}</select></td>
+      <td><select onchange="updateExpense(${e.id},'cat',this.value)">${catO}</select></td>
+      <td class="exp-col-hide"><select class="exp-cur" onchange="updateExpense(${e.id},'cur',this.value);recalcTotals();(function(s){const td=s.closest('tr').querySelector('.amt-wrap');td.querySelector('.amt-sym').textContent=CURRENCY_SYMBOLS[s.value]||'';td.querySelector('.exp-amt').placeholder='0';})(this)">${curO}</select></td>
       <td><div class="amt-wrap">
         <span class="amt-sym">${CURRENCY_SYMBOLS[e.cur]||''}</span>
         <input class="exp-amt" value="${formatAmtDisplay(floatToDigits(e.amt))}"
@@ -2481,8 +2481,8 @@ function renderExpenses() {
       <td colspan="4">
         <div class="exp-detail-grid">
           <div class="exp-detail-item">
-            <div class="exp-detail-label">Category</div>
-            <select onchange="updateExpense(${e.id},'cat',this.value)">${catO}</select>
+            <div class="exp-detail-label">Currency</div>
+            <select class="exp-cur" onchange="updateExpense(${e.id},'cur',this.value);recalcTotals();(function(s){const td=s.closest('tr').querySelector('.amt-wrap');td.querySelector('.amt-sym').textContent=CURRENCY_SYMBOLS[s.value]||'';td.querySelector('.exp-amt').placeholder='0';})(this)">${curO}</select>
           </div>
           <div class="exp-detail-item">
             <div class="exp-detail-label">Paid by</div>
