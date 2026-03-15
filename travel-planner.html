@@ -306,6 +306,10 @@
   .event-name { grid-column: 3; grid-row: 1; }
   .event-row-controls { display: flex; align-items: center; gap: 6px; grid-column: 4; grid-row: 1; }
   .event-del-btn { width: 28px; height: 28px; padding: 0 !important; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .event-drag-handle { font-size: 14px; color: var(--gray-300); cursor: grab; line-height: 1; user-select: none; flex-shrink: 0; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; transition: color .15s; }
+  .event-drag-handle:hover { color: var(--gray-500); }
+  .event-drag-handle:active { cursor: grabbing; }
+  .event-row.drag-over { background: var(--gray-100); outline: 2px dashed var(--gray-300); outline-offset: -2px; border-radius: var(--radius); }
   /* Mobile: time(col1 row1) | label+controls(col2 row1) | name(col2 row2) */
   @media (max-width: 600px) {
     .event-row { grid-template-columns: 50px 1fr; row-gap: 4px; }
@@ -454,6 +458,10 @@
 
   /* NOTES */
   .note-block { border: var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: visible; }
+  .note-block.drag-over { outline: 2px dashed var(--gray-400); outline-offset: -2px; background: var(--gray-100); border-radius: var(--radius); }
+  .note-drag-handle { font-size: 15px; color: var(--gray-300); cursor: grab; padding: 0 2px; line-height: 1; user-select: none; flex-shrink: 0; transition: color .15s; }
+  .note-drag-handle:hover { color: var(--gray-500); }
+  .note-drag-handle:active { cursor: grabbing; }
   .note-header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: var(--border); background: var(--gray-100); }
   .note-title-input { flex: 1; border: none; background: transparent; font-family: var(--font-mono); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--gray-600); outline: none; padding: 0; }
   .note-title-input::placeholder { color: var(--gray-300); }
@@ -468,7 +476,7 @@
   .note-toolbar-select { font-family: var(--font-mono); font-size: 11px; background: none; border: var(--border); border-radius: 2px; padding: 3px 6px; color: var(--gray-600); cursor: pointer; height: 26px; }
   .note-toolbar-select:focus { outline: none; border-color: var(--black); }
   /* Contenteditable body */
-  .note-body-input { width: 100%; box-sizing: border-box; border: none; padding: 14px 16px; font-size: 13px; line-height: 1.65; min-height: 120px; font-family: var(--font-mono); background: var(--white); color: var(--black); outline: none; display: block; }
+  .note-body-input { width: 100%; box-sizing: border-box; border: none; padding: 14px 16px; font-size: 13px; line-height: 1.65; min-height: 120px; max-height: 240px; overflow-y: auto; font-family: var(--font-mono); background: var(--white); color: var(--black); outline: none; display: block; }
   .note-body-input:focus { background: #fefefe; }
   .note-body-input:empty::before { content: attr(data-placeholder); color: var(--gray-400); pointer-events: none; display: block; }
   .note-body-input b, .note-body-input strong { font-weight: 700; }
@@ -532,6 +540,8 @@
         <div class="actions-menu-item" onclick="exportJSON();closeActionsMenu()">↓ JSON — data backup</div>
         <div class="actions-menu-item" onclick="exportHTML();closeActionsMenu()">↓ HTML — read-only snapshot</div>
         <div class="actions-menu-divider"></div>
+        <div class="actions-menu-divider"></div>
+        <div class="actions-menu-item" onclick="window.location.href='editor.html'">← Exit Editor</div>
         <div class="actions-menu-item actions-menu-danger" onclick="confirmReset();closeActionsMenu()">↺ Reset</div>
       </div>
     </div>
@@ -2736,7 +2746,10 @@ function renderItinerary() {
           ).join('')}</div>
         </div>`
       ).join('');
-      return `<div class="event-row">
+      return `<div class="event-row" data-dayid="${day.id}" data-evid="${ev.id}"
+        ondragover="eventDragOver(event)"
+        ondragleave="eventDragLeave(event)"
+        ondrop="eventDrop(event,${day.id},${ev.id})">
         <div class="event-time"><input value="${esc(ev.time)}" placeholder="09:00" maxlength="5" oninput="formatTimeInput(this)" onchange="updateEvent(${day.id},${ev.id},'time',this.value);renderItinerary()"/></div>
         <div class="event-row-top">
           <div class="event-label-select">
@@ -2750,6 +2763,11 @@ function renderItinerary() {
             </div>
             <button class="candidates-toggle" onclick="toggleCandidates(this)">More ▾</button>
             <button class="btn btn-ghost btn-sm event-del-btn" onclick="removeEvent(${day.id},${ev.id})" style="color:var(--gray-400)">×</button>
+            <span class="event-drag-handle" title="Drag to move"
+              onmousedown="this.closest('.event-row').draggable=true;"
+              onmouseup="this.closest('.event-row').draggable=false;"
+              ondragstart="eventDragStart(event,${day.id},${ev.id})"
+              ondragend="eventDragEnd(event)">⠿</span>
           </div>
         </div>
         <div class="event-name"><input value="${esc(ev.name)}" placeholder="Event / place name…" onchange="updateEvent(${day.id},${ev.id},'name',this.value)"/></div>
@@ -2910,6 +2928,44 @@ function syncTripDatesFromState() {
 
 /* ═══════════════ DAY DRAG REORDER ═══════════════ */
 let _dragDayId = null;
+/* ── EVENT DRAG REORDER (cross-day) ─────────────────────────────────────── */
+let _dragEvent = null; // { dayId, evId }
+
+function eventDragStart(e, dayId, evId) {
+  _dragEvent = { dayId, evId };
+  e.dataTransfer.effectAllowed = 'move';
+  e.stopPropagation(); // prevent day drag from firing
+}
+function eventDragEnd(e) {
+  e.currentTarget.closest('.event-row').draggable = false;
+}
+function eventDragOver(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  e.currentTarget.classList.add('drag-over');
+}
+function eventDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function eventDrop(e, toDayId, toEvId) {
+  e.preventDefault();
+  e.stopPropagation();
+  e.currentTarget.classList.remove('drag-over');
+  if (!_dragEvent) return;
+  const { dayId: fromDayId, evId: fromEvId } = _dragEvent;
+  _dragEvent = null;
+  if (fromDayId === toDayId && fromEvId === toEvId) return;
+  const fromDay = state.itinerary.find(d => d.id === fromDayId);
+  const toDay   = state.itinerary.find(d => d.id === toDayId);
+  if (!fromDay || !toDay) return;
+  const fromIdx = fromDay.events.findIndex(ev => ev.id === fromEvId);
+  if (fromIdx === -1) return;
+  const [ev] = fromDay.events.splice(fromIdx, 1);
+  const toIdx = toDay.events.findIndex(ev => ev.id === toEvId);
+  toDay.events.splice(toIdx === -1 ? toDay.events.length : toIdx, 0, ev);
+  renderItinerary(); scheduleSave();
+}
+
 function dayDragStart(e, id) {
   _dragDayId = id;
   e.dataTransfer.effectAllowed = 'move';
@@ -3379,8 +3435,16 @@ function addNote() {
 }
 
 function removeNote(id) {
-  state.notes = (state.notes || []).filter(n => n.id !== id);
-  renderNotes(); scheduleSave();
+  const n = (state.notes || []).find(n => n.id === id);
+  const label = n?.title ? `"${n.title}"` : 'this note';
+  showConfirm(
+    `Remove ${label}?`,
+    'This note will be permanently deleted.',
+    () => {
+      state.notes = (state.notes || []).filter(n => n.id !== id);
+      renderNotes(); scheduleSave();
+    }
+  );
 }
 
 function updateNote(id, key, val) {
@@ -3441,6 +3505,30 @@ function noteHeading(id, tag) {
   scheduleSave();
 }
 
+let _dragNoteId = null;
+function noteDragStart(e, id) {
+  _dragNoteId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.currentTarget.style.opacity = '0.5';
+}
+function noteDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function noteDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function noteDrop(e, targetId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  e.currentTarget.style.opacity = '';
+  if (!_dragNoteId || _dragNoteId === targetId) return;
+  const notes = state.notes || [];
+  const fromIdx = notes.findIndex(n => n.id === _dragNoteId);
+  const toIdx   = notes.findIndex(n => n.id === targetId);
+  if (fromIdx === -1 || toIdx === -1) return;
+  const [item] = notes.splice(fromIdx, 1);
+  notes.splice(toIdx, 0, item);
+  _dragNoteId = null;
+  renderNotes(); scheduleSave();
+}
+function noteDragEnd(e) { e.currentTarget.style.opacity = ''; }
+
 function renderNotes() {
   const wrap = document.getElementById('notes-list');
   if (!wrap) return;
@@ -3450,10 +3538,19 @@ function renderNotes() {
     return;
   }
   wrap.innerHTML = notes.map(n => `
-    <div class="note-block">
+    <div class="note-block"
+      draggable="false"
+      ondragover="noteDragOver(event)"
+      ondragleave="noteDragLeave(event)"
+      ondrop="noteDrop(event,${n.id})"
+      ondragend="noteDragEnd(event)">
       <div class="note-header">
         <input class="note-title-input" value="${esc(n.title)}" placeholder="Note title…"
           oninput="updateNote(${n.id},'title',this.value)"/>
+        <span class="note-drag-handle" title="Drag to reorder"
+          onmousedown="this.closest('.note-block').draggable=true;"
+          onmouseup="this.closest('.note-block').draggable=false;"
+          ondragstart="noteDragStart(event,${n.id})">⠿</span>
         <button class="note-remove" onclick="removeNote(${n.id})">×</button>
       </div>
       ${noteToolbar(n.id)}
