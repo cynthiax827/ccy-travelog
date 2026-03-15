@@ -448,6 +448,8 @@
   }
 
   /* ACTIONS MENU */
+  .exit-editor-desktop { display: inline-flex; }
+  @media (max-width: 600px) { .exit-editor-desktop { display: none; } }
   .actions-menu-wrap { position: relative; }
   .actions-menu-btn { background: none; border: var(--border); border-radius: var(--radius); padding: 5px 12px; font-family: var(--font-mono); font-size: 18px; cursor: pointer; line-height: 1; color: var(--black); letter-spacing: 2px; transition: background .15s; }
   .actions-menu-btn:hover { background: var(--gray-100); }
@@ -527,6 +529,7 @@
   <div class="header-actions">
     <div class="autosave-dot" id="autosave-dot"></div>
     <span class="autosave-label" id="autosave-label">Saved</span>
+    <a href="editor.html" class="btn btn-primary btn-sm exit-editor-desktop" style="padding:5px 14px;font-size:10px;text-decoration:none;">← Exit</a>
     <div class="actions-menu-wrap">
       <button class="actions-menu-btn" onclick="toggleActionsMenu()" aria-label="Menu" style="aspect-ratio:1;padding:5px 8px;">⋯</button>
       <div id="actions-menu" class="actions-menu" style="display:none">
@@ -3895,21 +3898,21 @@ ${coverHtml}
   ${notesHtml}
 </main>
 <footer>Made by Cynthia Hsiao</footer>
-<scr' + 'ipt>
+\x3Cscript>
 function toggleExpDetail(row) {
   if (window.innerWidth > 600) return;
   var detail = row.nextElementSibling;
   if (!detail || !detail.classList.contains('exp-detail-row')) return;
   var isOpen = detail.classList.contains('open');
   document.querySelectorAll('.exp-detail-row.open').forEach(function(r){r.classList.remove('open');});
-  document.querySelectorAll('.exp-row-toggle').forEach(function(b){b.textContent='›';});
+  document.querySelectorAll('.exp-row-toggle').forEach(function(b){b.textContent='\\u203A';});
   if (!isOpen) {
     detail.classList.add('open');
     var tog = row.querySelector('.exp-row-toggle');
-    if (tog) tog.textContent = '⌄';
+    if (tog) tog.textContent = '\\u2304';
   }
 }
-<\/scr' + 'ipt>
+\x3C/script>
 </body>
 </html>`;
 
