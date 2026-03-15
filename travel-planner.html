@@ -2987,6 +2987,21 @@ function dayDrop(e, targetId) {
   e.preventDefault();
   e.currentTarget.classList.remove('drag-over');
   e.currentTarget.style.opacity = '';
+  // Handle event dropped onto a day (e.g. empty day with no event-row targets)
+  if (_dragEvent) {
+    const { dayId: fromDayId, evId: fromEvId } = _dragEvent;
+    _dragEvent = null;
+    if (fromDayId === targetId) return;
+    const fromDay = state.itinerary.find(d => d.id === fromDayId);
+    const toDay   = state.itinerary.find(d => d.id === targetId);
+    if (!fromDay || !toDay) return;
+    const fromIdx = fromDay.events.findIndex(ev => ev.id === fromEvId);
+    if (fromIdx === -1) return;
+    const [ev] = fromDay.events.splice(fromIdx, 1);
+    toDay.events.push(ev);
+    renderItinerary(); scheduleSave();
+    return;
+  }
   if (_dragDayId === null || _dragDayId === targetId) return;
   const fromIdx = state.itinerary.findIndex(d => d.id === _dragDayId);
   const toIdx   = state.itinerary.findIndex(d => d.id === targetId);
