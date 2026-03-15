@@ -112,8 +112,44 @@
       ]
     }
   },
-  "hotel": [],
-  "expense": [],
+  "hotel": [
+    {
+      "id": 1,
+      "name": "D.C. Inn",
+      "city": "Penghu",
+      "checkin": "2025-02-28",
+      "checkout": "2025-03-02",
+      "room": "Standard Double Room",
+      "addr": "起點旅行民宿 D.C. Inn",
+      "notes": "4323.385.501"
+    }
+  ],
+  "expense": [
+    {
+      "id": 1,
+      "desc": "TSA - MZG",
+      "cat": "Flights",
+      "cur": "TWD",
+      "amt": "8724",
+      "paidBy": "Cynthia Hsiao",
+      "paidFor": [
+        "Cynthia Hsiao",
+        "Danny Parker"
+      ]
+    },
+    {
+      "id": 2,
+      "desc": "D. C. Inn",
+      "cat": "Accommodation",
+      "cur": "TWD",
+      "amt": "2464",
+      "paidBy": "Cynthia Hsiao",
+      "paidFor": [
+        "Cynthia Hsiao",
+        "Danny Parker"
+      ]
+    }
+  ],
   "itinerary": [
     {
       "id": 1,
@@ -362,8 +398,8 @@
   "_ids": {
     "dayId": 3,
     "eventId": 23,
-    "hotelId": 0,
-    "expId": 0,
+    "hotelId": 1,
+    "expId": 2,
     "destId": 0,
     "countryId": 201,
     "cityId": 2001,
