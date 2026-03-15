@@ -181,6 +181,14 @@ const LABEL_STYLE = {
 
 /* ── Render ──────────────────────────────────────────────── */
 function render(d) {
+  // Normalize singular keys (new format) to plural (used by render functions)
+  if (d.traveller && !d.travellers) d.travellers = d.traveller;
+  if (d.travellerColor && !d.travellerColors) d.travellerColors = d.travellerColor;
+  if (d.country && !d.countries) d.countries = d.country;
+  if (d.flight && !d.flights) d.flights = d.flight;
+  if (d.hotel && !d.hotels) d.hotels = d.hotel;
+  if (d.expense && !d.expenses) d.expenses = d.expense;
+  if (d.note && !d.notes) d.notes = d.note;
   document.title = (d.tripTitle || 'Travel Plan') + ' | CCY Travelog';
 
   const dateStr = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });

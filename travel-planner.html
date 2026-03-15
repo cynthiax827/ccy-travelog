@@ -973,12 +973,12 @@ function saveNow() {
           _jsonFilename: slugify(data.tripTitle || 'untitled') + '.json',
           startDate: data.tripStart || '',
           endDate: data.tripEnd || '',
-          destinations: (data.countries || []).map(c => ({
+          destinations: (data.country || []).map(c => ({
             country: c.name,
             cities: (c.cities || []).map(ci => ci.name).filter(Boolean)
           })).filter(c => c.country),
-          travellers: (data.travellers || []).map(n => ({
-            name: n, color: (data.travellerColors || {})[n] || '#0a0a0a'
+          travellers: (data.traveller || []).map(n => ({
+            name: n, color: (data.travellerColor || {})[n] || '#0a0a0a'
           }))
         };
         let plans = [];
@@ -1032,18 +1032,23 @@ function setAutosaveStatus(s) {
   else              { dot.className='autosave-dot saved';  lbl.textContent='Saved'; }
 }
 function collectData() {
+  // Filter travellerColors to only include current travellers
+  const cleanColors = {};
+  (state.travellers || []).forEach(n => {
+    if (state.travellerColors && state.travellerColors[n]) cleanColors[n] = state.travellerColors[n];
+  });
   return {
     tripTitle: document.getElementById('trip-title').value,
     tripStart: document.getElementById('trip-start')?.value||'',
     tripEnd:   document.getElementById('trip-end')?.value||'',
-    travellers: state.travellers,
-    travellerColors: state.travellerColors||{},
-    countries: state.countries,
-    flights: state.flights,
-    hotels: state.hotels,
-    expenses: state.expenses,
+    traveller: state.travellers,
+    travellerColor: cleanColors,
+    country: state.countries,
+    flight: state.flights,
+    hotel: state.hotels,
+    expense: state.expenses,
     itinerary: state.itinerary,
-    notes: state.notes||[],
+    note: state.notes||[],
     _ids: { dayId, eventId, hotelId, expId, destId, countryId, cityId, noteId, flightJourneyId, flightLegId }
   };
 }
@@ -3174,11 +3179,11 @@ function applyData(data) {
     countryId = data._ids.countryId||200; cityId = data._ids.cityId||2000; noteId = data._ids.noteId||900;
     flightJourneyId = data._ids.flightJourneyId||100; flightLegId = data._ids.flightLegId||1000;
   }
-  state.travellers = data.travellers||[];
-  state.travellerColors = data.travellerColors||{};
+  state.travellers = data.traveller||data.travellers||[];
+  state.travellerColors = data.travellerColor||data.travellerColors||{};
   // Migrate old flat destinations[] → new countries[] model
-  if (data.countries) {
-    state.countries = data.countries;
+  if (data.country||data.countries) {
+    state.countries = data.country||data.countries;
   } else if (data.destinations && data.destinations.length) {
     const grouped = {};
     const order = [];
@@ -3191,9 +3196,9 @@ function applyData(data) {
   } else {
     state.countries = [];
   }
-  state.flights   = data.flights||{};
-  state.hotels    = data.hotels||[];
-  state.expenses  = data.expenses||[];
+  state.flights   = data.flight||data.flights||{};
+  state.hotels    = data.hotel||data.hotels||[];
+  state.expenses  = data.expense||data.expenses||[];
   state.itinerary = data.itinerary||[];
   // Migrate old single-city field to overnightCity
   state.itinerary.forEach(d => {
@@ -3203,7 +3208,7 @@ function applyData(data) {
       d.isDayTrip = false; d.sightseeingCity = '';
     }
   });
-  state.notes     = data.notes||[];
+  state.notes     = data.note||data.notes||[];
   document.getElementById('trip-title').value = data.tripTitle||'';
   const _tt = (data.tripTitle||'').trim();
   document.title = _tt ? _tt + ' | Travel Planner' : 'Travel Planner';
@@ -3627,6 +3632,11 @@ async function exportJSON() {
 }
 function exportHTML() {
   const d = collectData();
+  // Normalize singular keys to plural for template compatibility
+  d.travellers = d.traveller||[]; d.travellerColors = d.travellerColor||{};
+  d.countries = d.country||[]; d.flights = d.flight||{};
+  d.hotels = d.hotel||[]; d.expenses = d.expense||[];
+  d.notes = d.note||[];
   const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
   const LABEL_ICONS = {flight:'✈',hotel:'🏨',transport:'🚕',bus:'🚌',train:'🚆',breakfast:'☕',lunch:'🍽',dinner:'🍷',bar:'🍸',tourist:'📍',reservation:'📋',activity:'🎭',museum:'🏛','gallery':'🖼',heritage:'🏯',coffee:'☕',snack:'🥐',other:'•'};
