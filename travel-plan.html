@@ -24,6 +24,7 @@
   header .inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
   .logo { font-family: 'DM Serif Display', Georgia, serif; font-size: 26px; font-weight: 400; letter-spacing: .02em; line-height: 1; flex-shrink: 0; white-space: nowrap; text-decoration: none; color: #0a0a0a; }
   .header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .exit-btn { display: inline-flex; align-items: center; font-family: 'DM Mono', 'Courier New', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 2px; cursor: pointer; border: 1px solid #0a0a0a; background: #0a0a0a; color: #f7f6f3; white-space: nowrap; text-decoration: none; }
 
   /* Nav */
   nav { display: flex; gap: 22px; flex: 1; justify-content: center; }
@@ -119,7 +120,7 @@
       <a href="#" onclick="scrollToSection('itinerary');return false;">Itinerary</a>
     </nav>
     <div class="header-actions">
-      <a href="index.html" class="btn btn-primary btn-sm exit-btn" style="padding:5px 14px;font-size:10px;text-decoration:none;">⭠ Exit</a>
+      <a href="index.html" class="exit-btn">⭠ Exit</a>
       <button class="menu-btn" id="menu-btn" onclick="toggleMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
