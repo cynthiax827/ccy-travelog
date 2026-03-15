@@ -305,7 +305,6 @@
   .event-label-select { position: relative; grid-column: 2; grid-row: 1; }
   .event-name { grid-column: 3; grid-row: 1; }
   .event-row-controls { display: flex; align-items: center; gap: 6px; grid-column: 4; grid-row: 1; }
-  .event-del-btn { width: 28px; height: 28px; padding: 0 !important; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .event-drag-handle { font-size: 14px; color: var(--gray-300); cursor: grab; line-height: 1; user-select: none; flex-shrink: 0; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; transition: color .15s; }
   .event-drag-handle:hover { color: var(--gray-500); }
   .event-drag-handle:active { cursor: grabbing; }
@@ -2747,6 +2746,7 @@ function renderItinerary() {
         </div>`
       ).join('');
       return `<div class="event-row" data-dayid="${day.id}" data-evid="${ev.id}"
+        draggable="false"
         ondragstart="eventDragStart(event,${day.id},${ev.id})"
         ondragover="eventDragOver(event)"
         ondragleave="eventDragLeave(event)"
@@ -2764,7 +2764,6 @@ function renderItinerary() {
               <div class="hashtag-dropdown">${tagOpts}</div>
             </div>
             <button class="candidates-toggle" onclick="toggleCandidates(this)">More ▾</button>
-            <button class="btn btn-ghost btn-sm event-del-btn" onclick="removeEvent(${day.id},${ev.id})" style="color:var(--gray-400)">×</button>
             <span class="event-drag-handle" title="Drag to move"
               onmousedown="this.closest('.event-row').draggable=true;"
               onmouseup="this.closest('.event-row').draggable=false;">⠿</span>
@@ -2775,15 +2774,16 @@ function renderItinerary() {
         <div class="candidates-panel">
           <div class="field" style="margin-bottom:14px">
             <label>Location Name &amp; Link</label>
-            <div style="display:flex;gap:8px;align-items:stretch;">
-              <input value="${esc(ev.address||'')}" placeholder="Location name or address…" style="flex:1"
+            <div style="display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;">
+              <input value="${esc(ev.address||'')}" placeholder="Location name or address…" style="flex:1;min-width:120px"
                 oninput="updateEvent(${day.id},${ev.id},'address',this.value);const a=this.parentElement.querySelector('.map-link');if(a){a.href='https://www.google.com/maps/search/'+encodeURIComponent(this.value);a.style.opacity=this.value?'1':'0.35';a.style.pointerEvents=this.value?'':'none';}"
                 onchange="updateEvent(${day.id},${ev.id},'address',this.value)"/>
               <a class="map-link btn btn-ghost btn-sm" href="${ev.address?'https://www.google.com/maps/search/'+encodeURIComponent(ev.address):'#'}" target="_blank" style="flex-shrink:0;text-decoration:none;opacity:${ev.address?'1':'0.35'};pointer-events:${ev.address?'auto':'none'};align-self:stretch;display:inline-flex;align-items:center;" title="Open in Google Maps">📍 Map</a>
-              <input value="${esc(ev.link||'')}" placeholder="https://…" style="flex:1"
+              <input value="${esc(ev.link||'')}" placeholder="https://…" style="flex:1;min-width:120px"
                 oninput="updateEvent(${day.id},${ev.id},'link',this.value);const a=this.parentElement.querySelector('.ext-link');if(a){a.href=this.value||'#';a.style.opacity=this.value?'1':'0.35';a.style.pointerEvents=this.value?'':'none';}"
                 onchange="updateEvent(${day.id},${ev.id},'link',this.value)"/>
               <a class="ext-link btn btn-ghost btn-sm" href="${ev.link||'#'}" target="_blank" style="flex-shrink:0;text-decoration:none;opacity:${ev.link?'1':'0.35'};pointer-events:${ev.link?'auto':'none'};align-self:stretch;display:inline-flex;align-items:center;" title="Open link">↗</a>
+              <button class="btn btn-danger btn-sm" onclick="removeEvent(${day.id},${ev.id})" style="flex-shrink:0;white-space:nowrap;">Delete Event</button>
             </div>
           </div>
           <label>Candidate Locations / Options</label>
