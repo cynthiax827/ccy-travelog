@@ -241,7 +241,7 @@
       ]
     },
     {
-      "id": 2,
+      "id": 5,
       "n": 2,
       "date": "2026-07-02",
       "city": "Lisbon",
@@ -251,7 +251,8 @@
           "time": "09:55",
           "label": "flight",
           "name": "Arrive at LIS",
-          "candidates": []
+          "candidates": [],
+          "address": "Humberto Delgado Airport"
         },
         {
           "id": 35,
@@ -261,34 +262,28 @@
           "candidates": []
         },
         {
-          "id": 18,
+          "id": 49,
           "time": "13:00",
           "label": "lunch",
-          "name": "Local Food Court: Time Out Market",
+          "name": "Walk around ALFAMA area and grab some food",
           "candidates": [],
-          "address": "Time Out Market",
-          "link": "https://thebeverlygarden.com/europe/portugal/lisbon/time-out-market/"
+          "address": "Alfama"
         },
         {
-          "id": 21,
-          "time": "14:00",
+          "id": 51,
+          "time": "13:30",
           "label": "coffee",
-          "name": "A Brasileira",
+          "name": "Have some coffee at nearby coffee shops",
           "candidates": [],
-          "address": "A Brasileira Lisbon"
+          "address": "Paleio Café"
         },
         {
-          "id": 25,
-          "time": "15:00",
+          "id": 50,
+          "time": "14:00",
           "label": "tourist",
-          "name": "Vintage Shop: A Vida Portuguesa",
+          "name": "Lisbon Cathedral",
           "candidates": [],
-          "hashtags": [
-            "shopping",
-            "cultural"
-          ],
-          "address": "A Vida Portuguesa",
-          "link": "https://thebeverlygarden.com/europe/portugal/lisbon/cafe-a-brasileira/"
+          "address": "Sé de Lisboa"
         },
         {
           "id": 15,
@@ -305,21 +300,12 @@
           "hashtags": [
             "culinary"
           ]
-        }
-      ],
-      "overnightCity": "Lisbon"
-    },
-    {
-      "id": 5,
-      "n": 3,
-      "date": "2026-07-03",
-      "city": "Lisbon",
-      "events": [
+        },
         {
-          "id": 43,
-          "time": "",
-          "label": "tourist",
-          "name": "Casa Do Licor Pastel De Nata",
+          "id": 52,
+          "time": "20:00",
+          "label": "bar",
+          "name": "A nice bar near the hotel",
           "candidates": []
         }
       ],
@@ -329,8 +315,8 @@
     },
     {
       "id": 4,
-      "n": 4,
-      "date": "2026-07-04",
+      "n": 3,
+      "date": "2026-07-03",
       "city": "Lisbon",
       "events": [
         {
@@ -374,31 +360,6 @@
           "label": "train",
           "name": "Sintra to Rossio - 45 mins",
           "candidates": []
-        },
-        {
-          "id": 45,
-          "time": "18:30",
-          "label": "heritage",
-          "name": "Belém Tower",
-          "candidates": [],
-          "address": "Belém Tower"
-        },
-        {
-          "id": 46,
-          "time": "19:30",
-          "label": "snack",
-          "name": "Egg tart: Pastéis de Belém",
-          "candidates": [],
-          "address": "Pastéis de Belém"
-        },
-        {
-          "id": 24,
-          "time": "20:00",
-          "label": "dinner",
-          "name": "Seafood restaurant: UMA Marisqueira $",
-          "candidates": [],
-          "address": "UMA Marisqueira",
-          "link": "https://marisqueirauma.eatbu.com/"
         }
       ],
       "overnightCity": "Lisbon",
@@ -407,8 +368,8 @@
     },
     {
       "id": 7,
-      "n": 5,
-      "date": "2026-07-05",
+      "n": 4,
+      "date": "2026-07-04",
       "city": "Coimbra",
       "events": [
         {
@@ -418,7 +379,40 @@
           "name": "Feira da Ladra (Flea market; open on Tue. & Sat.; Fado music)",
           "candidates": [],
           "link": "https://thebeverlygarden.com/europe/portugal/lisbon/feira-da-ladra/",
-          "address": "Feira da Ladra"
+          "address": "Feira da Ladra",
+          "hashtags": [
+            "local experience"
+          ]
+        },
+        {
+          "id": 58,
+          "time": "13:00",
+          "label": "heritage",
+          "name": "Gothic Building: Jerónimos Monastery",
+          "candidates": [],
+          "address": "Jerónimos Monastery",
+          "hashtags": [
+            "architectural",
+            "historical"
+          ]
+        },
+        {
+          "id": 60,
+          "time": "14:00",
+          "label": "snack",
+          "name": "Egg Tart: Pastéis de Belém",
+          "candidates": []
+        },
+        {
+          "id": 59,
+          "time": "17:00",
+          "label": "heritage",
+          "name": "Belém Tower (temporarlily closed)",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "architectural"
+          ]
         },
         {
           "id": 27,
@@ -433,53 +427,109 @@
       "overnightCity": "Lisbon"
     },
     {
-      "id": 6,
-      "n": 6,
-      "date": "2026-07-06",
+      "id": 2,
+      "n": 5,
+      "date": "2026-07-05",
       "city": "Lisbon",
-      "events": [],
+      "events": [
+        {
+          "id": 53,
+          "time": "10:00",
+          "label": "gallery",
+          "name": "The National Museum of Contemporary Art",
+          "candidates": [],
+          "hashtags": [
+            "cultural"
+          ]
+        },
+        {
+          "id": 18,
+          "time": "12:00",
+          "label": "lunch",
+          "name": "Local Food Court: Time Out Market",
+          "candidates": [],
+          "address": "Time Out Market",
+          "link": "https://thebeverlygarden.com/europe/portugal/lisbon/time-out-market/"
+        },
+        {
+          "id": 21,
+          "time": "13:00",
+          "label": "coffee",
+          "name": "A Brasileira",
+          "candidates": [],
+          "address": "A Brasileira Lisbon"
+        },
+        {
+          "id": 25,
+          "time": "14:00",
+          "label": "tourist",
+          "name": "Vintage Shop: A Vida Portuguesa",
+          "candidates": [],
+          "hashtags": [
+            "shopping",
+            "cultural"
+          ],
+          "address": "A Vida Portuguesa",
+          "link": "https://thebeverlygarden.com/europe/portugal/lisbon/cafe-a-brasileira/"
+        },
+        {
+          "id": 54,
+          "time": "15:00",
+          "label": "tourist",
+          "name": "Lisbon Plaza: Praça do Comércio",
+          "candidates": [],
+          "address": "Praça do Comércio",
+          "hashtags": [
+            "historical",
+            "architectural"
+          ]
+        },
+        {
+          "id": 55,
+          "time": "15:00",
+          "label": "heritage",
+          "name": "Cais das Colunas",
+          "candidates": [],
+          "hashtags": [
+            "historical",
+            "photography"
+          ],
+          "address": "Cais das Colunas"
+        },
+        {
+          "id": 43,
+          "time": "16:00",
+          "label": "bar",
+          "name": "Espresso Martini with Lisbon twist: Casa Do Licor Pastel De Nata",
+          "candidates": [],
+          "address": "Casa Do Licor Pastel De Nata"
+        },
+        {
+          "id": 24,
+          "time": "19:00",
+          "label": "dinner",
+          "name": "Seafood restaurant: UMA Marisqueira $",
+          "candidates": [],
+          "address": "UMA Marisqueira",
+          "link": "https://marisqueirauma.eatbu.com/"
+        }
+      ],
       "overnightCity": "Lisbon"
     },
     {
       "id": 13,
-      "n": 7,
-      "date": "2026-07-07",
+      "n": 6,
+      "date": "2026-07-06",
       "city": "",
       "events": [],
-      "overnightCity": "Lisbon",
-      "isDayTrip": true,
-      "sightseeingCity": "Obidos"
-    },
-    {
-      "id": 8,
-      "n": 8,
-      "date": "2026-07-08",
-      "city": "Coimbra",
-      "events": [
-        {
-          "id": 48,
-          "time": "10:00",
-          "label": "gallery",
-          "name": "Museu de Arte Contemporânea de Serralves",
-          "candidates": []
-        },
-        {
-          "id": 47,
-          "time": "12:00",
-          "label": "tourist",
-          "name": "Park Area Exploration: Parque de Serralves",
-          "candidates": [],
-          "address": "Parque de Serralves"
-        }
-      ],
-      "overnightCity": "Porto",
+      "overnightCity": "Obidos",
       "isDayTrip": false,
       "sightseeingCity": ""
     },
     {
       "id": 3,
-      "n": 9,
-      "date": "2026-07-09",
+      "n": 7,
+      "date": "2026-07-07",
       "city": "Lisbon",
       "events": [
         {
@@ -533,11 +583,45 @@
     },
     {
       "id": 12,
-      "n": 10,
-      "date": "2026-07-10",
+      "n": 8,
+      "date": "2026-07-08",
       "city": "",
       "events": [],
       "overnightCity": "Aveiro",
+      "isDayTrip": false,
+      "sightseeingCity": ""
+    },
+    {
+      "id": 6,
+      "n": 9,
+      "date": "2026-07-09",
+      "city": "Lisbon",
+      "events": [],
+      "overnightCity": "Porto"
+    },
+    {
+      "id": 8,
+      "n": 10,
+      "date": "2026-07-10",
+      "city": "Coimbra",
+      "events": [
+        {
+          "id": 48,
+          "time": "10:00",
+          "label": "gallery",
+          "name": "Museu de Arte Contemporânea de Serralves",
+          "candidates": []
+        },
+        {
+          "id": 47,
+          "time": "12:00",
+          "label": "tourist",
+          "name": "Park Area Exploration: Parque de Serralves",
+          "candidates": [],
+          "address": "Parque de Serralves"
+        }
+      ],
+      "overnightCity": "Porto",
       "isDayTrip": false,
       "sightseeingCity": ""
     },
@@ -603,10 +687,25 @@
       "city": "Porto",
       "events": [
         {
+          "id": 56,
+          "time": "08:50",
+          "label": "transport",
+          "name": "Danny: Hotel to OPO",
+          "candidates": [],
+          "address": "Francisco Sá Carneiro Airport"
+        },
+        {
           "id": 5,
           "time": "10:50",
           "label": "flight",
           "name": "Danny' direct flight to MAN",
+          "candidates": []
+        },
+        {
+          "id": 57,
+          "time": "14:40",
+          "label": "transport",
+          "name": "Cynthia: To OPO 1440",
           "candidates": []
         },
         {
@@ -626,7 +725,7 @@
     {
       "id": 909,
       "title": "The journey route",
-      "body": "Lisbon - Comibra - Aveiro - Porto<div>Day trips:</div><div><ul><li>Sintra: from Lisbon, can book a tour guy</li><li>Obidos: from Lisbon</li></ul></div>"
+      "body": "<b>Lisbon</b> - Obidos - Comibra - Aveiro - <b>Porto </b>(<a href=\"https://maps.app.goo.gl/5rtYSiBz8uGhSh4R7\">Google map</a>)<div><div><div>Day trips:</div><div><ul><li>Sintra: from Lisbon, can book a tour guy</li><li>Do Obidos through a day tour?</li></ul></div></div></div>"
     },
     {
       "id": 910,
@@ -646,13 +745,13 @@
   ],
   "_ids": {
     "dayId": 16,
-    "eventId": 48,
+    "eventId": 60,
     "hotelId": 5,
     "expId": 16,
     "destId": 0,
     "countryId": 201,
     "cityId": 2014,
-    "noteId": 910,
+    "noteId": 911,
     "flightJourneyId": 126,
     "flightLegId": 1006
   },
