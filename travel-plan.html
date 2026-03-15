@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CCY Travelog</title>
 <!-- Standard favicon for most browsers -->
-<link rel="icon" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon.png?v=2" type="image/x-icon">
+<link rel="icon" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon_w.png" type="image/x-icon">
 <!-- Recommended PNG icon for general use -->
-<link rel="icon" type="image/png" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon.png?v=2" sizes="32x32">
+<link rel="icon" type="image/png" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon_w.png" sizes="32x32">
 <!-- Apple Touch Icon (for iOS home screen) -->
-<link rel="apple-touch-icon" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon.png?v=2">
+<link rel="apple-touch-icon" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon_w.png">
 <!-- Web App Manifest (for Android PWA support) -->
 <link rel="manifest" href="https://cynthiax827.github.io/ccy-travelog/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -21,7 +21,7 @@
 
   header { border-bottom: 2px solid #0a0a0a; padding: 14px 48px; display: flex; align-items: center; justify-content: space-between; background: #f7f6f3; position: sticky; top: 0; z-index: 100; gap: 20px; }
   .logo { font-family: 'DM Serif Display', Georgia, serif; font-size: 22px; font-weight: 400; letter-spacing: .02em; flex-shrink: 0; text-decoration: none; color: #0a0a0a; }
-  .header-date { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #8f8f8c; flex-shrink: 0; }
+  .exit-btn { display: inline-flex; align-items: center; font-family: 'DM Mono', 'Courier New', monospace; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; cursor: pointer; border: 1px solid #0a0a0a; background: #0a0a0a; color: #f7f6f3; white-space: nowrap; }
 
   /* Nav */
   nav { display: flex; gap: 22px; position: absolute; left: 50%; transform: translateX(-50%); }
@@ -39,7 +39,7 @@
 
   @media (max-width: 700px) {
     nav { display: none; }
-    .header-date { display: none; }
+    .exit-btn { display: none; }
     .menu-btn { display: flex; }
   }
 
@@ -106,7 +106,7 @@
     <a href="#" onclick="scrollToSection('expenses');return false;">Expense</a>
     <a href="#" onclick="scrollToSection('itinerary');return false;">Itinerary</a>
   </nav>
-  <div class="header-date" id="header-date"></div>
+  <a href="index.html" class="btn btn-primary btn-sm exit-btn" style="padding:5px 14px;font-size:10px;text-decoration:none;">⭠ Exit</a>
   <button class="menu-btn" id="menu-btn" onclick="toggleMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -119,7 +119,6 @@
   <a href="#" onclick="scrollToSection('hotels');closeMenu();return false;">Hotel</a>
   <a href="#" onclick="scrollToSection('expenses');closeMenu();return false;">Expense</a>
   <a href="#" onclick="scrollToSection('itinerary');closeMenu();return false;">Itinerary</a>
-  <div class="menu-date" id="mobile-date"></div>
 </div>
 
 <div id="cover-section"><img id="cover-img" src="" alt=""/></div>
@@ -191,9 +190,6 @@ function render(d) {
   if (d.note && !d.notes) d.notes = d.note;
   document.title = (d.tripTitle || 'Travel Plan') + ' | CCY Travelog';
 
-  const dateStr = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-  document.getElementById('header-date').textContent = dateStr;
-  document.getElementById('mobile-date').textContent = dateStr;
 
   const coverSection = document.getElementById('cover-section');
   const coverImg     = document.getElementById('cover-img');
