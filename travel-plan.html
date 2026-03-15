@@ -30,7 +30,10 @@
 
   /* Mobile menu */
   .menu-btn { display: none; background: none; border: 1px solid #d4d4d2; border-radius: 2px; width: 32px; height: 32px; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex-shrink: 0; }
-  .menu-btn span { display: block; width: 14px; height: 1.5px; background: #0a0a0a; transition: all 0.2s; }
+  .menu-btn span { display: block; width: 14px; height: 1.5px; background: #0a0a0a; transition: all 0.25s; transform-origin: center; }
+  .menu-btn.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .menu-btn.open span:nth-child(2) { opacity: 0; }
+  .menu-btn.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
   .mobile-menu { display: none; position: fixed; inset: 0; top: 53px; background: #f7f6f3; z-index: 99; border-top: 1px solid #d4d4d2; padding: 24px 20px; flex-direction: column; gap: 4px; }
   .mobile-menu.open { display: flex; }
   .mobile-menu a { text-decoration: none; color: #0a0a0a; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 0; border-bottom: 1px solid #ebebea; }
@@ -119,6 +122,7 @@
   <a href="#" onclick="scrollToSection('hotels');closeMenu();return false;">Hotel</a>
   <a href="#" onclick="scrollToSection('expenses');closeMenu();return false;">Expense</a>
   <a href="#" onclick="scrollToSection('itinerary');closeMenu();return false;">Itinerary</a>
+  <a href="index.html" style="margin-top:auto;text-align:center;background:#0a0a0a;color:#f7f6f3;border-radius:2px;padding:12px 0;border-bottom:none;">⭠ Exit</a>
 </div>
 
 <div id="cover-section"><img id="cover-img" src="" alt=""/></div>
@@ -435,11 +439,12 @@ function scrollToSection(id) {
   else window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function toggleMenu() {
-  const m = document.getElementById('mobile-menu');
-  m.classList.toggle('open');
+  document.getElementById('mobile-menu').classList.toggle('open');
+  document.getElementById('menu-btn').classList.toggle('open');
 }
 function closeMenu() {
   document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('menu-btn').classList.remove('open');
 }
 document.addEventListener('click', e => {
   if (!e.target.closest('#mobile-menu') && !e.target.closest('#menu-btn'))
