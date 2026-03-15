@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Editor | CCY Travelog</title>
+<!-- Standard favicon for most browsers -->
+<link rel="icon" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon_w.png" type="image/x-icon">
+<!-- Recommended PNG icon for general use -->
+<link rel="icon" type="image/png" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon_w.png" sizes="32x32">
+<!-- Apple Touch Icon (for iOS home screen) -->
+<link rel="apple-touch-icon" href="https://cynthiax827.github.io/ccy-travelog/images/ccy-travelog-icon_w.png">
+<!-- Web App Manifest (for Android PWA support) -->
+<link rel="manifest" href="https://cynthiax827.github.io/ccy-travelog/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --black: #0a0a0a; --white: #f7f6f3; --gray-100: #ebebea; --gray-200: #d4d4d2;
+    --gray-300: #b8b8b5; --gray-400: #8f8f8c; --gray-500: #6e6e6b; --gray-600: #4a4a48;
+    --border: 1px solid #d4d4d2; --radius: 2px;
+    --font-serif: 'DM Serif Display', Georgia, serif;
+    --font-mono: 'DM Mono', 'Courier New', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { font-family: var(--font-mono); background: var(--white); color: var(--black); font-size: 13px; line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+  header { border-bottom: 2px solid var(--black); padding: 14px 0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--white); z-index: 100; }
+  .header-inner { max-width: 1440px; margin: 0 auto; width: 100%; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .logo { font-family: var(--font-serif); font-size: 26px; font-weight: 400; letter-spacing: 0.02em; line-height: 1; flex-shrink: 0; white-space: nowrap; text-decoration: none; color: var(--black); display: flex; align-items: baseline; gap: 10px; }
+  .logo-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-400); padding-left: 10px; border-left: 1px solid var(--gray-300); line-height: 1; }
+  nav { display: flex; gap: 22px; flex: 1; justify-content: center; }
+  nav a { text-decoration: none; color: var(--gray-600); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; white-space: nowrap; cursor: pointer; }
+  nav a:hover, nav a.active { color: var(--black); }
+  .header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .btn { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0 14px; height: 30px; border-radius: var(--radius); cursor: pointer; transition: all 0.2s; border: var(--border); margin-top: -1px; margin-left: -1px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; background: transparent; color: var(--black); text-decoration: none; line-height: 1; box-sizing: border-box; vertical-align: middle; }
+  .btn-primary { background: var(--black); color: var(--white); border-color: var(--black); }
+  .btn-primary:hover { background: var(--gray-600); border-color: var(--gray-600); }
+  .btn-ghost { background: transparent; color: var(--black); }
+  .btn-ghost:hover { background: var(--gray-100); }
+  .btn-open:hover { background: var(--black) !important; color: var(--white) !important; transition: background 0.15s, color 0.15s; }
+  .btn-danger { background: transparent; color: #c0392b; border-color: #c0392b; }
+  .btn-danger:hover { background: #c0392b; color: var(--white); }
+  .btn-sm { padding: 0 14px; height: 30px; font-size: 10px; }
+  .hero { padding: 64px 0 52px; border-bottom: 2px solid var(--black); }
+  .hero-inner { max-width: 1440px; margin: 0 auto; padding: 0 48px; display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; }
+  .hero-left { display: flex; flex-direction: column; gap: 12px; }
+  .hero-eyebrow { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gray-400); }
+  .hero-title { font-family: var(--font-serif); font-size: clamp(42px, 6vw, 72px); font-weight: 400; line-height: 1; letter-spacing: -0.02em; }
+  .hero-title em { font-style: italic; color: var(--gray-400); }
+  .hero-sub { font-size: 12px; color: var(--gray-500); max-width: 760px; line-height: 1.7; white-space: nowrap; }
+  .hero-stats { display: flex; gap: 40px; align-items: flex-end; flex-shrink: 0; }
+  .hero-stat { text-align: right; }
+  .hero-stat-val { font-family: var(--font-serif); font-size: 40px; font-weight: 400; line-height: 1; }
+  .hero-stat-lbl { font-size: 10px; color: var(--gray-400); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+  .toolbar { padding: 18px 0; border-bottom: var(--border); background: var(--white); position: sticky; top: 61px; z-index: 90; }
+  .toolbar-inner { max-width: 1440px; margin: 0 auto; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .toolbar-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+  .search-wrap { position: relative; flex: 1; max-width: 320px; }
+  .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none; }
+  .search-input { font-family: var(--font-mono); font-size: 12px; background: transparent; border: var(--border); margin-top: -1px; margin-left: -1px; border-radius: var(--radius); padding: 8px 12px 8px 36px; color: var(--black); outline: none; transition: border-color 0.2s; width: 100%; }
+  .search-input:focus { border-color: var(--black); }
+  .search-input::placeholder { color: var(--gray-400); }
+  .filter-select { font-family: var(--font-mono); font-size: 11px; background: transparent; border: var(--border); margin-top: -1px; margin-left: -1px; border-radius: var(--radius); padding: 8px 32px 8px 12px; color: var(--black); outline: none; cursor: pointer; letter-spacing: 0.06em; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238f8f8c'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+  .view-toggle { display: flex; border: var(--border); margin-top: -1px; margin-left: -1px; border-radius: var(--radius); overflow: hidden; }
+  .view-btn { background: transparent; border: none; cursor: pointer; padding: 8px 10px; color: var(--gray-400); transition: all 0.15s; display: flex; align-items: center; }
+  .view-btn.active, .view-btn:hover { background: var(--black); color: var(--white); }
+  .view-btn + .view-btn { border-left: var(--border); }
+  .results-count { font-size: 11px; color: var(--gray-400); letter-spacing: 0.06em; white-space: nowrap; }
+  main { max-width: 1440px; margin: 0 auto; padding: 40px 48px 100px; }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 0; }
+  .cards-grid.list-view { grid-template-columns: 1fr; }
+  .card { background: var(--white); padding: 28px 28px 24px; display: flex; flex-direction: column; gap: 20px; position: relative; transition: background 0.15s; cursor: pointer; border: var(--border); margin-top: -1px; margin-left: -1px; }
+  .card:hover { background: var(--gray-100); }
+  .card-top { display: flex; align-items: flex-start; gap: 12px; }
+  .card-index { font-size: 10px; color: var(--gray-400); letter-spacing: 0.1em; flex-shrink: 0; padding-top: 4px; }
+  .card-title { font-family: var(--font-serif); font-size: 22px; font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; flex: 1; }
+  .card-status { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 40px; flex-shrink: 0; }
+  .card-status.upcoming { background: var(--black); color: var(--white); }
+  .card-status.ongoing  { background: #27ae60; color: #fff; }
+  .card-status.past     { background: var(--gray-200); color: var(--gray-500); }
+  .card-status .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.7; }
+  .card-destinations { display: flex; flex-direction: column; gap: 8px; }
+  .dest-country { display: flex; flex-direction: column; gap: 4px; }
+  .dest-country-row { display: flex; align-items: center; gap: 8px; }
+  .dest-flag { font-size: 16px; line-height: 1; }
+  .dest-country-name { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-600); }
+  .dest-cities { display: flex; flex-wrap: wrap; gap: 6px; padding-left: 24px; }
+  .city-pill { font-size: 11px; letter-spacing: 0.04em; background: var(--gray-100); padding: 3px 10px; border-radius: 2px; color: var(--gray-600); border: var(--border); margin-top: -1px; margin-left: -1px; }
+  .card-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 16px; border-top: var(--border); }
+  .meta-item { display: flex; flex-direction: column; gap: 3px; }
+  .meta-label { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-400); }
+  .meta-value { font-size: 12px; color: var(--black); }
+  .travellers-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .traveller-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; letter-spacing: 0.03em; padding: 4px 10px; border-radius: 40px; background: var(--black); color: var(--white); }
+  .traveller-chip .chip-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .card-actions { display: flex; gap: 8px; padding-top: 8px; margin-top: auto; }
+  .list-view .card { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(0,2.3fr) minmax(0,1.2fr) auto; align-items: center; column-gap: 20px; row-gap: 0; padding: 14px 28px; }
+  .list-view .card-top { min-width: 0; overflow: hidden; }
+  .list-view .card-top .card-title { white-space: normal; overflow: visible; text-overflow: unset; font-size: 20px; }
+  .list-view .card-destinations { min-width: 0; flex-direction: column; flex-wrap: wrap; gap: 6px; align-items: flex-start; overflow: hidden; }
+  .list-view .card-destinations .dest-country { flex-direction: column; align-items: flex-start; gap: 4px; flex-shrink: 0; }
+  .list-view .card-destinations .dest-cities { display: flex; }
+  .list-view .card-destinations .dest-country-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+  .list-view .card-meta { min-width: 0; border-top: none; padding-top: 0; grid-template-columns: 1fr; gap: 3px; }
+  .list-view .card-meta .meta-item:nth-child(3) { display: none; }
+  .list-view .card-actions { flex-direction: row; justify-content: flex-end; padding-top: 0; gap: 8px; flex-wrap: nowrap; margin-top: 0; }
+  @media(max-width:1100px){ .list-view .card { grid-template-columns: minmax(0,1.5fr) minmax(0,2.3fr) minmax(0,1.2fr) auto; } .list-view .card-actions { flex-direction: column; align-items: stretch; gap: 6px; } .list-view .card-actions .btn { margin-left: 0 !important; text-align: center; justify-content: center; } }
+  .list-view .card-title-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+  @media(max-width:900px){ .view-toggle { display: none; } }
+  .empty-state { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 100px 40px; border: var(--border); margin-top: -1px; margin-left: -1px; background: var(--white); }
+  .empty-icon { font-size: 48px; opacity: 0.2; }
+  .empty-title { font-family: var(--font-serif); font-size: 28px; color: var(--gray-400); }
+  .empty-sub { font-size: 12px; color: var(--gray-400); letter-spacing: 0.06em; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(10,10,10,0.55); z-index: 500; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(2px); }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
+  @keyframes fadeIn { from{opacity:0}to{opacity:1} }
+  .modal { background: var(--white); border: 2px solid var(--black); border-radius: var(--radius); width: 100%; max-width: 420px; display: flex; flex-direction: column; animation: slideUp 0.2s ease; }
+  @keyframes slideUp { from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1} }
+  .modal-header { padding: 24px 32px 20px; border-bottom: 2px solid var(--black); display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-family: var(--font-serif); font-size: 28px; font-weight: 400; line-height: 1; }
+  .modal-close { background: transparent; border: var(--border); margin-top: -1px; margin-left: -1px; border-radius: var(--radius); cursor: pointer; font-size: 18px; line-height: 1; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+  .modal-close:hover { background: var(--gray-100); }
+  .modal-body { padding: 24px 32px; }
+  .modal-body p { font-size: 13px; color: var(--gray-600); line-height: 1.7; }
+  .modal-footer { padding: 16px 32px 24px; border-top: var(--border); display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+  .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--black); color: var(--white); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; padding: 12px 24px; border-radius: var(--radius); z-index: 999; opacity: 0; transition: all 0.25s ease; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @media(max-width:860px){nav{display:none;}}
+  @media(max-width:960px){
+    .hero-inner{flex-direction:column;align-items:flex-start;gap:28px;}
+    .hero-sub{white-space:normal;}
+    .hero-stats{flex-direction:row;align-items:flex-start;justify-content:flex-start;gap:0;width:100%;border-top:var(--border);padding-top:24px;}
+    .hero-stat{text-align:left;flex:1;}
+    .hero-stat-val{font-size:32px;}
+  }
+  @media(max-width:640px){
+    header,.toolbar,main{padding-left:20px;padding-right:20px;}
+    .header-inner{padding-left:0;padding-right:0;}
+    .hero{padding-left:0;padding-right:0;}
+    .hero-inner{padding-left:20px;padding-right:20px;}
+    .hero-sub{white-space:normal;}
+    .hero-stats{flex-direction:row;align-items:flex-start;gap:0;flex-wrap:nowrap;width:100%;border-top:var(--border);padding-top:24px;justify-content:space-between;}
+    .hero-stat{text-align:left;flex:1;}
+    .hero-stat-val{font-size:28px;}
+    .toolbar{flex-wrap:wrap;gap:10px;top:auto;position:static;}
+    .toolbar-inner{padding-left:0;padding-right:0;}
+    .toolbar-left{flex-wrap:nowrap;width:100%;}
+    .search-wrap{max-width:100%;min-width:0;flex:1;}
+    .cards-grid{grid-template-columns:1fr;}
+    .list-view .card{flex-direction:column;align-items:flex-start;gap:16px;padding:20px;}
+    .list-view .card-top,.list-view .card-destinations,.list-view .card-meta,.list-view .card-actions{flex:unset;width:100%;border-top:none;padding-top:0;}
+    .list-view .card-destinations{flex-direction:column;}
+    .list-view .dest-country{flex-direction:column;align-items:flex-start;}
+    .list-view .card-actions{justify-content:flex-start;}
+    .header-actions{gap:6px;}
+    #fs-btn{display:none;}
+    #goto-site-btn{display:none;}
+    #new-plan-btn{display:none;}
+    .mobile-menu{display:flex;}
+    .logo{font-size:20px;}
+    footer{padding:16px 20px;}
+  }
+  @media(min-width:641px){ .mobile-menu{display:none !important;} }
+  .mobile-menu { position: relative; }
+  .mobile-menu-btn { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); cursor: pointer; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--black); transition: border-color 0.15s, background 0.15s; padding: 0; flex-shrink: 0; }
+  .mobile-menu-btn:hover, .mobile-menu-btn.active { border-color: var(--gray-400); background: var(--gray-100); }
+  .mobile-dropdown { position: absolute; top: calc(100% + 10px); right: 0; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); min-width: 220px; z-index: 200; display: none; flex-direction: column; overflow: hidden; animation: slideUp 0.15s ease; }
+  .mobile-dropdown.open { display: flex; }
+  .mobile-dropdown-item { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.02em; padding: 14px 20px; background: transparent; border: none; border-top: 1px solid var(--gray-200); color: var(--black); text-decoration: none; cursor: pointer; text-align: left; transition: background 0.12s; display: flex; align-items: center; gap: 12px; width: 100%; }
+  .mobile-dropdown-item:first-child { border-top: none; }
+  .mobile-dropdown-item:hover { background: var(--gray-100); }
+  .mobile-dropdown-item.red { color: #c0392b; }
+  .mobile-dropdown-item.red:hover { background: #fdf2f1; }
+  .mobile-dropdown-item .item-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+  <a class="logo" href="#">CCY Travelog <span class="logo-tag">Editor</span></a>
+  <nav>
+    <a href="#" class="active" onclick="setFilter('');return false;">All Plans</a>
+    <a href="#" onclick="setFilter('upcoming');return false;">Upcoming</a>
+    <a href="#" onclick="setFilter('past');return false;">Past</a>
+  </nav>
+  <div class="header-actions">
+    <button class="btn btn-ghost btn-sm" onclick="grantFolderAccess()" id="fs-btn" title="Link once — all plans auto-save to JSON">Link Folder</button>
+    <button class="btn btn-primary btn-sm" id="new-plan-btn" onclick="openNewPlanModal()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      New Plan
+    </button>
+    <a class="btn btn-primary btn-sm" id="goto-site-btn" href="index.html">⭠ Go to Site</a>
+    <div class="mobile-menu">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleMobileMenu()" title="Menu"><svg width="14" height="4" viewBox="0 0 14 4" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="7" cy="2" r="1.5"/><circle cx="12" cy="2" r="1.5"/></svg></button>
+      <div class="mobile-dropdown" id="mobile-dropdown">
+        <button class="mobile-dropdown-item" onclick="closeMobileMenu();grantFolderAccess()">
+          <span class="item-icon">⇆</span><span id="mobile-fs-label">Link Folder</span>
+        </button>
+        <button class="mobile-dropdown-item" onclick="closeMobileMenu();openNewPlanModal()">
+          <span class="item-icon">+</span>New Plan
+        </button>
+        <a class="mobile-dropdown-item red" href="index.html">
+          <span class="item-icon">←</span>Go to Site
+        </a>
+      </div>
+    </div>
+  </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Our Travel Collection</div>
+    <h1 class="hero-title">Plan our journey,<br/>effortlessly.</h1>
+    <p class="hero-sub">Click any card to open the full planner, or start a new trip.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-val" id="stat-trips">0</div><div class="hero-stat-lbl">Total Trips</div></div>
+    <div class="hero-stat"><div class="hero-stat-val" id="stat-countries">0</div><div class="hero-stat-lbl">Countries</div></div>
+    <div class="hero-stat"><div class="hero-stat-val" id="stat-cities">0</div><div class="hero-stat-lbl">Cities</div></div>
+  </div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+  <div class="toolbar-left">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input class="search-input" id="search-input" type="text" placeholder="Search destinations, travellers…" oninput="renderCards()"/>
+    </div>
+    <select class="filter-select" id="filter-status" onchange="renderCards()">
+      <option value="">All Status</option>
+      <option value="upcoming">Upcoming</option>
+      <option value="ongoing">Ongoing</option>
+      <option value="past">Past</option>
+    </select>
+    <span class="results-count" id="results-count"></span>
+  </div>
+  <div class="view-toggle">
+    <button class="view-btn active" id="btn-grid" title="Grid view" onclick="setView('grid')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="0.5" stroke="currentColor" stroke-width="1.3"/><rect x="8" y="1" width="5" height="5" rx="0.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8" width="5" height="5" rx="0.5" stroke="currentColor" stroke-width="1.3"/><rect x="8" y="8" width="5" height="5" rx="0.5" stroke="currentColor" stroke-width="1.3"/></svg>
+    </button>
+    <button class="view-btn" id="btn-list" title="List view" onclick="setView('list')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12M1 7h12M1 11h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  </div>
+</div>
+
+<main>
+  <div class="cards-grid" id="cards-grid"></div>
+</main>
+
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Delete Plan</div>
+      <button class="modal-close" onclick="closeConfirm()">×</button>
+    </div>
+    <div class="modal-body"><p id="confirm-msg"></p></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="new-plan-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Trip</div>
+      <button class="modal-close" onclick="closeNewPlanModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <label style="display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;">Trip Name</label>
+      <input id="new-plan-name" type="text" placeholder="e.g. Japan Spring 2026"
+        style="width:100%;font-family:var(--font-mono);font-size:14px;border:var(--border);border-radius:var(--radius);padding:10px 14px;outline:none;box-sizing:border-box;"
+        onkeydown="if(event.key==='Enter')confirmNewPlan()"
+        oninput="document.getElementById('new-plan-confirm-btn').disabled=!this.value.trim()"/>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeNewPlanModal()">Cancel</button>
+      <button class="btn btn-primary" id="new-plan-confirm-btn" disabled onclick="confirmNewPlan()">Open Planner →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function toggleMobileMenu() {
+  const btn = document.getElementById('mobile-menu-btn');
+  const dropdown = document.getElementById('mobile-dropdown');
+  const isOpen = dropdown.classList.toggle('open');
+  btn.classList.toggle('active', isOpen);
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-dropdown').classList.remove('open');
+  document.getElementById('mobile-menu-btn').classList.remove('active');
+}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('mobile-menu-btn');
+  const dropdown = document.getElementById('mobile-dropdown');
+  if (menu && !menu.contains(e.target) && dropdown && !dropdown.contains(e.target)) {
+    dropdown.classList.remove('open');
+    menu.classList.remove('active');
+  }
+});
+
+const ACTIVE_KEY   = 'travelog_active';
+const PLANNER_FILE = 'travel-planner.html';
+const FLAGS = {'Japan':'🇯🇵','France':'🇫🇷','Italy':'🇮🇹','Spain':'🇪🇸','Germany':'🇩🇪','Greece':'🇬🇷','Portugal':'🇵🇹','Netherlands':'🇳🇱','UK':'🇬🇧','United Kingdom':'🇬🇧','USA':'🇺🇸','United States':'🇺🇸','Canada':'🇨🇦','Mexico':'🇲🇽','Brazil':'🇧🇷','Argentina':'🇦🇷','Colombia':'🇨🇴','Peru':'🇵🇪','Chile':'🇨🇱','Thailand':'🇹🇭','Vietnam':'🇻🇳','Indonesia':'🇮🇩','Philippines':'🇵🇭','Malaysia':'🇲🇾','Singapore':'🇸🇬','Cambodia':'🇰🇭','Myanmar':'🇲🇲','Nepal':'🇳🇵','India':'🇮🇳','China':'🇨🇳','South Korea':'🇰🇷','Taiwan':'🇹🇼','Australia':'🇦🇺','New Zealand':'🇳🇿','Morocco':'🇲🇦','Egypt':'🇪🇬','South Africa':'🇿🇦','Kenya':'🇰🇪','Tanzania':'🇹🇿','Norway':'🇳🇴','Sweden':'🇸🇪','Denmark':'🇩🇰','Finland':'🇫🇮','Iceland':'🇮🇸','Switzerland':'🇨🇭','Austria':'🇦🇹','Czech Republic':'🇨🇿','Hungary':'🇭🇺','Poland':'🇵🇱','Croatia':'🇭🇷','Turkey':'🇹🇷','Jordan':'🇯🇴','UAE':'🇦🇪'};
+
+let plans = [];
+
+
+/* ── OPTIONAL FILE SYSTEM SYNC ───────────────────────────────────────────
+   Link folder once here. The handle is stored in IndexedDB (travelog_fs)
+   and reused automatically by both index and planner on every save.
+──────────────────────────────────────────────────────────────────────── */
+let _fsDir = null;
+
+function slugify(title) {
+  return (title || 'untitled').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'untitled';
+}
+
+async function ensureFsDir() {
+  if (_fsDir) return _fsDir;
+  try {
+    const db = await new Promise((res, rej) => {
+      const r = indexedDB.open('travelog_fs', 1);
+      r.onupgradeneeded = e => e.target.result.createObjectStore('handles');
+      r.onsuccess = e => res(e.target.result);
+      r.onerror = () => rej(r.error);
+    });
+    const handle = await new Promise((res, rej) => {
+      const tx = db.transaction('handles', 'readonly');
+      const req = tx.objectStore('handles').get('root');
+      req.onsuccess = () => res(req.result);
+      req.onerror = () => rej(req.error);
+    });
+    if (handle) {
+      const perm = await handle.queryPermission({ mode: 'readwrite' });
+      if (perm === 'granted') { _fsDir = handle; return handle; }
+      const req2 = await handle.requestPermission({ mode: 'readwrite' });
+      if (req2 === 'granted') { _fsDir = handle; return handle; }
+    }
+  } catch(e) {}
+  return null;
+}
+
+async function storeFsHandle(handle) {
+  try {
+    const db = await new Promise((res, rej) => {
+      const r = indexedDB.open('travelog_fs', 1);
+      r.onupgradeneeded = e => e.target.result.createObjectStore('handles');
+      r.onsuccess = e => res(e.target.result);
+      r.onerror = () => rej(r.error);
+    });
+    await new Promise((res, rej) => {
+      const tx = db.transaction('handles', 'readwrite');
+      tx.objectStore('handles').put(handle, 'root');
+      tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+    });
+  } catch(e) {}
+}
+
+function updateFsBtn(linked) {
+  const btn = document.getElementById('fs-btn');
+  const mobileLabel = document.getElementById('mobile-fs-label');
+  if (!btn) return;
+  if (linked) {
+    btn.textContent = '✓ Folder Linked';
+    btn.style.color = 'var(--black)';
+    btn.style.borderColor = 'var(--black)';
+    if (mobileLabel) mobileLabel.textContent = '✓ Folder Linked';
+  } else {
+    btn.textContent = 'Link Folder';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+    if (mobileLabel) mobileLabel.textContent = 'Link Folder';
+  }
+}
+async function grantFolderAccess() {
+  if (!window.showDirectoryPicker) { toast('File System Access API not supported in this browser.'); return; }
+  try {
+    const handle = await window.showDirectoryPicker({ mode: 'readwrite', startIn: 'downloads' });
+    _fsDir = handle;
+    await storeFsHandle(handle);
+    updateFsBtn(true);
+    toast('Folder linked — syncing plans from folder…');
+    await loadPlansFromFolder(handle);
+    updateStats(); renderCards();
+  } catch(e) {}
+}
+
+/* ── PERSIST & LOAD ──────────────────────────────── */
+function savePlans() {
+  try { localStorage.setItem('travelog_plans', JSON.stringify(plans)); } catch(e) {}
+}
+
+async function loadPlansFromFolder(root) {
+  // Read all JSON files from plans/ folder and populate localStorage + plans array
+  try {
+    const plansDir = await root.getDirectoryHandle('plans', { create: true });
+    const loaded = [];
+    for await (const [name, fileHandle] of plansDir.entries()) {
+      if (!name.endsWith('.json')) continue;
+      try {
+        const file = await fileHandle.getFile();
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (!data._planId) data._planId = Date.now() + Math.floor(Math.random()*1000);
+        const id = data._planId;
+        localStorage.setItem('travelplan_' + id, JSON.stringify(data));
+        loaded.push(plannerToCard(id, data));
+      } catch(e) {}
+    }
+    if (loaded.length) {
+      // Merge with existing plans (avoid duplicates by id)
+      const existingIds = new Set(plans.map(p => p.id));
+      loaded.forEach(p => { if (!existingIds.has(p.id)) plans.push(p); else plans[plans.findIndex(x=>x.id===p.id)] = p; });
+      plans.sort((a,b) => (b.startDate||'').localeCompare(a.startDate||''));
+      savePlans();
+    }
+    return loaded.length;
+  } catch(e) { return 0; }
+}
+
+async function loadPlans() {
+  // Source of truth is always the linked folder — never seed from localStorage
+  const root = await ensureFsDir();
+  if (root) {
+    updateFsBtn(true);
+    await loadPlansFromFolder(root);
+  } else {
+    updateFsBtn(false);
+  }
+}
+
+
+/* ── SYNC BACK FROM PLANNER ──────────────────────── */
+async function syncBack() {
+  const root = await ensureFsDir();
+  if (!root) return; // No folder linked — never fall back to localStorage cache
+  // Re-read all plans directly from the linked folder (bypass localStorage cache)
+  await loadPlansFromFolder(root);
+  updateStats(); renderCards();
+}
+
+window.addEventListener('focus', () => syncBack());
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') syncBack(); });
+// Folder is the single source of truth — localStorage storage events are not used
+
+/* ── DATA CONVERSION ─────────────────────────────── */
+function plannerToCard(id, d) {
+  const destinations = (d.country || d.countries || []).map(c => ({
+    country: c.name, flag: FLAGS[c.name] || '🌍',
+    cities: (c.cities || []).map(ci => ci.name).filter(Boolean)
+  })).filter(c => c.country);
+  const travellers = (d.traveller || d.travellers || []).map(n => ({ name: n, color: (d.travellerColor||d.travellerColors||{})[n] || '#0a0a0a' }));
+  return { id, title: d.tripTitle || 'Untitled Trip',
+           startDate: d.tripStart || '', endDate: d.tripEnd || '',
+           destinations, travellers,
+};
+}
+
+function cardToPlanner(p) {
+  let cid = 200, kid = 2000;
+  const country = (p.destinations||[]).map(d => ({ id: ++cid, name: d.country, cities: (d.cities||[]).map(c=>({id:++kid,name:c})) }));
+  const travellerColor = {};
+  (p.travellers||[]).forEach(t => { travellerColor[t.name] = t.color; });
+  return { tripTitle: p.title||'', tripStart: p.startDate||'', tripEnd: p.endDate||'',
+           traveller: (p.travellers||[]).map(t=>t.name), travellerColor, country,
+           flight:{}, hotel:[], expense:[], itinerary:[], note:[] };
+}
+
+/* ── OPEN PLANNER ────────────────────────────────── */
+function openNewPlanModal() {
+  const inp = document.getElementById('new-plan-name');
+  inp.value = '';
+  document.getElementById('new-plan-confirm-btn').disabled = true;
+  document.getElementById('new-plan-modal').classList.add('open');
+  setTimeout(() => inp.focus(), 60);
+}
+
+function closeNewPlanModal() {
+  document.getElementById('new-plan-modal').classList.remove('open');
+}
+
+function confirmNewPlan() {
+  const title = document.getElementById('new-plan-name').value.trim();
+  if (!title) return;
+  closeNewPlanModal();
+  const newId = plans.length ? Math.max(...plans.map(p => p.id)) + 1 : 1;
+  localStorage.setItem(ACTIVE_KEY, String(newId));
+  window.location.href = PLANNER_FILE + '?id=' + newId + '&title=' + encodeURIComponent(title);
+}
+
+function openEditPlan(id) {
+  localStorage.setItem(ACTIVE_KEY, String(id));
+  window.location.href = PLANNER_FILE + '?id=' + id;
+}
+
+/* ── DELETE ──────────────────────────────────────── */
+function confirmDelete(id) {
+  const p = plans.find(p => p.id === id);
+  if (!p) return;
+  document.getElementById('confirm-msg').textContent = `Delete "${p.title}"? This cannot be undone.`;
+  document.getElementById('confirm-delete-btn').onclick = () => doDelete(id);
+  document.getElementById('confirm-modal').classList.add('open');
+}
+function doDelete(id) {
+  closeConfirm();
+  const delPlan = plans.find(p => p.id === id);
+  // Remove from localStorage
+  localStorage.removeItem('travelplan_' + id);
+  plans = plans.filter(p => p.id !== id);
+  savePlans();
+  updateStats(); renderCards();
+  // Remove JSON file if folder is linked
+  if (delPlan) {
+    ensureFsDir().then(root => {
+      if (!root) return;
+      const filename = delPlan._jsonFilename || (slugify(delPlan.title) + '.json');
+      root.getDirectoryHandle('plans', { create: false })
+        .then(d => d.removeEntry(filename))
+        .catch(() => {});
+    });
+  }
+}
+function closeConfirm() { document.getElementById('confirm-modal').classList.remove('open'); }
+document.addEventListener('click', e => {
+  if (e.target.id === 'confirm-modal') closeConfirm();
+  if (e.target.id === 'new-plan-modal') closeNewPlanModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeConfirm(); closeNewPlanModal(); } });
+
+/* ── STATS ───────────────────────────────────────── */
+function updateStats() {
+  const C = new Set(), K = new Set();
+  plans.forEach(p => (p.destinations||[]).forEach(d => { C.add(d.country); (d.cities||[]).forEach(c=>K.add(c)); }));
+  document.getElementById('stat-trips').textContent = plans.length;
+  document.getElementById('stat-countries').textContent = C.size;
+  document.getElementById('stat-cities').textContent = K.size;
+}
+
+/* ── RENDER ──────────────────────────────────────── */
+function inferStatus(s, e) {
+  if (!s) return 'upcoming';
+  const now = new Date(), sd = new Date(s+'T00:00:00'), ed = e ? new Date(e+'T00:00:00') : null;
+  if (now < sd) return 'upcoming';
+  if (ed && now > ed) return 'past';
+  return 'ongoing';
+}
+function statusLabel(s) { return {upcoming:'Upcoming',ongoing:'Live',past:'Past'}[s]||s; }
+function formatRange(s, e) {
+  if (!s && !e) return '—'; if (!e) return fmt(s);
+  try {
+    const sd = new Date(s+'T00:00:00'), ed = new Date(e+'T00:00:00');
+    if (sd.getFullYear()===ed.getFullYear()) {
+      if (sd.getMonth()===ed.getMonth()) return `${sd.getDate()}–${ed.getDate()} ${sd.toLocaleDateString('en-GB',{month:'short',year:'numeric'})}`;
+      return `${sd.toLocaleDateString('en-GB',{day:'numeric',month:'short'})} – ${ed.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}`;
+    }
+    return `${fmt(s)} – ${fmt(e)}`;
+  } catch(err) { return `${s} – ${e}`; }
+}
+function fmt(d) { try { return new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); } catch(e){return d;} }
+function nights(s,e) { if(!s||!e)return null; try{const d=(new Date(e)-new Date(s))/86400000;return d>0?d:null;}catch(e2){return null;} }
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function setFilter(v) { document.getElementById('filter-status').value = v; renderCards(); }
+
+function renderCards() {
+  const grid = document.getElementById('cards-grid');
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  const fs = document.getElementById('filter-status').value;
+  let filtered = plans.filter(p => {
+    const st = inferStatus(p.startDate, p.endDate);
+    if (fs && st !== fs) return false;
+    if (!q) return true;
+    return [p.title,...(p.destinations||[]).flatMap(d=>[d.country,...(d.cities||[])]),...(p.travellers||[]).map(t=>t.name)].join(' ').toLowerCase().includes(q);
+  });
+  filtered.sort((a,b)=>(b.startDate||'')<(a.startDate||'')?-1:(b.startDate||'')>(a.startDate||'')?1:0);
+  document.getElementById('results-count').textContent = filtered.length===plans.length?`${plans.length} plan${plans.length!==1?'s':''}`:`${filtered.length} of ${plans.length}`;
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">✈</div><div class="empty-title">No plans found</div><div class="empty-sub">${plans.length?'Try adjusting your filters.':'Create your first trip to get started.'}</div>${!plans.length?'<button class="btn btn-primary" onclick="openNewPlanModal()">+ New Plan</button>':''}</div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map((p,idx)=>{
+    const status = inferStatus(p.startDate, p.endDate);
+    const n = nights(p.startDate, p.endDate);
+    const dests = p.destinations||[], travellers = p.travellers||[];
+    const destsHtml = dests.map(d=>`<div class="dest-country"><div class="dest-country-row"><span class="dest-flag">${esc(d.flag||'🌍')}</span><span class="dest-country-name">${esc(d.country)}</span></div>${(d.cities||[]).length?`<div class="dest-cities">${d.cities.map(c=>`<span class="city-pill">${esc(c)}</span>`).join('')}</div>`:''}</div>`).join('');
+    const travHtml = travellers.map(t=>`<span class="traveller-chip"><span class="chip-dot" style="background:${esc(t.color||'#f7f6f3')};${t.color==='#0a0a0a'?'border:1px solid rgba(255,255,255,0.3)':''}"></span>${esc(t.name)}</span>`).join('');
+    return `<div class="card" onclick="openEditPlan(${p.id})">
+      <div class="card-top">
+        <span class="card-index">${String(idx+1).padStart(2,'0')}</span>
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+          <div class="card-title-row" style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+            <div class="card-title">${esc(p.title||'Untitled Trip')}</div>
+            <span class="card-status ${status}"><span class="dot"></span>${statusLabel(status)}</span>
+          </div>
+        </div>
+      </div>
+      ${destsHtml?`<div class="card-destinations">${destsHtml}</div>`:''}
+      <div class="card-meta">
+        <div class="meta-item"><div class="meta-label">Dates</div><div class="meta-value">${formatRange(p.startDate,p.endDate)}</div></div>
+        <div class="meta-item"><div class="meta-label">${n?'Duration':'Countries'}</div><div class="meta-value">${n?`${n} night${n!==1?'s':''}`:dests.length+' countr'+(dests.length!==1?'ies':'y')}</div></div>
+        ${travellers.length?`<div class="meta-item" style="grid-column:1/-1;"><div class="meta-label">Travellers</div><div class="travellers-row">${travHtml}</div></div>`:''}
+      </div>
+      <div class="card-actions" onclick="event.stopPropagation()">
+        <button class="btn btn-ghost btn-sm btn-open" onclick="openEditPlan(${p.id})">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M7 1.5l1.5 1.5L3 8.5H1.5V7L7 1.5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Open Planner
+        </button>
+        <button class="btn btn-danger btn-sm" style="margin-left:auto;" onclick="confirmDelete(${p.id})">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setView(v) {
+  if (window.innerWidth <= 900) return;
+  document.getElementById('cards-grid').classList.toggle('list-view', v==='list');
+  document.getElementById('btn-grid').classList.toggle('active', v==='grid');
+  document.getElementById('btn-list').classList.toggle('active', v==='list');
+}
+
+// Auto-switch to grid if window resized below 900px while in list view
+window.addEventListener('resize', () => {
+  const grid = document.getElementById('cards-grid');
+  if (window.innerWidth <= 900 && grid.classList.contains('list-view')) {
+    grid.classList.remove('list-view');
+    document.getElementById('btn-grid').classList.add('active');
+    document.getElementById('btn-list').classList.remove('active');
+  }
+});
+
+let _tt;
+function toast(msg) { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2400); }
+
+function sampleData() {
+  return [
+    {id:1,title:'Cherry Blossom Season',startDate:'2025-03-25',endDate:'2025-04-08',destinations:[{country:'Japan',flag:'🇯🇵',cities:['Tokyo','Kyoto','Nara','Osaka']}],travellers:[{name:'Alex',color:'#0a0a0a'},{name:'Morgan',color:'#8e44ad'}]},
+    {id:2,title:'Mediterranean Summer',startDate:'2025-07-10',endDate:'2025-07-28',destinations:[{country:'Italy',flag:'🇮🇹',cities:['Rome','Amalfi','Sicily']},{country:'Greece',flag:'🇬🇷',cities:['Athens','Santorini','Mykonos']}],travellers:[{name:'Jordan',color:'#2980b9'},{name:'Sam',color:'#16a085'},{name:'Taylor',color:'#e67e22'}]},
+    {id:3,title:'Southeast Asia Backpack',startDate:'2024-11-01',endDate:'2024-11-30',destinations:[{country:'Thailand',flag:'🇹🇭',cities:['Bangkok','Chiang Mai']},{country:'Vietnam',flag:'🇻🇳',cities:['Hanoi','Hội An']},{country:'Cambodia',flag:'🇰🇭',cities:['Siem Reap']}],travellers:[{name:'Riley',color:'#c0392b'}]},
+    {id:4,title:'Nordic Winter Escape',startDate:'2026-01-15',endDate:'2026-01-24',destinations:[{country:'Norway',flag:'🇳🇴',cities:['Oslo','Bergen','Tromsø']},{country:'Iceland',flag:'🇮🇸',cities:['Reykjavik']}],travellers:[{name:'Casey',color:'#2c3e50'},{name:'Quinn',color:'#27ae60'}]},
+    {id:5,title:'Patagonia Trek',startDate:'2025-12-01',endDate:'2025-12-15',destinations:[{country:'Argentina',flag:'🇦🇷',cities:['Buenos Aires','El Calafate']},{country:'Chile',flag:'🇨🇱',cities:['Puerto Natales']}],travellers:[{name:'Drew',color:'#8e44ad'},{name:'Sage',color:'#e67e22'}]},
+    {id:6,title:'Morocco Sojourn',startDate:'2025-09-05',endDate:'2025-09-16',destinations:[{country:'Morocco',flag:'🇲🇦',cities:['Marrakech','Fez','Chefchaouen']}],travellers:[{name:'Alex',color:'#0a0a0a'},{name:'Morgan',color:'#8e44ad'},{name:'Jordan',color:'#2980b9'}]}
+  ];
+}
+
+/* ── INIT ────────────────────────────────────────── */
+loadPlans().then(() => { updateStats(); renderCards(); });
+</script>
+<footer style="border-top:var(--border);padding:20px 48px;text-align:center;">
+  <span style="font-family:var(--font-mono);font-size:11px;color:var(--gray-400);letter-spacing:0.08em;">Made by Cynthia Hsiao</span>
+</footer>
+</body>
+</html>
