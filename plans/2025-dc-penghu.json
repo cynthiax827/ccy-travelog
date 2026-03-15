@@ -2,15 +2,15 @@
   "tripTitle": "2025 DC Penghu",
   "tripStart": "2025-02-28",
   "tripEnd": "2025-03-02",
-  "travellers": [
+  "traveller": [
     "Cynthia Hsiao",
     "Danny Parker"
   ],
-  "travellerColors": {
+  "travellerColor": {
     "Cynthia Hsiao": "#ff5979",
     "Danny Parker": "#06c8c8"
   },
-  "countries": [
+  "country": [
     {
       "id": 201,
       "name": "Taiwan",
@@ -22,7 +22,7 @@
       ]
     }
   ],
-  "flights": {
+  "flight": {
     "Cynthia Hsiao": {
       "journeys": [
         {
@@ -112,8 +112,8 @@
       ]
     }
   },
-  "hotels": [],
-  "expenses": [],
+  "hotel": [],
+  "expense": [],
   "itinerary": [
     {
       "id": 1,
@@ -131,7 +131,7 @@
         {
           "id": 1,
           "time": "13:30",
-          "label": "heritage",
+          "label": "tourist",
           "name": "Magong Zhongyang Old Street 馬公中央老街",
           "candidates": [],
           "hashtags": [
@@ -215,7 +215,7 @@
         {
           "id": 9,
           "time": "10:00",
-          "label": "tourist",
+          "label": "heritage",
           "name": "Erkan Historic Village 二崁聚落",
           "candidates": [],
           "hashtags": [
@@ -328,7 +328,7 @@
         {
           "id": 20,
           "time": "16:00",
-          "label": "tourist",
+          "label": "coffee",
           "name": "及林春咖啡館Ji Lin Chun Cafe",
           "candidates": []
         },
@@ -358,7 +358,7 @@
       "overnightCity": "Penghu"
     }
   ],
-  "notes": [],
+  "note": [],
   "_ids": {
     "dayId": 3,
     "eventId": 23,
@@ -373,5 +373,5 @@
   },
   "_planId": 3,
   "_coverPosY": 33,
-  "_coverFilename": "Rainbow bridge.jpg"
+  "_coverFilename": "2025-dc-penghu.jpg"
 }
